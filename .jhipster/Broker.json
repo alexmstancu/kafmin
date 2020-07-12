@@ -1,0 +1,41 @@
+{
+  "name": "Broker",
+  "fields": [
+    {
+      "fieldName": "brokerId",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "host",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "port",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "isController",
+      "fieldType": "Boolean"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "cluster",
+      "otherEntityRelationshipName": "brokers",
+      "relationshipName": "cluster",
+      "otherEntityField": "name"
+    }
+  ],
+  "changelogDate": "20200712190435",
+  "entityTableName": "broker",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

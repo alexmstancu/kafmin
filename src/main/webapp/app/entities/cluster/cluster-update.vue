@@ -1,0 +1,36 @@
+<template>
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <form name="editForm" role="form" novalidate v-on:submit.prevent="save()" >
+                <h2 id="kafminApp.cluster.home.createOrEditLabel">Create or edit a Cluster</h2>
+                <div>
+                    <div class="form-group" v-if="cluster.id">
+                        <label for="id">ID</label>
+                        <input type="text" class="form-control" id="id" name="id"
+                               v-model="cluster.id" readonly />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-control-label" for="cluster-clusterId">Cluster Id</label>
+                        <input type="text" class="form-control" name="clusterId" id="cluster-clusterId"
+                            :class="{'valid': !$v.cluster.clusterId.$invalid, 'invalid': $v.cluster.clusterId.$invalid }" v-model="$v.cluster.clusterId.$model" />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-control-label" for="cluster-name">Name</label>
+                        <input type="text" class="form-control" name="name" id="cluster-name"
+                            :class="{'valid': !$v.cluster.name.$invalid, 'invalid': $v.cluster.name.$invalid }" v-model="$v.cluster.name.$model" />
+                    </div>
+                </div>
+                <div>
+                    <button type="button" id="cancel-save" class="btn btn-secondary" v-on:click="previousState()">
+                        <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span>Cancel</span>
+                    </button>
+                    <button type="submit" id="save-entity" :disabled="$v.cluster.$invalid || isSaving" class="btn btn-primary">
+                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Save</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</template>
+<script lang="ts" src="./cluster-update.component.ts">
+</script>

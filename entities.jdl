@@ -1,0 +1,15 @@
+entity Broker {
+	brokerId String
+    host String
+    port Integer
+    isController Boolean
+}
+
+entity Cluster {
+	clusterId String
+	name String
+}
+
+relationship OneToMany {
+	Cluster{brokers(brokerId)} to Broker{cluster(name)}
+}
