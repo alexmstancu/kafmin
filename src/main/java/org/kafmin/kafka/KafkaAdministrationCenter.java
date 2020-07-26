@@ -20,14 +20,9 @@ public class KafkaAdministrationCenter {
     private Map<String, Admin> kafkaAdminByCluster = new HashMap<>();
 
     public KafkaAdministrationCenter() {
-        Admin kafkaAdminClient = createAdmin(HTTP_LOCALHOST_9093);
-        logger.debug("Starting the KafkaAdministrationCenter");
-        DescribeClusterResult describeClusterResult = kafkaAdminClient.describeCluster();
+        logger.debug("Starting the KafkaAdministrationCenter.");
         try {
-            logger.debug("Describing ClusterId: {}, Controller: {}, Nodes: {}.",
-                describeClusterResult.clusterId().get(),
-                describeClusterResult.controller().get(),
-                describeClusterResult.nodes().get());
+            describeCluster(HTTP_LOCALHOST_9093);
         } catch (Exception e) {
             logger.error("Something went wrong describing cluster " + HTTP_LOCALHOST_9093, e);
         }
@@ -36,9 +31,10 @@ public class KafkaAdministrationCenter {
     public DescribeClusterResult describeCluster(String clusterId) throws ExecutionException, InterruptedException {
         DescribeClusterResult clusterResult = getClusterAdmin(clusterId).describeCluster();
 
-        clusterResult.clusterId().get();
-        clusterResult.nodes().get();
-        clusterResult.controller().get();
+        logger.debug("Describing ClusterId: {}, Controller: {}, Nodes: {}.",
+            clusterResult.clusterId().get(),
+            clusterResult.controller().get(),
+            clusterResult.nodes().get());
 
         return clusterResult;
     }
