@@ -1,6 +1,7 @@
 package org.kafmin.web.rest;
 
 import org.kafmin.domain.Cluster;
+import org.kafmin.kafka.KafkaAdministrationCenter;
 import org.kafmin.repository.ClusterRepository;
 import org.kafmin.web.rest.errors.BadRequestAlertException;
 
@@ -36,6 +37,7 @@ public class ClusterResource {
     private final ClusterRepository clusterRepository;
 
     public ClusterResource(ClusterRepository clusterRepository) {
+        KafkaAdministrationCenter administrationCenter = new KafkaAdministrationCenter();
         this.clusterRepository = clusterRepository;
     }
 
