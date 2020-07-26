@@ -33,15 +33,19 @@ public class KafkaAdministrationCenter {
         }
     }
 
-    public DescribeClusterResult describeCluster(String clusterId) throws ExecutionException, InterruptedException {
+    public DescribeClusterResult describeCluster(String clusterId) {
         DescribeClusterResult clusterResult = getClusterAdmin(clusterId).describeCluster();
 
-        logger.debug("Describing ClusterId: {}, Controller: {}, Nodes: {}.",
-            clusterResult.clusterId().get(),
-            clusterResult.controller().get(),
-            clusterResult.nodes().get());
+        try {
+            logger.debug("Describing ClusterId: {}, Controller: {}, Nodes: {}.",
+                clusterResult.clusterId().get(),
+                clusterResult.controller().get(),
+                clusterResult.nodes().get());
+        } catch (Exception e) {
+            logger.error("Could not get the cluster description");
+        }
 
-        return clusterResult;
+        return null;
     }
 
     private Admin getClusterAdmin(String clusterId) {

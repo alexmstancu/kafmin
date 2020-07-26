@@ -3,6 +3,7 @@ package org.kafmin.web.rest;
 import org.kafmin.domain.Cluster;
 import org.kafmin.kafka.KafkaAdministrationCenter;
 import org.kafmin.repository.ClusterRepository;
+import org.kafmin.service.ClusterService;
 import org.kafmin.web.rest.errors.BadRequestAlertException;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -18,6 +19,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 /**
  * REST controller for managing {@link org.kafmin.domain.Cluster}.
@@ -35,10 +37,12 @@ public class ClusterResource {
     private String applicationName;
 
     private final ClusterRepository clusterRepository;
+    private final ClusterService clusterService;
 
-    public ClusterResource(ClusterRepository clusterRepository) {
-        KafkaAdministrationCenter administrationCenter = new KafkaAdministrationCenter();
+    public ClusterResource(ClusterRepository clusterRepository, ClusterService clusterService) {
         this.clusterRepository = clusterRepository;
+        this.clusterService = clusterService;
+        KafkaAdministrationCenter administrationCenter = new KafkaAdministrationCenter();
     }
 
     /**
@@ -49,12 +53,13 @@ public class ClusterResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/clusters")
-    public ResponseEntity<Cluster> createCluster(@RequestBody Cluster cluster) throws URISyntaxException {
+    public ResponseEntity<Cluster> createCluster(@RequestBody Cluster cluster) throws URISyntaxException, ExecutionException, InterruptedException {
         log.debug("REST request to save Cluster : {}", cluster);
         if (cluster.getId() != null) {
             throw new BadRequestAlertException("A new cluster cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Cluster result = clusterRepository.save(cluster);
+//        Cluster result = clusterRepository.save(cluster);
+        Cluster result = clusterService.save(cluster);
         return ResponseEntity.created(new URI("/api/clusters/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
