@@ -21,6 +21,11 @@ public class KafkaAdministrationCenter {
 
     public KafkaAdministrationCenter() {
         logger.debug("Starting the KafkaAdministrationCenter.");
+        testConnection();
+    }
+
+    // TODO this should be removed later on
+    private void testConnection() {
         try {
             describeCluster(HTTP_LOCALHOST_9093);
         } catch (Exception e) {
@@ -43,7 +48,7 @@ public class KafkaAdministrationCenter {
         return kafkaAdminByCluster.computeIfAbsent(clusterId, this::createAdmin);
     }
 
-    public Admin createAdmin(String clusterId) {
+    private Admin createAdmin(String clusterId) {
         Properties properties = new Properties();
         properties.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, clusterId);
         return Admin.create(properties);
