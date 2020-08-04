@@ -1,5 +1,6 @@
 package org.kafmin.web.rest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.kafmin.domain.Cluster;
 import org.kafmin.kafka.KafkaAdministrationCenter;
 import org.kafmin.repository.ClusterRepository;
@@ -55,14 +56,32 @@ public class ClusterResource {
     @PostMapping("/clusters")
     public ResponseEntity<Cluster> createCluster(@RequestBody Cluster cluster) throws URISyntaxException, ExecutionException, InterruptedException {
         log.debug("REST request to save Cluster : {}", cluster);
-        if (cluster.getId() != null) {
-            throw new BadRequestAlertException("A new cluster cannot already have an ID", ENTITY_NAME, "idexists");
+
+        validate(cluster);
+
+        Cluster result = clusterService.create(cluster);
+
+        if (result == null) {
+            throw new BadRequestAlertException("The cluster already exists.", ENTITY_NAME, "idexists");
         }
-//        Cluster result = clusterRepository.save(cluster);
-        Cluster result = clusterService.save(cluster);
+
         return ResponseEntity.created(new URI("/api/clusters/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
+    }
+
+    private void validate(Cluster cluster) {
+        if (cluster.getId() != null || cluster.getClusterId() != null) {
+            throw new BadRequestAlertException("A new cluster cannot already have an ID", ENTITY_NAME, "idexists");
+        }
+
+        if (cluster.getBrokers().isEmpty()) {
+            throw new BadRequestAlertException("At least one bootstrap server must be populated", ENTITY_NAME, "nobootstrap");
+        }
+
+        if (StringUtils.isBlank(cluster.getName())) {
+            throw new BadRequestAlertException("The cluster must have a unique name", ENTITY_NAME, "nobootstrap");
+        }
     }
 
     /**
