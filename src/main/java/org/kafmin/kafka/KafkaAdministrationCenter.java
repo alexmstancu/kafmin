@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.ExecutionException;
 
 @Service
 public class KafkaAdministrationCenter {
@@ -52,9 +51,10 @@ public class KafkaAdministrationCenter {
         return kafkaAdminByCluster.computeIfAbsent(clusterId, this::createAdmin);
     }
 
-    private Admin createAdmin(String clusterId) {
+
+    private Admin createAdmin(String bootstrapServers) {
         Properties properties = new Properties();
-        properties.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, clusterId);
+        properties.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         return Admin.create(properties);
     }
 }
