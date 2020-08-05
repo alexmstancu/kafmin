@@ -5,6 +5,7 @@ import org.kafmin.domain.Broker;
 
 import java.util.Collection;
 import java.util.Set;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 public class BrokerMapper {
@@ -23,5 +24,15 @@ public class BrokerMapper {
 
     public static Set<Broker> fromNodes(Collection<Node> nodes, Node controller) {
         return nodes.stream().map(n -> fromNode(n, controller)).collect(Collectors.toSet());
+    }
+
+    public static String toBootstrapServersStringList(Set<Broker> brokers) {
+        StringJoiner joiner = new StringJoiner(",");
+        brokers.forEach(broker -> joiner.add(createIpAddress(broker)));
+        return joiner.toString();
+    }
+
+    private static String createIpAddress(Broker broker) {
+        return broker.getHost() + ":" + broker.getPort();
     }
 }
