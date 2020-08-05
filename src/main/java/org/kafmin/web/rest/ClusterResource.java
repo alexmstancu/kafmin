@@ -43,7 +43,6 @@ public class ClusterResource {
     public ClusterResource(ClusterRepository clusterRepository, ClusterService clusterService) {
         this.clusterRepository = clusterRepository;
         this.clusterService = clusterService;
-        KafkaAdministrationCenter administrationCenter = new KafkaAdministrationCenter();
     }
 
     /**
@@ -125,8 +124,9 @@ public class ClusterResource {
     @GetMapping("/clusters/{id}")
     public ResponseEntity<Cluster> getCluster(@PathVariable Long id) {
         log.debug("REST request to get Cluster : {}", id);
-        Optional<Cluster> cluster = clusterRepository.findById(id);
+        Optional<Cluster> cluster = clusterService.get(id);
         return ResponseUtil.wrapOrNotFound(cluster);
+
     }
 
     /**

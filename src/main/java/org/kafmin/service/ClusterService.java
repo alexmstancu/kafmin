@@ -43,7 +43,7 @@ public class ClusterService {
         return createdCluster;
     }
 
-    public Cluster get() {
+    public Optional<Cluster> get(Long id) {
         return null;
 
     }

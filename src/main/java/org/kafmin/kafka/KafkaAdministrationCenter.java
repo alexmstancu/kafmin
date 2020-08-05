@@ -22,10 +22,10 @@ public class KafkaAdministrationCenter {
 
     private Map<String, Admin> kafkaAdminByClusterId = new HashMap<>();
 
-    public KafkaAdministrationCenter() {
-        logger.debug("Starting the KafkaAdministrationCenter.");
-        testConnection();
-    }
+//    public KafkaAdministrationCenter() {
+//        logger.debug("Starting the KafkaAdministrationCenter.");
+//        testConnection();
+//    }
 
     // TODO this should be removed later on
     private void testConnection() {
