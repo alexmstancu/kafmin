@@ -36,11 +36,20 @@ public class KafkaAdministrationCenter {
         }
     }
 
+    /**
+     * Gets the cluster description for that cluster.
+     *
+     * @return the already 'described' cluster or null if could not 'get' the description
+     */
     public DescribeClusterResult describeCluster(String clusterId) {
-        DescribeClusterResult clusterResult = getClusterAdmin(clusterId).describeCluster(describeOptions);
-        return describeClusterResultGet(clusterResult);
+        return describeClusterResultGet(getClusterAdmin(clusterId).describeCluster(describeOptions));
     }
 
+    /**
+     * Connects to the bootstrapServer and gets the cluster description for that cluster.
+     *
+     * @return the already 'described' cluster or null if could not connect or could not 'get' the description
+     */
     public DescribeClusterResult createCluster(String bootstrapServers) throws ExecutionException, InterruptedException {
         Admin admin = createAdmin(bootstrapServers);
         if (admin == null) {
