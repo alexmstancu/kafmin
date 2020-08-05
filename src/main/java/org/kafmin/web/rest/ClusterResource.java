@@ -90,10 +90,9 @@ public class ClusterResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated cluster,
      * or with status {@code 400 (Bad Request)} if the cluster is not valid,
      * or with status {@code 500 (Internal Server Error)} if the cluster couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/clusters")
-    public ResponseEntity<Cluster> updateCluster(@RequestBody Cluster cluster) throws URISyntaxException {
+    public ResponseEntity<Cluster> updateCluster(@RequestBody Cluster cluster) {
         log.debug("REST request to update Cluster : {}", cluster);
         if (cluster.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
@@ -122,7 +121,7 @@ public class ClusterResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the cluster, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/clusters/{id}")
-    public ResponseEntity<Cluster> getCluster(@PathVariable Long id) {
+    public ResponseEntity<Cluster> getCluster(@PathVariable Long id) throws ExecutionException, InterruptedException {
         log.debug("REST request to get Cluster : {}", id);
         Optional<Cluster> cluster = clusterService.get(id);
         return ResponseUtil.wrapOrNotFound(cluster);

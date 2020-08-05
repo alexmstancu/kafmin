@@ -43,9 +43,17 @@ public class ClusterService {
         return createdCluster;
     }
 
-    public Optional<Cluster> get(Long id) {
-        return null;
+    public Optional<Cluster> get(Long id) throws ExecutionException, InterruptedException {
+        Optional<Cluster> savedCluster = clusterRepository.findById(id);
+        if (!savedCluster.isPresent()) {
+            return savedCluster;
+        }
 
+        Cluster actualCluster = ClusterMapper.fromDescription(adminCenter.describeCluster(savedCluster.get().getClusterId()));
+        actualCluster.setId(savedCluster.get().getId());
+        actualCluster.setName(savedCluster.get().getName());
+
+        return Optional.of(actualCluster);
     }
 
     public Cluster update(Cluster cluster) throws ExecutionException, InterruptedException {
