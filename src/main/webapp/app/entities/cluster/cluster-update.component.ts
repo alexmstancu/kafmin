@@ -3,7 +3,7 @@ import { Component, Vue, Inject } from 'vue-property-decorator';
 import { numeric, required, minLength, maxLength, minValue, maxValue } from 'vuelidate/lib/validators';
 
 import BrokerService from '../broker/broker.service';
-import { IBroker } from '@/shared/model/broker.model';
+import { IBroker, Broker } from '@/shared/model/broker.model';
 
 import AlertService from '@/shared/alert/alert.service';
 import { ICluster, Cluster } from '@/shared/model/cluster.model';
@@ -27,6 +27,7 @@ export default class ClusterUpdate extends Vue {
   @Inject('brokerService') private brokerService: () => BrokerService;
 
   public brokers: IBroker[] = [];
+  public initialBroker: IBroker = new Broker();
   public isSaving = false;
   public currentLanguage = '';
 
@@ -61,6 +62,9 @@ export default class ClusterUpdate extends Vue {
           this.alertService().showAlert(message, 'info');
         });
     } else {
+      this.addBroker(this.initialBroker.host, this.initialBroker.port)
+      this.cluster.brokers = this.brokers;
+
       this.clusterService()
         .create(this.cluster)
         .then(param => {
@@ -90,5 +94,12 @@ export default class ClusterUpdate extends Vue {
       .then(res => {
         this.brokers = res.data;
       });
+  }
+
+  public addBroker(host, port) : void {
+    const broker = new Broker();
+    broker.host = host;
+    broker.port = port;
+    this.brokers.push(broker);
   }
 }

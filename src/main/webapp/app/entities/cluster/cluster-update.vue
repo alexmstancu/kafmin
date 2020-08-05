@@ -9,16 +9,61 @@
                         <input type="text" class="form-control" id="id" name="id"
                                v-model="cluster.id" readonly />
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label class="form-control-label" for="cluster-clusterId">Cluster Id</label>
                         <input type="text" class="form-control" name="clusterId" id="cluster-clusterId"
                             :class="{'valid': !$v.cluster.clusterId.$invalid, 'invalid': $v.cluster.clusterId.$invalid }" v-model="$v.cluster.clusterId.$model" />
-                    </div>
+                    </div> -->
                     <div class="form-group">
-                        <label class="form-control-label" for="cluster-name">Name</label>
+                        <label class="form-control-label" for="cluster-name">Cluster Name</label>
                         <input type="text" class="form-control" name="name" id="cluster-name"
                             :class="{'valid': !$v.cluster.name.$invalid, 'invalid': $v.cluster.name.$invalid }" v-model="$v.cluster.name.$model" />
                     </div>
+
+                    <!-- list the brokers and let the user add more brokers (host & port only) ONLY IN CASE OF CREATE -->
+                    <label class="form-control-label" for="brokers-table">Bootstrap servers - you need to add at least one</label>
+                    <!-- <div class="table-responsive" v-if="brokers && brokers.length > 0"> -->
+
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th><span>Host</span></th>
+                                    <th><span>Port</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="text" class="form-control" id="id" name="id" v-model="initialBroker.host"/></td>
+                                    <td><input type="text" class="form-control" id="id" name="id" v-model="initialBroker.port"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+
+                    <!-- just show all brokers when in EDIT (but don't let them actually edit the brokers) -->
+                    <!-- <div class="table-responsive">
+
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th><span>Host</span></th>
+                                    <th><span>Port</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                <tr v-for="broker in brokers" :key="broker.host">
+                                    <td>{{broker.host}}</td>
+                                    <td>{{broker.port}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div> -->
+
+
                 </div>
                 <div>
                     <button type="button" id="cancel-save" class="btn btn-secondary" v-on:click="previousState()">
