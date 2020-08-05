@@ -25,6 +25,7 @@ public class ClusterService {
             return null;
         }
 
+        // it comes with just name & at least one broker
         Cluster incomingCluster = clusterRepository.save(cluster);
         Cluster actualCluster = ClusterMapper.fromDescription(adminCenter.describeCluster(incomingCluster.getClusterId()));
         actualCluster.setName(incomingCluster.getName());
