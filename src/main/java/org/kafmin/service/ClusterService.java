@@ -21,24 +21,31 @@ public class ClusterService {
     @Autowired
     private KafkaAdministrationCenter adminCenter;
 
-    public Cluster create(Cluster cluster) throws ExecutionException, InterruptedException {
-        Optional<Cluster> existing = clusterRepository.findByName(cluster.getName());
+    public Cluster create(Cluster incomingCluster) throws ExecutionException, InterruptedException {
+        Optional<Cluster> existing = clusterRepository.findByName(incomingCluster.getName());
         if (existing.isPresent()) {
             return null;
         }
 
         // it comes with just name & at least one broker
-        DescribeClusterResult createdClusterResult = adminCenter.createCluster(BrokerMapper.toBootstrapServersStringList(cluster.getBrokers()));
+        DescribeClusterResult createdClusterResult = adminCenter.createCluster(BrokerMapper.toBootstrapServersStringList(incomingCluster.getBrokers()));
         if (createdClusterResult == null) {
             return null;
         }
 
-        Cluster incomingCluster = clusterRepository.save(cluster);
         Cluster createdCluster = ClusterMapper.fromDescription(createdClusterResult);
 
-        createdCluster.setName(incomingCluster.getName());
-        createdCluster.setId(incomingCluster.getId());
+        incomingCluster.setClusterId(createdCluster.getClusterId());
+        Cluster savedCluster = clusterRepository.save(incomingCluster);
+
+        createdCluster.setName(savedCluster.getName());
+        createdCluster.setId(savedCluster.getId());
         return createdCluster;
+    }
+
+    public Cluster get() {
+        return null;
+
     }
 
     public Cluster update(Cluster cluster) throws ExecutionException, InterruptedException {
