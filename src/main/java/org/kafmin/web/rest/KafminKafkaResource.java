@@ -32,7 +32,8 @@ public class KafminKafkaResource {
 
     public KafminKafkaResource(KafkaProperties kafkaProperties) {
         this.kafkaProperties = kafkaProperties;
-        this.producer = new KafkaProducer<>(kafkaProperties.getProducerProps());
+        // TODO create the producer for each cluster
+//        this.producer = new KafkaProducer<>(kafkaProperties.getProducerProps());
     }
 
     @PostMapping("/publish/{topic}")
