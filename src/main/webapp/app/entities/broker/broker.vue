@@ -36,9 +36,10 @@
                 <tbody>
                 <tr v-for="broker in brokers"
                     :key="broker.id">
-                    <!-- <td>
+                    <td>
+                        <!-- TODO move the router link to brokerId -->
                         <router-link :to="{name: 'BrokerView', params: {brokerId: broker.id}}">{{broker.id}}</router-link>
-                    </td> -->
+                    </td>
                     <td>{{broker.brokerId}}</td>
                     <td>{{broker.host}}</td>
                     <td>{{broker.port}}</td>

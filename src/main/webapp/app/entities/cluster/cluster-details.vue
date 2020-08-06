@@ -16,7 +16,33 @@
                     <dd>
                         <span>{{cluster.name}}</span>
                     </dd>
-                    <!-- TODO list the brokers here -->
+
+                    <dt>
+                        <span>Brokers</span>
+                    </dt>
+                    <div class="table-responsive" v-if="cluster.id">
+
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th><span>Broker ID</span></th>
+                                    <th><span>Host</span></th>
+                                    <th><span>Port</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                <tr v-for="broker in cluster.brokers" :key="broker.host">
+                                    <!-- TODO create hyperlink on the brokerId to the broker details page -->
+                                    <td><span>{{broker.brokerId}}</span></td>
+                                    <td><span>{{broker.host}}</span></td>
+                                    <td><span>{{broker.port}}</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- TODO print number topics, number of partitions, number of brokers -->
+
                 </dl>
                 <button type="submit"
                         v-on:click.prevent="previousState()"
