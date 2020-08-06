@@ -25,9 +25,9 @@
                 <thead>
                 <tr>
                     <th><span>ID</span></th>
-                    <th><span>Cluster Id</span></th>
                     <th><span>Name</span></th>
-                    <th></th>
+                    <th><span>Cluster Id</span></th>
+                    <th><span># of brokers</span></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -36,8 +36,9 @@
                     <td>
                         <router-link :to="{name: 'ClusterView', params: {clusterId: cluster.id}}">{{cluster.id}}</router-link>
                     </td>
-                    <td>{{cluster.clusterId}}</td>
                     <td>{{cluster.name}}</td>
+                    <td>{{cluster.clusterId}}</td>
+                    <td>{{getBrokersCount(cluster)}}</td>
                     <td class="text-right">
                         <div class="btn-group">
                             <router-link :to="{name: 'ClusterView', params: {clusterId: cluster.id}}" tag="button" class="btn btn-info btn-sm details">

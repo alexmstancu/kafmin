@@ -16,6 +16,7 @@
                     <dd>
                         <span>{{cluster.name}}</span>
                     </dd>
+                    <!-- TODO list the brokers here -->
                 </dl>
                 <button type="submit"
                         v-on:click.prevent="previousState()"
