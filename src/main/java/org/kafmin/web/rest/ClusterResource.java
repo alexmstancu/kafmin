@@ -109,9 +109,9 @@ public class ClusterResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of clusters in body.
      */
     @GetMapping("/clusters")
-    public List<Cluster> getAllClusters() {
+    public List<Cluster> getAllClusters() throws ExecutionException, InterruptedException {
         log.debug("REST request to get all Clusters");
-        return clusterRepository.findAll();
+        return clusterService.getAll();
     }
 
     /**

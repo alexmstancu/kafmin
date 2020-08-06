@@ -9,6 +9,8 @@ import org.kafmin.service.mapper.ClusterMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
@@ -33,35 +35,54 @@ public class ClusterService {
             return null;
         }
 
-        Cluster createdCluster = ClusterMapper.fromDescription(createdClusterResult);
+        Cluster kafkaCluster = ClusterMapper.fromDescription(createdClusterResult);
 
-        incomingCluster.setClusterId(createdCluster.getClusterId());
-        Cluster savedCluster = clusterRepository.save(incomingCluster);
+        incomingCluster.setClusterId(kafkaCluster.getClusterId());
+        Cluster dbCluster = clusterRepository.save(incomingCluster);
 
-        createdCluster.setName(savedCluster.getName());
-        createdCluster.setId(savedCluster.getId());
-        return createdCluster;
+        enhance(kafkaCluster, dbCluster);
+        return kafkaCluster;
+    }
+
+    public Cluster update(Cluster incomingCluster) throws ExecutionException, InterruptedException {
+        Cluster dbCluster = clusterRepository.save(incomingCluster);
+        Cluster kafkaCluster = ClusterMapper.fromDescription(adminCenter.describeCluster(dbCluster.getClusterId()));
+        enhance(kafkaCluster, dbCluster);
+        return kafkaCluster;
     }
 
     public Optional<Cluster> get(Long id) throws ExecutionException, InterruptedException {
-        Optional<Cluster> savedCluster = clusterRepository.findById(id);
-        if (!savedCluster.isPresent()) {
-            return savedCluster;
+        Optional<Cluster> dbCluster = clusterRepository.findById(id);
+        if (!dbCluster.isPresent()) {
+            return dbCluster;
         }
 
-        Cluster actualCluster = ClusterMapper.fromDescription(adminCenter.describeCluster(savedCluster.get().getClusterId()));
-        actualCluster.setId(savedCluster.get().getId());
-        actualCluster.setName(savedCluster.get().getName());
+        Cluster kafkaCluster = ClusterMapper.fromDescription(adminCenter.describeCluster(dbCluster.get().getClusterId()));
+        enhance(kafkaCluster, dbCluster.get());
 
-        return Optional.of(actualCluster);
+        return Optional.of(kafkaCluster);
     }
 
-    public Cluster update(Cluster cluster) throws ExecutionException, InterruptedException {
-        Cluster incomingCluster = clusterRepository.save(cluster);
-        Cluster actualCluster = ClusterMapper.fromDescription(adminCenter.describeCluster(incomingCluster.getClusterId()));
-        actualCluster.setName(incomingCluster.getName());
-        actualCluster.setId(incomingCluster.getId());
-        return actualCluster;
+    public List<Cluster> getAll() throws ExecutionException, InterruptedException {
+        // they have id and name
+        List<Cluster> dbClusters = clusterRepository.findAll();
+        if (dbClusters.isEmpty()) {
+            return dbClusters;
+        }
+
+        List<Cluster> result = new ArrayList<>();
+
+        for (Cluster dbCluster : dbClusters) {
+            Cluster kafkaCluster = ClusterMapper.fromDescription(adminCenter.describeCluster(dbCluster.getClusterId()));
+            enhance(kafkaCluster, dbCluster);
+            result.add(kafkaCluster);
+        }
+
+        return result;
     }
 
+    private void enhance(Cluster kafkaCluster, Cluster dbCluster) {
+        kafkaCluster.setId(dbCluster.getId());
+        kafkaCluster.setName(dbCluster.getName());
+    }
 }

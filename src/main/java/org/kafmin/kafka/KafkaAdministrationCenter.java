@@ -58,7 +58,12 @@ public class KafkaAdministrationCenter {
 
         DescribeClusterResult clusterResult = describeClusterResultGet(admin.describeCluster(describeOptions));
         if (clusterResult != null) {
-            addClusterAdmin(clusterResult.clusterId().get(), admin);
+            String clusterId = clusterResult.clusterId().get();
+            if (kafkaAdminByClusterId.containsKey(clusterId)) {
+                return null;
+            }
+
+            addClusterAdmin(clusterId, admin);
         }
         return clusterResult;
     }
