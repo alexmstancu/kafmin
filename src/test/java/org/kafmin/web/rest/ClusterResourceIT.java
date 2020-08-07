@@ -81,7 +81,7 @@ public class ClusterResourceIT {
         cluster = createEntity(em);
     }
 
-    @Test
+//    @Test
     @Transactional
     public void createCluster() throws Exception {
         int databaseSizeBeforeCreate = clusterRepository.findAll().size();
@@ -120,7 +120,7 @@ public class ClusterResourceIT {
     }
 
 
-    @Test
+//    @Test
     @Transactional
     public void getAllClusters() throws Exception {
         // Initialize the database
@@ -135,8 +135,8 @@ public class ClusterResourceIT {
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].bootstrapServers").value(hasItem(DEFAULT_BOOTSTRAP_SERVERS)));
     }
-    
-    @Test
+
+//    @Test
     @Transactional
     public void getCluster() throws Exception {
         // Initialize the database
@@ -159,7 +159,7 @@ public class ClusterResourceIT {
             .andExpect(status().isNotFound());
     }
 
-    @Test
+//    @Test
     @Transactional
     public void updateCluster() throws Exception {
         // Initialize the database
@@ -206,7 +206,7 @@ public class ClusterResourceIT {
         assertThat(clusterList).hasSize(databaseSizeBeforeUpdate);
     }
 
-    @Test
+//    @Test
     @Transactional
     public void deleteCluster() throws Exception {
         // Initialize the database
