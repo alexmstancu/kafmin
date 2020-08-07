@@ -5,11 +5,16 @@ import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.DescribeClusterOptions;
 import org.apache.kafka.clients.admin.DescribeClusterResult;
 import org.apache.kafka.common.KafkaException;
+import org.kafmin.domain.Cluster;
+import org.kafmin.repository.ClusterRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
@@ -21,6 +26,22 @@ public class KafkaAdministrationCenter {
     public static final String HTTP_LOCALHOST_9093 = "http://localhost:9092";
 
     private final Map<String, Admin> kafkaAdminByClusterId = new HashMap<>();
+
+    @Autowired
+    private ClusterRepository clusterRepository;
+
+    @PostConstruct
+    public void init() {
+        List<Cluster> existingClusters = clusterRepository.findAll();
+        logger.debug("Initializing the KafkaAdminClients for the existing clusters in the DB: {}", existingClusters);
+        existingClusters.forEach(cluster -> {
+            try {
+                createCluster(cluster.getBootstrapServers());
+            } catch (Exception e) {
+                logger.error("Could not initialize KafkaAdminClient at startup for cluster {}", cluster, e);
+            }
+        });
+    }
 
     // CLUSTER ADMINISTRATION
 
