@@ -20,21 +20,9 @@ public class KafkaAdministrationCenter {
     private static final DescribeClusterOptions describeOptions = new DescribeClusterOptions().timeoutMs(3000);
     public static final String HTTP_LOCALHOST_9093 = "http://localhost:9092";
 
-    private Map<String, Admin> kafkaAdminByClusterId = new HashMap<>();
+    private final Map<String, Admin> kafkaAdminByClusterId = new HashMap<>();
 
-//    public KafkaAdministrationCenter() {
-//        logger.debug("Starting the KafkaAdministrationCenter.");
-//        testConnection();
-//    }
-
-    // TODO this should be removed later on
-    private void testConnection() {
-        try {
-            createCluster(HTTP_LOCALHOST_9093);
-        } catch (Exception e) {
-            logger.error("Something went wrong describing cluster with bootstrapServers" + HTTP_LOCALHOST_9093, e);
-        }
-    }
+    // CLUSTER ADMINISTRATION
 
     /**
      * Gets the cluster description for that cluster.
@@ -68,6 +56,10 @@ public class KafkaAdministrationCenter {
         return clusterResult;
     }
 
+    public void deleteCluster(String clusterId) {
+        kafkaAdminByClusterId.remove(clusterId);
+    }
+
     private void addClusterAdmin(String clusterId, Admin admin) {
         kafkaAdminByClusterId.put(clusterId, admin);
     }
@@ -89,6 +81,7 @@ public class KafkaAdministrationCenter {
         return clusterResult;
     }
 
+    // KAFKA ADMIN
     private Admin createAdmin(String bootstrapServers) {
         try {
             logger.debug("Creating KafkaAdminClient for bootstrapServers: {}", bootstrapServers);
@@ -100,4 +93,5 @@ public class KafkaAdministrationCenter {
             return null;
         }
     }
+
 }

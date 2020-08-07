@@ -38,6 +38,7 @@ public class ClusterService {
         Cluster kafkaCluster = ClusterMapper.fromDescription(createdClusterResult);
 
         incomingCluster.setClusterId(kafkaCluster.getClusterId());
+        incomingCluster.setBrokers(kafkaCluster.getBrokers());
         Cluster dbCluster = clusterRepository.save(incomingCluster);
 
         enhance(kafkaCluster, dbCluster);
@@ -79,6 +80,15 @@ public class ClusterService {
         }
 
         return result;
+    }
+
+    public void delete(Long id) {
+        Optional<Cluster> optional = clusterRepository.findById(id);
+        if (optional.isPresent()) {
+            String clusterId = optional.get().getClusterId();
+            adminCenter.deleteCluster(clusterId);
+            clusterRepository.deleteById(id);
+        }
     }
 
     private void enhance(Cluster kafkaCluster, Cluster dbCluster) {

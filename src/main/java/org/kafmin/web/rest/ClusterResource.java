@@ -97,6 +97,7 @@ public class ClusterResource {
         if (cluster.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        // TODO
         Cluster result = clusterRepository.save(cluster);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, cluster.getId().toString()))
@@ -118,7 +119,7 @@ public class ClusterResource {
      * {@code GET  /clusters/:id} : get the "id" cluster.
      *
      * @param id the id of the cluster to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the cluster, or with status {@code 404 (Not Found)}.
+     * @return the {@link ResponseEntity} with status {@code 200 \(OK)} and with body the cluster, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/clusters/{id}")
     public ResponseEntity<Cluster> getCluster(@PathVariable Long id) throws ExecutionException, InterruptedException {
@@ -137,7 +138,7 @@ public class ClusterResource {
     @DeleteMapping("/clusters/{id}")
     public ResponseEntity<Void> deleteCluster(@PathVariable Long id) {
         log.debug("REST request to delete Cluster : {}", id);
-        clusterRepository.deleteById(id);
+        clusterService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
     }
 }
