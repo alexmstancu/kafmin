@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,6 +79,7 @@ public class KafkaAdministrationCenter {
     }
 
     public void deleteCluster(String clusterId) {
+        kafkaAdminByClusterId.get(clusterId).close(Duration.ofSeconds(5));
         kafkaAdminByClusterId.remove(clusterId);
     }
 
