@@ -13,6 +13,7 @@ const validations: any = {
   cluster: {
     clusterId: {},
     name: {},
+    bootstrapServers: {},
   },
 };
 

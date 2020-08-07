@@ -126,7 +126,6 @@ public class ClusterResource {
         log.debug("REST request to get Cluster : {}", id);
         Optional<Cluster> cluster = clusterService.get(id);
         return ResponseUtil.wrapOrNotFound(cluster);
-
     }
 
     /**

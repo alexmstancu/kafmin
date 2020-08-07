@@ -22,6 +22,9 @@
             <column name="name" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
+            <column name="bootstrap_servers" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
     </changeSet>
@@ -47,6 +50,7 @@
             <column name="id" type="numeric"/>
             <column name="cluster_id" type="string"/>
             <column name="name" type="string"/>
+            <column name="bootstrap_servers" type="string"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

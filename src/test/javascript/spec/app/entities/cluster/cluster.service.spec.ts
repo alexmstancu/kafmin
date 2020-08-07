@@ -30,7 +30,7 @@ describe('Service Tests', () => {
     beforeEach(() => {
       service = new ClusterService();
 
-      elemDefault = new Cluster(0, 'AAAAAAA', 'AAAAAAA');
+      elemDefault = new Cluster(0, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA');
     });
 
     describe('Service methods', () => {
@@ -84,6 +84,7 @@ describe('Service Tests', () => {
           {
             clusterId: 'BBBBBB',
             name: 'BBBBBB',
+            bootstrapServers: 'BBBBBB',
           },
           elemDefault
         );
@@ -112,6 +113,7 @@ describe('Service Tests', () => {
           {
             clusterId: 'BBBBBB',
             name: 'BBBBBB',
+            bootstrapServers: 'BBBBBB',
           },
           elemDefault
         );

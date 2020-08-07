@@ -29,6 +29,9 @@ public class Cluster implements Serializable {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "bootstrap_servers")
+    private String bootstrapServers;
+
     @OneToMany(mappedBy = "cluster")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Broker> brokers = new HashSet<>();
@@ -66,6 +69,19 @@ public class Cluster implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getBootstrapServers() {
+        return bootstrapServers;
+    }
+
+    public Cluster bootstrapServers(String bootstrapServers) {
+        this.bootstrapServers = bootstrapServers;
+        return this;
+    }
+
+    public void setBootstrapServers(String bootstrapServers) {
+        this.bootstrapServers = bootstrapServers;
     }
 
     public Set<Broker> getBrokers() {
@@ -117,6 +133,7 @@ public class Cluster implements Serializable {
             "id=" + getId() +
             ", clusterId='" + getClusterId() + "'" +
             ", name='" + getName() + "'" +
+            ", bootstrapServers='" + getBootstrapServers() + "'" +
             "}";
     }
 }

@@ -35,6 +35,9 @@ public class ClusterResourceIT {
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
+    private static final String DEFAULT_BOOTSTRAP_SERVERS = "AAAAAAAAAA";
+    private static final String UPDATED_BOOTSTRAP_SERVERS = "BBBBBBBBBB";
+
     @Autowired
     private ClusterRepository clusterRepository;
 
@@ -55,7 +58,8 @@ public class ClusterResourceIT {
     public static Cluster createEntity(EntityManager em) {
         Cluster cluster = new Cluster()
             .clusterId(DEFAULT_CLUSTER_ID)
-            .name(DEFAULT_NAME);
+            .name(DEFAULT_NAME)
+            .bootstrapServers(DEFAULT_BOOTSTRAP_SERVERS);
         return cluster;
     }
     /**
@@ -67,7 +71,8 @@ public class ClusterResourceIT {
     public static Cluster createUpdatedEntity(EntityManager em) {
         Cluster cluster = new Cluster()
             .clusterId(UPDATED_CLUSTER_ID)
-            .name(UPDATED_NAME);
+            .name(UPDATED_NAME)
+            .bootstrapServers(UPDATED_BOOTSTRAP_SERVERS);
         return cluster;
     }
 
@@ -92,6 +97,7 @@ public class ClusterResourceIT {
         Cluster testCluster = clusterList.get(clusterList.size() - 1);
         assertThat(testCluster.getClusterId()).isEqualTo(DEFAULT_CLUSTER_ID);
         assertThat(testCluster.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testCluster.getBootstrapServers()).isEqualTo(DEFAULT_BOOTSTRAP_SERVERS);
     }
 
     @Test
@@ -126,7 +132,8 @@ public class ClusterResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(cluster.getId().intValue())))
             .andExpect(jsonPath("$.[*].clusterId").value(hasItem(DEFAULT_CLUSTER_ID)))
-            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)));
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
+            .andExpect(jsonPath("$.[*].bootstrapServers").value(hasItem(DEFAULT_BOOTSTRAP_SERVERS)));
     }
     
     @Test
@@ -141,7 +148,8 @@ public class ClusterResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(cluster.getId().intValue()))
             .andExpect(jsonPath("$.clusterId").value(DEFAULT_CLUSTER_ID))
-            .andExpect(jsonPath("$.name").value(DEFAULT_NAME));
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
+            .andExpect(jsonPath("$.bootstrapServers").value(DEFAULT_BOOTSTRAP_SERVERS));
     }
     @Test
     @Transactional
@@ -165,7 +173,8 @@ public class ClusterResourceIT {
         em.detach(updatedCluster);
         updatedCluster
             .clusterId(UPDATED_CLUSTER_ID)
-            .name(UPDATED_NAME);
+            .name(UPDATED_NAME)
+            .bootstrapServers(UPDATED_BOOTSTRAP_SERVERS);
 
         restClusterMockMvc.perform(put("/api/clusters")
             .contentType(MediaType.APPLICATION_JSON)
@@ -178,6 +187,7 @@ public class ClusterResourceIT {
         Cluster testCluster = clusterList.get(clusterList.size() - 1);
         assertThat(testCluster.getClusterId()).isEqualTo(UPDATED_CLUSTER_ID);
         assertThat(testCluster.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testCluster.getBootstrapServers()).isEqualTo(UPDATED_BOOTSTRAP_SERVERS);
     }
 
     @Test

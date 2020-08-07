@@ -16,7 +16,6 @@
                     <dd>
                         <span>{{cluster.name}}</span>
                     </dd>
-
                     <dt>
                         <span>Brokers</span>
                     </dt>
@@ -31,7 +30,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                
+
                                 <tr v-for="broker in cluster.brokers" :key="broker.host">
                                     <!-- TODO create hyperlink on the brokerId to the broker details page -->
                                     <td><span>{{broker.brokerId}}</span></td>

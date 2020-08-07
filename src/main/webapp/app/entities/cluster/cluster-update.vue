@@ -6,7 +6,8 @@
                 <div>
                     <div class="form-group" v-if="cluster.id">
                         <label for="id">ID</label>
-                        <input type="text" class="form-control" id="id" name="id" v-model="cluster.id" readonly />
+                        <input type="text" class="form-control" id="id" name="id"
+                               v-model="cluster.id" readonly />
                     </div>
                     <div class="form-group" v-if="cluster.id">
                         <label class="form-control-label" for="cluster-clusterId">Cluster Id</label>
@@ -40,7 +41,6 @@
                             </tbody>
                         </table>
                     </div>
-
                 </div>
                 <div>
                     <button type="button" id="cancel-save" class="btn btn-secondary" v-on:click="previousState()">
