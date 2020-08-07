@@ -38,6 +38,7 @@ public class ClusterService {
         Cluster kafkaCluster = ClusterMapper.fromDescription(createdClusterResult);
 
         incomingCluster.setClusterId(kafkaCluster.getClusterId());
+        // TODO save the brokers in the DB
         incomingCluster.setBrokers(kafkaCluster.getBrokers());
         Cluster dbCluster = clusterRepository.save(incomingCluster);
 
