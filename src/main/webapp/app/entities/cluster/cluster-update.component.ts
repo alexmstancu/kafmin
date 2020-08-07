@@ -63,7 +63,7 @@ export default class ClusterUpdate extends Vue {
           this.alertService().showAlert(message, 'info');
         });
     } else {
-      this.addBroker(this.initialBroker.host, this.initialBroker.port)
+      this.addBroker(this.initialBroker.host, this.initialBroker.port);
       this.cluster.brokers = this.brokers;
 
       this.clusterService()
@@ -97,7 +97,7 @@ export default class ClusterUpdate extends Vue {
       });
   }
 
-  public addBroker(host, port) : void {
+  public addBroker(host, port): void {
     const broker = new Broker();
     broker.host = host;
     broker.port = port;

@@ -67,7 +67,7 @@ export default class Cluster extends mixins(AlertMixin) {
   }
 
   public getBrokersCount(cluster: ICluster): number {
-    if (cluster.brokers == null || cluster.brokers.length == 0) {
+    if (cluster.brokers == null || cluster.brokers.length === 0) {
       return 0;
     }
     return cluster.brokers.length;
