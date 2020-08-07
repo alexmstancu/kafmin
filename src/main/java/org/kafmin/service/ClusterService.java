@@ -38,8 +38,7 @@ public class ClusterService {
         Cluster kafkaCluster = ClusterMapper.fromDescription(createdClusterResult);
 
         incomingCluster.setClusterId(kafkaCluster.getClusterId());
-        // TODO save the brokers in the DB
-        incomingCluster.setBrokers(kafkaCluster.getBrokers());
+        incomingCluster.setBootstrapServers(BrokerMapper.toBootstrapServersStringList(kafkaCluster.getBrokers()));
         Cluster dbCluster = clusterRepository.save(incomingCluster);
 
         enhance(kafkaCluster, dbCluster);
@@ -47,8 +46,15 @@ public class ClusterService {
     }
 
     public Cluster update(Cluster incomingCluster) throws ExecutionException, InterruptedException {
-        Cluster dbCluster = clusterRepository.save(incomingCluster);
+        String newName = incomingCluster.getName();
+
+        Cluster dbCluster = clusterRepository.findById(incomingCluster.getId()).get();
         Cluster kafkaCluster = ClusterMapper.fromDescription(adminCenter.describeCluster(dbCluster.getClusterId()));
+
+        dbCluster.setName(newName);
+        dbCluster.setBootstrapServers(BrokerMapper.toBootstrapServersStringList(kafkaCluster.getBrokers()));
+        clusterRepository.save(dbCluster);
+
         enhance(kafkaCluster, dbCluster);
         return kafkaCluster;
     }

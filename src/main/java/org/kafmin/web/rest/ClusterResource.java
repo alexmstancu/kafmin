@@ -92,13 +92,13 @@ public class ClusterResource {
      * or with status {@code 500 (Internal Server Error)} if the cluster couldn't be updated.
      */
     @PutMapping("/clusters")
-    public ResponseEntity<Cluster> updateCluster(@RequestBody Cluster cluster) {
+    public ResponseEntity<Cluster> updateCluster(@RequestBody Cluster cluster) throws ExecutionException, InterruptedException {
         log.debug("REST request to update Cluster : {}", cluster);
         if (cluster.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         // TODO
-        Cluster result = clusterRepository.save(cluster);
+        Cluster result = clusterService.update(cluster);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, cluster.getId().toString()))
             .body(result);
