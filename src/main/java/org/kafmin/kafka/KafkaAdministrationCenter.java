@@ -83,14 +83,6 @@ public class KafkaAdministrationCenter {
         kafkaAdminByClusterId.remove(clusterId);
     }
 
-    private void addClusterAdmin(String clusterId, Admin admin) {
-        kafkaAdminByClusterId.put(clusterId, admin);
-    }
-
-    private Admin getClusterAdmin(String clusterId) {
-        return kafkaAdminByClusterId.get(clusterId);
-    }
-
     private DescribeClusterResult describeClusterResultGet(DescribeClusterResult clusterResult) {
         try {
             logger.debug("Describing ClusterId: {}, Controller: {}, Nodes: {}.",
@@ -105,6 +97,14 @@ public class KafkaAdministrationCenter {
     }
 
     // KAFKA ADMIN
+
+    private Admin getClusterAdmin(String clusterId) {
+        return kafkaAdminByClusterId.get(clusterId);
+    }
+
+    private void addClusterAdmin(String clusterId, Admin admin) {
+        kafkaAdminByClusterId.put(clusterId, admin);
+    }
     private Admin createAdmin(String bootstrapServers) {
         try {
             logger.debug("Creating KafkaAdminClient for bootstrapServers: {}", bootstrapServers);
