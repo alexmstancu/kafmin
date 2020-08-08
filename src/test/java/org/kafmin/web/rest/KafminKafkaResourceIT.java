@@ -63,7 +63,7 @@ class KafminKafkaResourceIT {
         restMockMvc = MockMvcBuilders.standaloneSetup(kafkaResource).build();
     }
 
-    @Test
+//    @Test
     void producesMessages() throws Exception {
         restMockMvc.perform(post("/api/kafmin-kafka/publish/topic-produce?message=value-produce"))
             .andExpect(status().isOk())

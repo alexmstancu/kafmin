@@ -28,6 +28,8 @@ import ConfigurationService from '@/admin/configuration/configuration.service';
 
 /* tslint:disable */
 
+import BrokerService from '@/entities/broker/broker.service';
+import ClusterService from '@/entities/cluster/cluster.service';
 // jhipster-needle-add-entity-service-to-main-import - JHipster will import entities services here
 
 /* tslint:enable */
@@ -87,6 +89,8 @@ new Vue({
     logsService: () => new LogsService(),
     metricsService: () => new MetricsService(),
     alertService: () => alertService,
+    brokerService: () => new BrokerService(),
+    clusterService: () => new ClusterService(),
     // jhipster-needle-add-entity-service-to-main - JHipster will import entities services here
     accountService: () => accountService,
   },

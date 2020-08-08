@@ -1,0 +1,38 @@
+{
+  "name": "Cluster",
+  "fields": [
+    {
+      "fieldName": "clusterId",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "name",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "bootstrapServers",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "broker",
+      "otherEntityRelationshipName": "cluster",
+      "relationshipName": "brokers"
+    }
+  ],
+  "changelogDate": "20200712190535",
+  "entityTableName": "cluster",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*",
+  "searchEngine": false,
+  "databaseType": "sql"
+}
