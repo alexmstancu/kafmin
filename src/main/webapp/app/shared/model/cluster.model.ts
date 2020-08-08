@@ -1,4 +1,5 @@
 import { IBroker } from '@/shared/model/broker.model';
+import { ITopicDetails } from '@/shared/model/topicDetails.model'
 
 export interface ICluster {
   id?: number;
@@ -8,6 +9,7 @@ export interface ICluster {
   topicsCount?: number;
   partitionsCount?: number;
   brokers?: IBroker[];
+  topics?: ITopicDetails[];
 }
 
 export class Cluster implements ICluster {
@@ -18,6 +20,7 @@ export class Cluster implements ICluster {
     public bootstrapServers?: string,
     public topicsCount?: number,
     public partitionsCount?: number,
-    public brokers?: IBroker[]
+    public brokers?: IBroker[],
+    public topics?: ITopicDetails[]
   ) {}
 }
