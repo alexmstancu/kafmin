@@ -45,16 +45,15 @@
                             <tbody>
 
                                 <tr v-for="topic in cluster.topics" :key="topic.name">
-                                    <!-- TODO create hyperlink on the brokerId to the broker details page -->
+                                    <!-- TODO create hyperlink on the topicName to go to the topic details page -->
                                     <td><span>{{topic.name}}</span></td>
                                     <td><span>{{topic.partitions}}</span></td>
-                                    <td><span>{{topic.isInternal}}</span></td>
+                                    <td><span>{{isInternal(topic)}}</span></td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-
-
+                    
                     <dt>
                         <span>Brokers</span>
                     </dt>

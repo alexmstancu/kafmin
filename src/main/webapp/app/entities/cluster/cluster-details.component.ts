@@ -48,4 +48,11 @@ export default class ClusterDetails extends Vue {
     }
     return 'no';
   }
+
+  public isInternal(topic): string {
+    if (topic.internal) {
+      return 'yes';
+    }
+    return 'no';
+  }
 }
