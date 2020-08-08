@@ -44,7 +44,7 @@ public class ClusterService {
         Cluster dbCluster = clusterRepository.save(incomingCluster);
 
         enhanceFromDb(kafkaCluster, dbCluster);
-        enhanceWithTopicPartitionsCount(kafkaCluster);
+        enhanceWithTopicPartitions(kafkaCluster);
         return kafkaCluster;
     }
 
@@ -70,7 +70,7 @@ public class ClusterService {
 
         Cluster kafkaCluster = ClusterMapper.fromDescription(adminCenter.describeCluster(dbCluster.get().getClusterId()));
         enhanceFromDb(kafkaCluster, dbCluster.get());
-        enhanceWithTopicPartitionsCount(kafkaCluster);
+        enhanceWithTopicPartitions(kafkaCluster);
 
         return Optional.of(kafkaCluster);
     }
@@ -87,7 +87,7 @@ public class ClusterService {
         for (Cluster dbCluster : dbClusters) {
             Cluster kafkaCluster = ClusterMapper.fromDescription(adminCenter.describeCluster(dbCluster.getClusterId()));
             enhanceFromDb(kafkaCluster, dbCluster);
-            enhanceWithTopicPartitionsCount(kafkaCluster);
+            enhanceWithTopicPartitions(kafkaCluster);
             result.add(kafkaCluster);
         }
 
@@ -108,7 +108,7 @@ public class ClusterService {
         kafkaCluster.setName(dbCluster.getName());
     }
 
-    private void enhanceWithTopicPartitionsCount(Cluster kafkaCluster) throws ExecutionException, InterruptedException {
+    private void enhanceWithTopicPartitions(Cluster kafkaCluster) throws ExecutionException, InterruptedException {
         DescribeTopicsResult describeTopicsResult = adminCenter.describeTopics(kafkaCluster.getClusterId());
         TopicPartitionCount topicPartitionCount = TopicPartitionCount.extract(describeTopicsResult);
         kafkaCluster.setTopicsCount(topicPartitionCount.getTopics());

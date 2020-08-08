@@ -49,7 +49,7 @@
                                     <td><span>{{broker.brokerId}}</span></td>
                                     <td><span>{{broker.host}}</span></td>
                                     <td><span>{{broker.port}}</span></td>
-                                    <td><span>{{broker.isController}}</span></td>
+                                    <td><span>{{isController(broker)}}</span></td>
                                 </tr>
                             </tbody>
                         </table>

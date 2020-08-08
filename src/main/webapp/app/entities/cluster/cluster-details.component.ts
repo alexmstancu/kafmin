@@ -41,4 +41,11 @@ export default class ClusterDetails extends Vue {
     }
     return this.cluster.partitionsCount;
   }
+
+  public isController(broker): string {
+    if (broker.isController) {
+      return 'yes';
+    }
+    return 'no';
+  }
 }
