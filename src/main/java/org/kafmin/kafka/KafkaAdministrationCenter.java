@@ -1,9 +1,6 @@
 package org.kafmin.kafka;
 
-import org.apache.kafka.clients.admin.Admin;
-import org.apache.kafka.clients.admin.AdminClientConfig;
-import org.apache.kafka.clients.admin.DescribeClusterOptions;
-import org.apache.kafka.clients.admin.DescribeClusterResult;
+import org.apache.kafka.clients.admin.*;
 import org.apache.kafka.common.KafkaException;
 import org.kafmin.domain.Cluster;
 import org.kafmin.repository.ClusterRepository;
@@ -14,16 +11,16 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 @Service
 public class KafkaAdministrationCenter {
     private static final Logger logger = LoggerFactory.getLogger(KafkaAdministrationCenter.class);
-    private static final DescribeClusterOptions describeOptions = new DescribeClusterOptions().timeoutMs(3000);
+    private static final int TIMEOUT_MS = 3000;
+    private static final DescribeClusterOptions DESCRIBE_CLUSTER_OPTIONS = new DescribeClusterOptions().timeoutMs(TIMEOUT_MS);
+    private static final DescribeTopicsOptions DESCRIBE_TOPICS_OPTIONS = new DescribeTopicsOptions().timeoutMs(TIMEOUT_MS);
+    private static final ListTopicsOptions LIST_TOPICS_OPTIONS = new ListTopicsOptions().timeoutMs(3000);
     public static final String HTTP_LOCALHOST_9093 = "http://localhost:9092";
 
     private final Map<String, Admin> kafkaAdminByClusterId = new HashMap<>();
@@ -52,7 +49,7 @@ public class KafkaAdministrationCenter {
      * @return the already 'described' cluster or null if could not 'get' the description
      */
     public DescribeClusterResult describeCluster(String clusterId) {
-        return describeClusterResultGet(getClusterAdmin(clusterId).describeCluster(describeOptions));
+        return describeClusterResultGet(getClusterAdmin(clusterId).describeCluster(DESCRIBE_CLUSTER_OPTIONS));
     }
 
     /**
@@ -66,7 +63,7 @@ public class KafkaAdministrationCenter {
             return null;
         }
 
-        DescribeClusterResult clusterResult = describeClusterResultGet(admin.describeCluster(describeOptions));
+        DescribeClusterResult clusterResult = describeClusterResultGet(admin.describeCluster(DESCRIBE_CLUSTER_OPTIONS));
         if (clusterResult != null) {
             String clusterId = clusterResult.clusterId().get();
             if (kafkaAdminByClusterId.containsKey(clusterId)) {
@@ -90,10 +87,57 @@ public class KafkaAdministrationCenter {
                 clusterResult.controller().get(),
                 clusterResult.nodes().get());
         } catch (Exception e) {
-            logger.error("Could not 'get' the cluster description.");
+            logger.error("Could not 'get' the cluster description", e);
             return null;
         }
         return clusterResult;
+    }
+
+    // TOPICS MANAGEMENT
+
+    public ListTopicsResult listTopics(String clusterId) {
+        return listTopicsResultGet(getClusterAdmin(clusterId).listTopics(LIST_TOPICS_OPTIONS), clusterId);
+    }
+
+    private ListTopicsResult listTopicsResultGet(ListTopicsResult listTopicsResult, String clusterId) {
+        try {
+            logger.debug("Topics listing for cluster: {}, listing: {}", clusterId, listTopicsResult.namesToListings());
+        } catch (Exception e) {
+            logger.error("Could not 'get' the topics listing for cluster {}.", clusterId, e);
+            return null;
+        }
+        return listTopicsResult;
+    }
+
+    private DescribeTopicsResult describeTopicsResultGet(DescribeTopicsResult describeTopicsResult, String clusterId) {
+        try {
+            logger.debug("Topics description for cluster: {}, description: {}", clusterId, describeTopicsResult.all().get());
+        } catch (Exception e) {
+            logger.error("Could not 'get' the topic description for cluster {}", clusterId, e);
+            return null;
+        }
+        return describeTopicsResult;
+    }
+
+    // PARTITION MANAGEMENT
+
+    // BROKER MANAGEMENT
+
+
+
+    /**
+     * Describe all topics for the given cluster
+     */
+    public DescribeTopicsResult describeTopics(String clusterId) throws ExecutionException, InterruptedException {
+        ListTopicsResult listTopicsResult = listTopics(clusterId);
+        return describeTopics(clusterId, listTopicsResult.names().get());
+    }
+
+    /**
+     * Describe only the given topics for the given cluster
+     */
+    public DescribeTopicsResult describeTopics(String clusterId, Collection<String> topics) {
+        return describeTopicsResultGet(getClusterAdmin(clusterId).describeTopics(topics, DESCRIBE_TOPICS_OPTIONS), clusterId);
     }
 
     // KAFKA ADMIN
@@ -105,6 +149,7 @@ public class KafkaAdministrationCenter {
     private void addClusterAdmin(String clusterId, Admin admin) {
         kafkaAdminByClusterId.put(clusterId, admin);
     }
+
     private Admin createAdmin(String bootstrapServers) {
         try {
             logger.debug("Creating KafkaAdminClient for bootstrapServers: {}", bootstrapServers);
