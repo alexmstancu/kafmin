@@ -3,11 +3,11 @@
         <b-navbar-brand class="logo" b-link to="/">
             <span class="logo-img"></span>
             <span class="navbar-title">kafmin</span> <span class="navbar-version">{{version}}</span>
-        </b-navbar-brand>      
-        <b-navbar-toggle 
-        right 
-        class="jh-navbar-toggler d-lg-none" 
-        href="javascript:void(0);"  
+        </b-navbar-brand>
+        <b-navbar-toggle
+        right
+        class="jh-navbar-toggler d-lg-none"
+        href="javascript:void(0);"
         data-toggle="collapse" 
         target="header-tabs" 
         aria-expanded="false" 
@@ -34,11 +34,11 @@
                     </span>
                     <b-dropdown-item to="/broker">
                         <font-awesome-icon icon="asterisk" />
-                        <span >Broker</span>
+                        <span>Broker</span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/cluster">
                         <font-awesome-icon icon="asterisk" />
-                        <span >Cluster</span>
+                        <span>Cluster</span>
                     </b-dropdown-item>
                     <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
                 </b-nav-item-dropdown>

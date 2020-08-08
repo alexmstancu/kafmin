@@ -9,7 +9,8 @@ export default class JhiNavbar extends Vue {
   private loginService: () => LoginService;
 
   @Inject('accountService') private accountService: () => AccountService;
-  public version = VERSION ? 'v' + VERSION : '';
+  // public version = VERSION ? 'v' + VERSION : '';
+  public version = '1.0.0';
   private currentLanguage = this.$store.getters.currentLanguage;
   private languages: any = this.$store.getters.languages;
   private hasAnyAuthorityValue = false;
