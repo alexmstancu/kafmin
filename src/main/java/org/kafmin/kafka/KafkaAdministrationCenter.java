@@ -109,22 +109,6 @@ public class KafkaAdministrationCenter {
         return listTopicsResult;
     }
 
-    private DescribeTopicsResult describeTopicsResultGet(DescribeTopicsResult describeTopicsResult, String clusterId) {
-        try {
-            logger.debug("Topics description for cluster: {}, description: {}", clusterId, describeTopicsResult.all().get());
-        } catch (Exception e) {
-            logger.error("Could not 'get' the topic description for cluster {}", clusterId, e);
-            return null;
-        }
-        return describeTopicsResult;
-    }
-
-    // PARTITION MANAGEMENT
-
-    // BROKER MANAGEMENT
-
-
-
     /**
      * Describe all topics for the given cluster
      */
@@ -140,7 +124,21 @@ public class KafkaAdministrationCenter {
         return describeTopicsResultGet(getClusterAdmin(clusterId).describeTopics(topics, DESCRIBE_TOPICS_OPTIONS), clusterId);
     }
 
-    // KAFKA ADMIN
+    private DescribeTopicsResult describeTopicsResultGet(DescribeTopicsResult describeTopicsResult, String clusterId) {
+        try {
+            logger.debug("Topics description for cluster: {}, description: {}", clusterId, describeTopicsResult.all().get());
+        } catch (Exception e) {
+            logger.error("Could not 'get' the topic description for cluster {}", clusterId, e);
+            return null;
+        }
+        return describeTopicsResult;
+    }
+
+    // PARTITION MANAGEMENT
+
+    // BROKER MANAGEMENT
+
+    // KAFKA ADMIN MANAGEMENT
 
     private Admin getClusterAdmin(String clusterId) {
         return kafkaAdminByClusterId.get(clusterId);
