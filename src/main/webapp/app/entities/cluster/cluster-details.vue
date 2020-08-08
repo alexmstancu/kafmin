@@ -17,6 +17,18 @@
                         <span>{{cluster.name}}</span>
                     </dd>
                     <dt>
+                        <span>Total # of topics</span>
+                    </dt>
+                    <dd>
+                        <span>{{getTopicsCount()}}</span>
+                    </dd>
+                     <dt>
+                        <span>Total # of partitions</span>
+                    </dt>
+                    <dd>
+                        <span>{{getPartitionsCount()}}</span>
+                    </dd>
+                    <dt>
                         <span>Brokers</span>
                     </dt>
                     <div class="table-responsive" v-if="cluster.id">
@@ -27,6 +39,7 @@
                                     <th><span>Broker ID</span></th>
                                     <th><span>Host</span></th>
                                     <th><span>Port</span></th>
+                                    <th><span>Is controller?</span></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -36,6 +49,7 @@
                                     <td><span>{{broker.brokerId}}</span></td>
                                     <td><span>{{broker.host}}</span></td>
                                     <td><span>{{broker.port}}</span></td>
+                                    <td><span>{{broker.isController}}</span></td>
                                 </tr>
                             </tbody>
                         </table>

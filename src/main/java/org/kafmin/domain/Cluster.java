@@ -1,5 +1,6 @@
 package org.kafmin.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -31,6 +32,14 @@ public class Cluster implements Serializable {
 
     @Column(name = "bootstrap_servers")
     private String bootstrapServers;
+
+    @Transient
+    @JsonSerialize()
+    private Integer topicsCount;
+
+    @Transient
+    @JsonSerialize
+    private Integer partitionsCount;
 
     @OneToMany(mappedBy = "cluster")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -135,5 +144,21 @@ public class Cluster implements Serializable {
             ", name='" + getName() + "'" +
             ", bootstrapServers='" + getBootstrapServers() + "'" +
             "}";
+    }
+
+    public Integer getPartitionsCount() {
+        return partitionsCount;
+    }
+
+    public void setPartitionsCount(Integer partitionsCount) {
+        this.partitionsCount = partitionsCount;
+    }
+
+    public Integer getTopicsCount() {
+        return topicsCount;
+    }
+
+    public void setTopicsCount(Integer topicsCount) {
+        this.topicsCount = topicsCount;
     }
 }

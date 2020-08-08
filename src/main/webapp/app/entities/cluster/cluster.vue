@@ -28,6 +28,8 @@
                     <th><span>Name</span></th>
                     <th><span>Cluster Id</span></th>
                     <th><span># of brokers</span></th>
+                    <th><span># of topics</span></th>
+                    <th><span># of partitions</span></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -39,6 +41,8 @@
                     <td>{{cluster.name}}</td>
                     <td>{{cluster.clusterId}}</td>
                     <td>{{getBrokersCount(cluster)}}</td>
+                    <td>{{cluster.topicsCount}}</td>
+                    <td>{{cluster.partitionsCount}}</td>
                     <td class="text-right">
                         <div class="btn-group">
                             <router-link :to="{name: 'ClusterView', params: {clusterId: cluster.id}}" tag="button" class="btn btn-info btn-sm details">

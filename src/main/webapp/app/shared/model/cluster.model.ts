@@ -5,6 +5,8 @@ export interface ICluster {
   clusterId?: string;
   name?: string;
   bootstrapServers?: string;
+  topicsCount?: number;
+  partitionsCount?: number;
   brokers?: IBroker[];
 }
 
@@ -14,6 +16,8 @@ export class Cluster implements ICluster {
     public clusterId?: string,
     public name?: string,
     public bootstrapServers?: string,
+    public topicsCount?: number,
+    public partitionsCount?: number,
     public brokers?: IBroker[]
   ) {}
 }

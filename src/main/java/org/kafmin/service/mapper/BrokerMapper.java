@@ -18,7 +18,8 @@ public class BrokerMapper {
 
     public static Broker fromNode(Node node, Node controller) {
         Broker broker = fromNode(node);
-        broker.isController(node.id() == controller.id());
+        boolean isController = controller != null && node.id() == controller.id();
+        broker.isController(isController);
         return broker;
     }
 
