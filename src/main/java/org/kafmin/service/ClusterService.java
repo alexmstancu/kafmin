@@ -70,6 +70,7 @@ public class ClusterService {
 
         Cluster kafkaCluster = ClusterMapper.fromDescription(adminCenter.describeCluster(dbCluster.get().getClusterId()));
         enhanceFromDb(kafkaCluster, dbCluster.get());
+        enhanceWithTopicPartitionsCount(kafkaCluster);
 
         return Optional.of(kafkaCluster);
     }
