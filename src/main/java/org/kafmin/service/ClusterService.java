@@ -41,7 +41,7 @@ public class ClusterService {
         incomingCluster.setBootstrapServers(BrokerMapper.toBootstrapServersStringList(kafkaCluster.getBrokers()));
         Cluster dbCluster = clusterRepository.save(incomingCluster);
 
-        enhance(kafkaCluster, dbCluster);
+        enhanceFromDb(kafkaCluster, dbCluster);
         return kafkaCluster;
     }
 
@@ -55,7 +55,7 @@ public class ClusterService {
         dbCluster.setBootstrapServers(BrokerMapper.toBootstrapServersStringList(kafkaCluster.getBrokers()));
         clusterRepository.save(dbCluster);
 
-        enhance(kafkaCluster, dbCluster);
+        enhanceFromDb(kafkaCluster, dbCluster);
         return kafkaCluster;
     }
 
@@ -66,7 +66,7 @@ public class ClusterService {
         }
 
         Cluster kafkaCluster = ClusterMapper.fromDescription(adminCenter.describeCluster(dbCluster.get().getClusterId()));
-        enhance(kafkaCluster, dbCluster.get());
+        enhanceFromDb(kafkaCluster, dbCluster.get());
 
         return Optional.of(kafkaCluster);
     }
@@ -82,7 +82,7 @@ public class ClusterService {
 
         for (Cluster dbCluster : dbClusters) {
             Cluster kafkaCluster = ClusterMapper.fromDescription(adminCenter.describeCluster(dbCluster.getClusterId()));
-            enhance(kafkaCluster, dbCluster);
+            enhanceFromDb(kafkaCluster, dbCluster);
             result.add(kafkaCluster);
         }
 
@@ -98,7 +98,7 @@ public class ClusterService {
         }
     }
 
-    private void enhance(Cluster kafkaCluster, Cluster dbCluster) {
+    private void enhanceFromDb(Cluster kafkaCluster, Cluster dbCluster) {
         kafkaCluster.setId(dbCluster.getId());
         kafkaCluster.setName(dbCluster.getName());
     }
