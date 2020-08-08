@@ -3,7 +3,6 @@ package org.kafmin.kafka;
 import org.apache.kafka.clients.admin.DescribeTopicsResult;
 import org.apache.kafka.clients.admin.TopicDescription;
 
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 

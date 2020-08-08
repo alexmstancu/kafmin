@@ -97,7 +97,6 @@ public class ClusterResource {
         if (cluster.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        // TODO
         Cluster result = clusterService.update(cluster);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, cluster.getId().toString()))
