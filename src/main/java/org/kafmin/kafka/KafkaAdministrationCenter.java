@@ -110,7 +110,7 @@ public class KafkaAdministrationCenter {
     }
 
     /**
-     * Describe all topics for the given cluster
+     * Describe all topics & associated partitions for the given cluster
      */
     public DescribeTopicsResult describeTopics(String clusterId) throws ExecutionException, InterruptedException {
         ListTopicsResult listTopicsResult = listTopics(clusterId);
