@@ -28,6 +28,33 @@
                     <dd>
                         <span>{{getPartitionsCount()}}</span>
                     </dd>
+
+                    <dt>
+                        <span>Topics</span>
+                    </dt>
+                    <div class="table-responsive" v-if="cluster.id">
+
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th><span>Topic name</span></th>
+                                    <th><span># of partitions</span></th>
+                                    <th><span>Is internal?</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr v-for="topic in cluster.topics" :key="topic.name">
+                                    <!-- TODO create hyperlink on the brokerId to the broker details page -->
+                                    <td><span>{{topic.name}}</span></td>
+                                    <td><span>{{topic.partitions}}</span></td>
+                                    <td><span>{{topic.isInternal}}</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+
                     <dt>
                         <span>Brokers</span>
                     </dt>
@@ -54,7 +81,6 @@
                             </tbody>
                         </table>
                     </div>
-                    <!-- TODO print number topics, number of partitions, number of brokers -->
 
                 </dl>
                 <button type="submit"
