@@ -8,6 +8,7 @@ import org.kafmin.kafka.TopicPartitionCount;
 import org.kafmin.repository.ClusterRepository;
 import org.kafmin.service.mapper.BrokerMapper;
 import org.kafmin.service.mapper.ClusterMapper;
+import org.kafmin.service.mapper.TopicDetailsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -113,5 +114,6 @@ public class ClusterService {
         TopicPartitionCount topicPartitionCount = TopicPartitionCount.extract(describeTopicsResult);
         kafkaCluster.setTopicsCount(topicPartitionCount.getTopics());
         kafkaCluster.setPartitionsCount(topicPartitionCount.getPartitions());
+        kafkaCluster.setTopics(TopicDetailsMapper.from(describeTopicsResult));
     }
 }
