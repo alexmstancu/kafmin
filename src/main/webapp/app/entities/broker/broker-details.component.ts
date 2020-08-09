@@ -16,9 +16,9 @@ export default class BrokerDetails extends Vue {
     });
   }
 
-  public retrieveBroker(clusterId, brokerId) {
+  public retrieveBroker(clusterDbId, brokerId) {
     this.brokerService()
-      .find(clusterId, brokerId)
+      .find(clusterDbId, brokerId)
       .then(res => {
         this.broker = res;
       });

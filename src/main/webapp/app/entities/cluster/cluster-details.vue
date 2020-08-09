@@ -70,7 +70,7 @@
                                 <!-- TODO create hyperlink on the brokerId to the broker details page -->
                                 
                                 <td><span>
-                                    <router-link :to="{name: 'BrokerView', params: {clusterId: cluster.clusterId, brokerId: broker.brokerId}}">{{broker.brokerId}}
+                                    <router-link :to="{name: 'BrokerView', params: {clusterId: cluster.id, brokerId: broker.brokerId}}">{{broker.brokerId}}
                                         </router-link>
                                 </span></td>
                                 <td><span>{{broker.host}}</span></td>

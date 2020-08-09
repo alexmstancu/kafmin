@@ -77,8 +77,6 @@ public class ClusterService {
         enhanceFromDb(kafkaCluster, dbCluster.get());
         enhanceWithTopicPartitions(kafkaCluster);
 
-        printBrokersConfigs(kafkaCluster);
-
         return Optional.of(kafkaCluster);
     }
 
@@ -123,10 +121,4 @@ public class ClusterService {
         kafkaCluster.setTopics(TopicDetailsMapper.from(describeTopicsResult));
     }
 
-    private void printBrokersConfigs(Cluster kafkaCluster) throws ExecutionException, InterruptedException {
-        Broker broker = kafkaCluster.getBrokers().iterator().next();
-        DescribeConfigsResult describeConfigsResult = adminCenter.describeBrokerConfig(kafkaCluster.getClusterId(), broker.getBrokerId());
-        List<GenericConfig> genericConfigs = ConfigMapper.fromSingleResource(describeConfigsResult);
-        System.out.println("COOOOONFIIIIIIGGGGGG " + genericConfigs);
-    }
 }

@@ -18,6 +18,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 /**
  * REST controller for managing {@link org.kafmin.domain.Broker}.
@@ -48,10 +49,10 @@ public class BrokerResource {
      * @param brokerId the brokerId of the broker to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the broker, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/brokers/{clusterId}/{brokerId}")
-    public ResponseEntity<Broker> getBroker(@PathVariable String clusterId, @PathVariable String brokerId) {
-        log.debug("REST request to get Broker: {} for cluster: {}", brokerId, clusterId);
-        Optional<Broker> broker = brokerService.get(clusterId, brokerId);
+    @GetMapping("/brokers/{clusterDbId}/{brokerId}")
+    public ResponseEntity<Broker> getBroker(@PathVariable Long clusterDbId, @PathVariable String brokerId) throws ExecutionException, InterruptedException {
+        log.debug("REST request to get Broker: {} for cluster: {}", brokerId, clusterDbId);
+        Optional<Broker> broker = brokerService.get(clusterDbId, brokerId);
         return ResponseUtil.wrapOrNotFound(broker);
     }
 
