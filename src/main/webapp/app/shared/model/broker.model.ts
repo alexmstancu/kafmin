@@ -1,4 +1,5 @@
 import { ICluster } from '@/shared/model/cluster.model';
+import { IGenericConfig } from './genericConfig.model';
 
 export interface IBroker {
   id?: number;
@@ -7,6 +8,7 @@ export interface IBroker {
   port?: number;
   isController?: boolean;
   cluster?: ICluster;
+  configs?: IGenericConfig[];
 }
 
 export class Broker implements IBroker {
@@ -16,7 +18,8 @@ export class Broker implements IBroker {
     public host?: string,
     public port?: number,
     public isController?: boolean,
-    public cluster?: ICluster
+    public cluster?: ICluster,
+    public configs? :IGenericConfig[]
   ) {
     this.isController = this.isController || false;
   }
