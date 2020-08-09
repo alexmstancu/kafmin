@@ -32,10 +32,10 @@
                         <font-awesome-icon icon="th-list" />
                         <span>Entities</span>
                     </span>
-                    <b-dropdown-item to="/broker">
+                    <!-- <b-dropdown-item to="/broker">
                         <font-awesome-icon icon="asterisk" />
                         <span>Broker</span>
-                    </b-dropdown-item>
+                    </b-dropdown-item> -->
                     <b-dropdown-item to="/cluster">
                         <font-awesome-icon icon="asterisk" />
                         <span>Cluster</span>
