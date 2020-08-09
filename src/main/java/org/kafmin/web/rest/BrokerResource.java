@@ -2,6 +2,7 @@ package org.kafmin.web.rest;
 
 import org.kafmin.domain.Broker;
 import org.kafmin.repository.BrokerRepository;
+import org.kafmin.service.BrokerService;
 import org.kafmin.web.rest.errors.BadRequestAlertException;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -34,21 +35,23 @@ public class BrokerResource {
     private String applicationName;
 
     private final BrokerRepository brokerRepository;
+    private final BrokerService brokerService;
 
-    public BrokerResource(BrokerRepository brokerRepository) {
+    public BrokerResource(BrokerRepository brokerRepository, BrokerService brokerService) {
         this.brokerRepository = brokerRepository;
+        this.brokerService = brokerService;
     }
 
     /**
-     * {@code GET  /brokers/:id} : get the "id" broker.
+     * {@code GET  /brokers/:brokerId} : get the "brokerId" broker.
      *
-     * @param id the id of the broker to retrieve.
+     * @param brokerId the brokerId of the broker to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the broker, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/brokers/{clusterId}/{id}")
-    public ResponseEntity<Broker> getBroker(@PathVariable String clusterId, @PathVariable Long id) {
-        log.debug("REST request to get Broker: {} for cluster: {}", id, clusterId);
-        Optional<Broker> broker = brokerRepository.findById(id);
+    @GetMapping("/brokers/{clusterId}/{brokerId}")
+    public ResponseEntity<Broker> getBroker(@PathVariable String clusterId, @PathVariable String brokerId) {
+        log.debug("REST request to get Broker: {} for cluster: {}", brokerId, clusterId);
+        Optional<Broker> broker = brokerService.get(clusterId, brokerId);
         return ResponseUtil.wrapOrNotFound(broker);
     }
 
