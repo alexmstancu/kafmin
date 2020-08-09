@@ -1,5 +1,6 @@
 package org.kafmin.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -7,6 +8,7 @@ import javax.persistence.*;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -32,9 +34,21 @@ public class Cluster implements Serializable {
     @Column(name = "bootstrap_servers")
     private String bootstrapServers;
 
+    @Transient
+    @JsonSerialize()
+    private Integer topicsCount;
+
+    @Transient
+    @JsonSerialize
+    private Integer partitionsCount;
+
     @OneToMany(mappedBy = "cluster")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Broker> brokers = new HashSet<>();
+
+    @Transient
+    @JsonSerialize
+    private List<TopicDetails> topics;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -135,5 +149,29 @@ public class Cluster implements Serializable {
             ", name='" + getName() + "'" +
             ", bootstrapServers='" + getBootstrapServers() + "'" +
             "}";
+    }
+
+    public Integer getPartitionsCount() {
+        return partitionsCount;
+    }
+
+    public void setPartitionsCount(Integer partitionsCount) {
+        this.partitionsCount = partitionsCount;
+    }
+
+    public Integer getTopicsCount() {
+        return topicsCount;
+    }
+
+    public void setTopicsCount(Integer topicsCount) {
+        this.topicsCount = topicsCount;
+    }
+
+    public List<TopicDetails> getTopics() {
+        return topics;
+    }
+
+    public void setTopics(List<TopicDetails> topics) {
+        this.topics = topics;
     }
 }

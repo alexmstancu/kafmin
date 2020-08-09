@@ -12,6 +12,14 @@
     {
       "fieldName": "bootstrapServers",
       "fieldType": "String"
+    },
+    {
+      "fieldName": "topicsCount",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "partitionsCount",
+      "fieldType": "Integer"
     }
   ],
   "relationships": [

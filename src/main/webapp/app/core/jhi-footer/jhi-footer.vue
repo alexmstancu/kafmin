@@ -1,6 +1,6 @@
 <template>
     <div id="footer" class="footer">
-        <p>This is your footer</p>
+        <p>Kafmin © 2020 </p>
     </div>
 </template>
 

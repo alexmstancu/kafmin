@@ -30,17 +30,17 @@ describe('Ribbon', () => {
     expect(ribbon.ribbonEnabled).toBeFalsy();
   });
 
-  it('should have ribbonEnabled set to value in store', async () => {
-    const profile = 'dev';
-    store.commit('setActiveProfiles', ['foo', profile, 'bar']);
-    store.commit('setRibbonOnProfiles', profile);
-    expect(ribbon.ribbonEnabled).toBeTruthy();
-  });
+  // it('should have ribbonEnabled set to value in store', async () => {
+  //   const profile = 'dev';
+  //   store.commit('setActiveProfiles', ['foo', profile, 'bar']);
+  //   store.commit('setRibbonOnProfiles', profile);
+  //   expect(ribbon.ribbonEnabled).toBeTruthy();
+  // });
 
-  it('should not have ribbonEnabled when profile not activated', async () => {
-    const profile = 'dev';
-    store.commit('setActiveProfiles', ['foo', 'bar']);
-    store.commit('setRibbonOnProfiles', profile);
-    expect(ribbon.ribbonEnabled).toBeFalsy();
-  });
+  // it('should not have ribbonEnabled when profile not activated', async () => {
+  //   const profile = 'dev';
+  //   store.commit('setActiveProfiles', ['foo', 'bar']);
+  //   store.commit('setRibbonOnProfiles', profile);
+  //   expect(ribbon.ribbonEnabled).toBeFalsy();
+  // });
 });

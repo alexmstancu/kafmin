@@ -15,9 +15,14 @@ const onRequestSuccess = config => {
   config.url = `${SERVER_API_URL}${config.url}`;
   return config;
 };
+
 const setupAxiosInterceptors = onUnauthenticated => {
   const onResponseError = err => {
     const status = err.status || err.response.status;
+    if (status === 400) {
+      console.log('HTTP Error 400 received by Axios Interceptor.');
+    }
+
     if (status === 403 || status === 401) {
       onUnauthenticated();
     }

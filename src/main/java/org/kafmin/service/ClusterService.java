@@ -1,11 +1,14 @@
 package org.kafmin.service;
 
 import org.apache.kafka.clients.admin.DescribeClusterResult;
+import org.apache.kafka.clients.admin.DescribeTopicsResult;
 import org.kafmin.domain.Cluster;
 import org.kafmin.kafka.KafkaAdministrationCenter;
+import org.kafmin.kafka.TopicPartitionCount;
 import org.kafmin.repository.ClusterRepository;
 import org.kafmin.service.mapper.BrokerMapper;
 import org.kafmin.service.mapper.ClusterMapper;
+import org.kafmin.service.mapper.TopicDetailsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +44,8 @@ public class ClusterService {
         incomingCluster.setBootstrapServers(BrokerMapper.toBootstrapServersStringList(kafkaCluster.getBrokers()));
         Cluster dbCluster = clusterRepository.save(incomingCluster);
 
-        enhance(kafkaCluster, dbCluster);
+        enhanceFromDb(kafkaCluster, dbCluster);
+        enhanceWithTopicPartitions(kafkaCluster);
         return kafkaCluster;
     }
 
@@ -55,7 +59,7 @@ public class ClusterService {
         dbCluster.setBootstrapServers(BrokerMapper.toBootstrapServersStringList(kafkaCluster.getBrokers()));
         clusterRepository.save(dbCluster);
 
-        enhance(kafkaCluster, dbCluster);
+        enhanceFromDb(kafkaCluster, dbCluster);
         return kafkaCluster;
     }
 
@@ -66,7 +70,8 @@ public class ClusterService {
         }
 
         Cluster kafkaCluster = ClusterMapper.fromDescription(adminCenter.describeCluster(dbCluster.get().getClusterId()));
-        enhance(kafkaCluster, dbCluster.get());
+        enhanceFromDb(kafkaCluster, dbCluster.get());
+        enhanceWithTopicPartitions(kafkaCluster);
 
         return Optional.of(kafkaCluster);
     }
@@ -82,7 +87,8 @@ public class ClusterService {
 
         for (Cluster dbCluster : dbClusters) {
             Cluster kafkaCluster = ClusterMapper.fromDescription(adminCenter.describeCluster(dbCluster.getClusterId()));
-            enhance(kafkaCluster, dbCluster);
+            enhanceFromDb(kafkaCluster, dbCluster);
+            enhanceWithTopicPartitions(kafkaCluster);
             result.add(kafkaCluster);
         }
 
@@ -98,8 +104,16 @@ public class ClusterService {
         }
     }
 
-    private void enhance(Cluster kafkaCluster, Cluster dbCluster) {
+    private void enhanceFromDb(Cluster kafkaCluster, Cluster dbCluster) {
         kafkaCluster.setId(dbCluster.getId());
         kafkaCluster.setName(dbCluster.getName());
+    }
+
+    private void enhanceWithTopicPartitions(Cluster kafkaCluster) throws ExecutionException, InterruptedException {
+        DescribeTopicsResult describeTopicsResult = adminCenter.describeTopics(kafkaCluster.getClusterId());
+        TopicPartitionCount topicPartitionCount = TopicPartitionCount.extract(describeTopicsResult);
+        kafkaCluster.setTopicsCount(topicPartitionCount.getTopics());
+        kafkaCluster.setPartitionsCount(topicPartitionCount.getPartitions());
+        kafkaCluster.setTopics(TopicDetailsMapper.from(describeTopicsResult));
     }
 }

@@ -27,4 +27,32 @@ export default class ClusterDetails extends Vue {
   public previousState() {
     this.$router.go(-1);
   }
+
+  public getTopicsCount(): number {
+    if (this.cluster.topicsCount == null) {
+      return 0;
+    }
+    return this.cluster.topicsCount;
+  }
+
+  public getPartitionsCount(): number {
+    if (this.cluster.partitionsCount == null) {
+      return 0;
+    }
+    return this.cluster.partitionsCount;
+  }
+
+  public isController(broker): string {
+    if (broker.isController) {
+      return 'yes';
+    }
+    return 'no';
+  }
+
+  public isInternal(topic): string {
+    if (topic.internal) {
+      return 'yes';
+    }
+    return 'no';
+  }
 }
