@@ -2,7 +2,7 @@
     <div class="row justify-content-center">
         <div class="col-8">
             <div v-if="cluster">
-                <h2 class="jh-entity-heading"><span>Cluster</span> {{cluster.id}}</h2>
+                <h2 class="jh-entity-heading"><span>Cluster</span> '{{cluster.name}}'</h2>
                 <dl class="row jh-entity-details">
                     <dt>
                         <span>Cluster Id</span>
@@ -28,60 +28,56 @@
                     <dd>
                         <span>{{getPartitionsCount()}}</span>
                     </dd>
-
-                    <dt>
-                        <span>Topics</span>
-                    </dt>
-                    <div class="table-responsive" v-if="cluster.id">
-
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th><span>Topic name</span></th>
-                                    <th><span># of partitions</span></th>
-                                    <th><span>Is internal?</span></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                                <tr v-for="topic in cluster.topics" :key="topic.name">
-                                    <!-- TODO create hyperlink on the topicName to go to the topic details page -->
-                                    <td><span>{{topic.name}}</span></td>
-                                    <td><span>{{topic.partitions}}</span></td>
-                                    <td><span>{{isInternal(topic)}}</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <dt>
-                        <span>Brokers</span>
-                    </dt>
-                    <div class="table-responsive" v-if="cluster.id">
-
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th><span>Broker ID</span></th>
-                                    <th><span>Host</span></th>
-                                    <th><span>Port</span></th>
-                                    <th><span>Is controller?</span></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                                <tr v-for="broker in cluster.brokers" :key="broker.host">
-                                    <!-- TODO create hyperlink on the brokerId to the broker details page -->
-                                    <td><span>{{broker.brokerId}}</span></td>
-                                    <td><span>{{broker.host}}</span></td>
-                                    <td><span>{{broker.port}}</span></td>
-                                    <td><span>{{isController(broker)}}</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
                 </dl>
+
+
+                <h4><span>Topics</span></h4>
+            
+                <div class="table-responsive" v-if="cluster.id">
+                    <table class="table table-sm table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th><span>Topic name</span></th>
+                                <th><span># of partitions</span></th>
+                                <th><span>Is internal?</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr v-for="topic in cluster.topics" :key="topic.name">
+                                <!-- TODO create hyperlink on the topicName to go to the topic details page -->
+                                <td><span>{{topic.name}}</span></td>
+                                <td><span>{{topic.partitions}}</span></td>
+                                <td><span>{{isInternal(topic)}}</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <h4><span>Brokers</span></h4>
+                <div class="table-responsive" v-if="cluster.id">
+                    <table class="table table-sm table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th><span>Broker ID</span></th>
+                                <th><span>Host</span></th>
+                                <th><span>Port</span></th>
+                                <th><span>Is controller?</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr v-for="broker in cluster.brokers" :key="broker.host">
+                                <!-- TODO create hyperlink on the brokerId to the broker details page -->
+                                <td><span>{{broker.brokerId}}</span></td>
+                                <td><span>{{broker.host}}</span></td>
+                                <td><span>{{broker.port}}</span></td>
+                                <td><span>{{isController(broker)}}</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
                 <button type="submit"
                         v-on:click.prevent="previousState()"
                         class="btn btn-info">
