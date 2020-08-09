@@ -2,6 +2,7 @@ package org.kafmin.kafka;
 
 import org.apache.kafka.clients.admin.*;
 import org.apache.kafka.common.KafkaException;
+import org.apache.kafka.common.config.ConfigResource;
 import org.kafmin.domain.Cluster;
 import org.kafmin.repository.ClusterRepository;
 import org.slf4j.Logger;
@@ -20,6 +21,7 @@ public class KafkaAdministrationCenter {
     private static final int TIMEOUT_MS = 3000;
     private static final DescribeClusterOptions DESCRIBE_CLUSTER_OPTIONS = new DescribeClusterOptions().timeoutMs(TIMEOUT_MS);
     private static final DescribeTopicsOptions DESCRIBE_TOPICS_OPTIONS = new DescribeTopicsOptions().timeoutMs(TIMEOUT_MS);
+    private static final DescribeConfigsOptions DESCRIBE_CONFIGS_OPTIONS = new DescribeConfigsOptions().timeoutMs(TIMEOUT_MS);
     private static final ListTopicsOptions LIST_TOPICS_OPTIONS = new ListTopicsOptions().timeoutMs(3000);
     public static final String HTTP_LOCALHOST_9093 = "http://localhost:9092";
 
@@ -137,6 +139,23 @@ public class KafkaAdministrationCenter {
     // PARTITION MANAGEMENT
 
     // BROKER MANAGEMENT
+
+    private DescribeConfigsResult describeConfigResourceGet(DescribeConfigsResult describeConfigsResult, String clusterId) {
+        try {
+            logger.debug("Configs description for cluster: {}, description: {}", clusterId, describeConfigsResult.all().get());
+        } catch (Exception e) {
+            logger.error("Could not 'get' the configs description for cluster {}", clusterId, e);
+            return null;
+        }
+        return describeConfigsResult;
+    }
+
+    private DescribeConfigsResult describeBrokerConfig(String clusterId, String brokerId) {
+        Admin clusterAdmin = getClusterAdmin(clusterId);
+        ConfigResource brokerResource = new ConfigResource(ConfigResource.Type.BROKER, brokerId);
+        DescribeConfigsResult describeConfigsResult = clusterAdmin.describeConfigs(Collections.singletonList(brokerResource), DESCRIBE_CONFIGS_OPTIONS);
+        return describeConfigResourceGet(describeConfigsResult, clusterId);
+    }
 
     // KAFKA ADMIN MANAGEMENT
 
