@@ -34,7 +34,7 @@ describe('Component Tests', () => {
         brokerServiceStub.find.resolves(foundBroker);
 
         // WHEN
-        comp.retrieveBroker(123);
+        comp.retrieveBroker('dummyCLusterId', 123);
         await comp.$nextTick();
 
         // THEN

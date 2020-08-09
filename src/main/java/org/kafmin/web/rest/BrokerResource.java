@@ -45,9 +45,9 @@ public class BrokerResource {
      * @param id the id of the broker to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the broker, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/brokers/{id}")
-    public ResponseEntity<Broker> getBroker(@PathVariable Long id) {
-        log.debug("REST request to get Broker : {}", id);
+    @GetMapping("/brokers/{clusterId}/{id}")
+    public ResponseEntity<Broker> getBroker(@PathVariable String clusterId, @PathVariable Long id) {
+        log.debug("REST request to get Broker: {} for cluster: {}", id, clusterId);
         Optional<Broker> broker = brokerRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(broker);
     }
@@ -72,6 +72,10 @@ public class BrokerResource {
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, broker.getId().toString()))
             .body(result);
     }
+
+    /*
+     * Below are unused APIs !
+     */
 
     /**
      * TODO this endpoint cannot be used and should be deleted/hidden

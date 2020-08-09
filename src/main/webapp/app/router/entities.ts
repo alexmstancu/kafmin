@@ -36,7 +36,7 @@ export default [
     meta: { authorities: [Authority.USER] },
   },
   {
-    path: '/broker/:brokerId/view',
+    path: '/broker/:clusterId/:brokerId/view',
     name: 'BrokerView',
     component: BrokerDetails,
     meta: { authorities: [Authority.USER] },

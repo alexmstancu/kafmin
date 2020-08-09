@@ -2,14 +2,8 @@
     <div class="row justify-content-center">
         <div class="col-8">
             <div v-if="broker">
-                <h2 class="jh-entity-heading"><span>Broker</span> {{broker.id}}</h2>
+                <h2 class="jh-entity-heading"><span>Broker</span> {{broker.brokerId}}</h2>
                 <dl class="row jh-entity-details">
-                    <dt>
-                        <span>Broker Id</span>
-                    </dt>
-                    <dd>
-                        <span>{{broker.brokerId}}</span>
-                    </dd>
                     <dt>
                         <span>Host</span>
                     </dt>
@@ -33,9 +27,10 @@
                     </dt>
                     <dd>
                         <div v-if="broker.cluster">
-                            <router-link :to="{name: 'ClusterView', params: {clusterId: broker.cluster.id}}">{{broker.cluster.name}}</router-link>
+                            <router-link :to="{name: 'ClusterView', params: {clusterId: broker.cluster.id}}">{{broker.cluster.name}} ({{broker.cluster.clusterId}})</router-link>
                         </div>
                     </dd>
+                    <!-- TODO print the configs -->
                 </dl>
                 <button type="submit"
                         v-on:click.prevent="previousState()"

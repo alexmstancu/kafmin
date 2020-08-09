@@ -68,7 +68,11 @@
                         <tbody>
                             <tr v-for="broker in cluster.brokers" :key="broker.host">
                                 <!-- TODO create hyperlink on the brokerId to the broker details page -->
-                                <td><span>{{broker.brokerId}}</span></td>
+                                
+                                <td><span>
+                                    <router-link :to="{name: 'BrokerView', params: {clusterId: cluster.clusterId, brokerId: broker.brokerId}}">{{broker.brokerId}}
+                                        </router-link>
+                                </span></td>
                                 <td><span>{{broker.host}}</span></td>
                                 <td><span>{{broker.port}}</span></td>
                                 <td><span>{{isController(broker)}}</span></td>

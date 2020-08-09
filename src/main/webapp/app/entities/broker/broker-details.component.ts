@@ -10,15 +10,15 @@ export default class BrokerDetails extends Vue {
 
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      if (to.params.brokerId) {
-        vm.retrieveBroker(to.params.brokerId);
+      if (to.params.clusterId && to.params.brokerId) {
+        vm.retrieveBroker(to.params.clusterId, to.params.brokerId);
       }
     });
   }
 
-  public retrieveBroker(brokerId) {
+  public retrieveBroker(clusterId, brokerId) {
     this.brokerService()
-      .find(brokerId)
+      .find(clusterId, brokerId)
       .then(res => {
         this.broker = res;
       });
