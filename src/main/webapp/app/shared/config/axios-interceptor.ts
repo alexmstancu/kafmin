@@ -19,8 +19,8 @@ const onRequestSuccess = config => {
 const setupAxiosInterceptors = onUnauthenticated => {
   const onResponseError = err => {
     const status = err.status || err.response.status;
-    if (status == 400) {
-      console.log("HTTP Error 400 received by Axios Interceptor.");
+    if (status === 400) {
+      console.log('HTTP Error 400 received by Axios Interceptor.');
     }
 
     if (status === 403 || status === 401) {

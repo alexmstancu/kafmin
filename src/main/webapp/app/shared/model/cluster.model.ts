@@ -1,5 +1,5 @@
 import { IBroker } from '@/shared/model/broker.model';
-import { ITopicDetails } from '@/shared/model/topicDetails.model'
+import { ITopicDetails } from '@/shared/model/topicDetails.model';
 
 export interface ICluster {
   id?: number;
