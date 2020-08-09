@@ -29,7 +29,7 @@
                         <span>{{getPartitionsCount()}}</span>
                     </dd>
                 </dl>
-
+                <!-- TODO ADD BUTTON TO CREATE TOPIC -->
 
                 <h4><span>Topics</span></h4>
             
@@ -67,8 +67,6 @@
                         </thead>
                         <tbody>
                             <tr v-for="broker in cluster.brokers" :key="broker.host">
-                                <!-- TODO create hyperlink on the brokerId to the broker details page -->
-                                
                                 <td><span>
                                     <router-link :to="{name: 'BrokerView', params: {clusterId: cluster.id, brokerId: broker.brokerId}}">{{broker.brokerId}}
                                         </router-link>
