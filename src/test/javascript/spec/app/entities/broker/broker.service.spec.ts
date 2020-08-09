@@ -38,7 +38,7 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign({}, elemDefault);
         mockedAxios.get.mockReturnValue(Promise.resolve({ data: returnedFromService }));
 
-        return service.find(123).then(res => {
+        return service.find('123', '123').then(res => {
           expect(res).toMatchObject(elemDefault);
         });
       });
@@ -46,7 +46,7 @@ describe('Service Tests', () => {
       it('should not find an element', async () => {
         mockedAxios.get.mockReturnValue(Promise.reject(error));
         return service
-          .find(123)
+          .find('123', '123')
           .then()
           .catch(err => {
             expect(err).toMatchObject(error);

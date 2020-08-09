@@ -5,10 +5,10 @@ import { IBroker } from '@/shared/model/broker.model';
 const baseApiUrl = 'api/brokers';
 
 export default class BrokerService {
-  public find(id: number): Promise<IBroker> {
+  public find(clusterDbId: number, brokerId: string): Promise<IBroker> {
     return new Promise<IBroker>((resolve, reject) => {
       axios
-        .get(`${baseApiUrl}/${id}`)
+        .get(`${baseApiUrl}/${clusterDbId}/${brokerId}`)
         .then(res => {
           resolve(res.data);
         })

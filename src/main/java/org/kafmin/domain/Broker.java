@@ -1,12 +1,14 @@
 package org.kafmin.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * A Broker.
@@ -33,6 +35,10 @@ public class Broker implements Serializable {
 
     @Column(name = "is_controller")
     private Boolean isController;
+
+    @Transient
+    @JsonSerialize
+    private List<GenericConfig> configs;
 
     @ManyToOne
     @JsonIgnoreProperties(value = "brokers", allowSetters = true)
@@ -139,5 +145,13 @@ public class Broker implements Serializable {
             ", port=" + getPort() +
             ", isController='" + isIsController() + "'" +
             "}";
+    }
+
+    public List<GenericConfig> getConfigs() {
+        return configs;
+    }
+
+    public void setConfigs(List<GenericConfig> configs) {
+        this.configs = configs;
     }
 }
