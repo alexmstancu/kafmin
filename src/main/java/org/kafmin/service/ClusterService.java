@@ -1,13 +1,17 @@
 package org.kafmin.service;
 
 import org.apache.kafka.clients.admin.DescribeClusterResult;
+import org.apache.kafka.clients.admin.DescribeConfigsResult;
 import org.apache.kafka.clients.admin.DescribeTopicsResult;
+import org.kafmin.domain.Broker;
 import org.kafmin.domain.Cluster;
+import org.kafmin.domain.GenericConfig;
 import org.kafmin.kafka.KafkaAdministrationCenter;
 import org.kafmin.kafka.TopicPartitionCount;
 import org.kafmin.repository.ClusterRepository;
 import org.kafmin.service.mapper.BrokerMapper;
 import org.kafmin.service.mapper.ClusterMapper;
+import org.kafmin.service.mapper.ConfigMapper;
 import org.kafmin.service.mapper.TopicDetailsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -73,6 +77,8 @@ public class ClusterService {
         enhanceFromDb(kafkaCluster, dbCluster.get());
         enhanceWithTopicPartitions(kafkaCluster);
 
+        printBrokersConfigs(kafkaCluster);
+
         return Optional.of(kafkaCluster);
     }
 
@@ -115,5 +121,12 @@ public class ClusterService {
         kafkaCluster.setTopicsCount(topicPartitionCount.getTopics());
         kafkaCluster.setPartitionsCount(topicPartitionCount.getPartitions());
         kafkaCluster.setTopics(TopicDetailsMapper.from(describeTopicsResult));
+    }
+
+    private void printBrokersConfigs(Cluster kafkaCluster) throws ExecutionException, InterruptedException {
+        Broker broker = kafkaCluster.getBrokers().iterator().next();
+        DescribeConfigsResult describeConfigsResult = adminCenter.describeBrokerConfig(kafkaCluster.getClusterId(), broker.getBrokerId());
+        List<GenericConfig> genericConfigs = ConfigMapper.fromSingleResource(describeConfigsResult);
+        System.out.println("COOOOONFIIIIIIGGGGGG " + genericConfigs);
     }
 }

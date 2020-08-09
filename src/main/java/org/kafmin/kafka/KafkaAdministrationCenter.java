@@ -150,7 +150,7 @@ public class KafkaAdministrationCenter {
         return describeConfigsResult;
     }
 
-    private DescribeConfigsResult describeBrokerConfig(String clusterId, String brokerId) {
+    public DescribeConfigsResult describeBrokerConfig(String clusterId, String brokerId) {
         Admin clusterAdmin = getClusterAdmin(clusterId);
         ConfigResource brokerResource = new ConfigResource(ConfigResource.Type.BROKER, brokerId);
         DescribeConfigsResult describeConfigsResult = clusterAdmin.describeConfigs(Collections.singletonList(brokerResource), DESCRIBE_CONFIGS_OPTIONS);
