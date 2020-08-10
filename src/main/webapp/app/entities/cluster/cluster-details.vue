@@ -51,6 +51,7 @@
                     </router-link>
                 </h4>
 
+                <!-- <div class="table-responsive" v-if="cluster.id && !isFetchingTopics"> -->
                 <div class="table-responsive" v-if="cluster.id">
                     <table class="table table-sm table-striped table-bordered">
                         <thead>

@@ -12,22 +12,22 @@
                     </div> -->
 
                     <dl class="row jh-entity-details">
-                        <dt>
+                        <dt v-if="cluster.id">
                             <span>Cluster Id</span>
                         </dt>
-                        <dd>
+                        <dd v-if="cluster.id">
                             <span>{{cluster.clusterId}}</span>
                         </dd>
-                        <dt>
+                        <dt v-if="cluster.id">
                             <span>Total # of topics</span>
                         </dt>
-                        <dd>
+                        <dd v-if="cluster.id">
                             <span>{{getTopicsCount()}}</span>
                         </dd>
-                        <dt>
+                        <dt v-if="cluster.id">
                             <span>Total # of partitions</span>
                         </dt>
-                        <dd>
+                        <dd v-if="cluster.id">
                             <span>{{getPartitionsCount()}}</span>
                         </dd>
                     </dl>

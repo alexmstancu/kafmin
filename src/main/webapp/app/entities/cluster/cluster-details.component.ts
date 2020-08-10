@@ -13,6 +13,8 @@ export default class ClusterDetails extends Vue {
   @Inject('alertService') private alertService: () => AlertService;
   public cluster: ICluster = {};
   public removedTopicName: string = '';
+  
+  public isFetchingTopics: boolean = false;
 
   beforeRouteEnter(to, from, next) {
     next(vm => {
@@ -23,10 +25,12 @@ export default class ClusterDetails extends Vue {
   }
 
   public retrieveCluster(clusterId) {
+    this.isFetchingTopics = true;
     this.clusterService()
       .find(clusterId)
       .then(res => {
         this.cluster = res;
+        this.isFetchingTopics = false;
       });
   }
 
@@ -83,8 +87,10 @@ export default class ClusterDetails extends Vue {
         this.alertService().showAlert(message, 'danger');
         // this.getAlertFromStore();
         this.removedTopicName = null;
+        // this.retrieveCluster(this.cluster.clusterId)
         // this.retrieveAllTopics();
         this.closeDialog();
+        this.$router.go(0)
       });
   }
 

@@ -13,6 +13,7 @@ import ClusterService from './cluster.service';
 export default class Cluster extends mixins(AlertMixin) {
   @Inject('clusterService') private clusterService: () => ClusterService;
   private removeId: number = null;
+  private removedClusterId: string = null;
 
   public clusters: ICluster[] = [];
 
@@ -44,6 +45,7 @@ export default class Cluster extends mixins(AlertMixin) {
 
   public prepareRemove(instance: ICluster): void {
     this.removeId = instance.id;
+    this.removedClusterId = instance.clusterId
     if (<any>this.$refs.removeEntity) {
       (<any>this.$refs.removeEntity).show();
     }
@@ -53,7 +55,7 @@ export default class Cluster extends mixins(AlertMixin) {
     this.clusterService()
       .delete(this.removeId)
       .then(() => {
-        const message = 'A Cluster is deleted with identifier ' + this.removeId;
+        const message = 'A cluster was disconnected with identifier ' + this.removedClusterId;
         this.alertService().showAlert(message, 'danger');
         this.getAlertFromStore();
         this.removeId = null;
