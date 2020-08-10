@@ -32,7 +32,7 @@
                 <!-- TODO ADD BUTTON TO CREATE TOPIC -->
 
                 <h4><span>Topics</span></h4>
-            
+
                 <div class="table-responsive" v-if="cluster.id">
                     <table class="table table-sm table-striped table-bordered">
                         <thead>
@@ -40,20 +40,46 @@
                                 <th><span>Topic name</span></th>
                                 <th><span># of partitions</span></th>
                                 <th><span>Is internal?</span></th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
 
                             <tr v-for="topic in cluster.topics" :key="topic.name">
-                                <!-- TODO create hyperlink on the topicName to go to the topic details page -->
-                                <td><span>{{topic.name}}</span></td>
+                                <td>
+                                    <span>
+                                        <router-link :to="{name: 'TopicView', params: {topicId: topic.id}}">
+                                            {{topic.name}}
+                                        </router-link>
+
+                                    </span>
+                                </td>
                                 <td><span>{{topic.partitions}}</span></td>
                                 <td><span>{{isInternal(topic)}}</span></td>
+                                <td class="text-right">
+                                    <div class="btn-group">
+                                        <router-link :to="{name: 'TopicView', params: {topicId: topic.id}}" tag="button" class="btn btn-info btn-sm details">
+                                            <font-awesome-icon icon="eye"></font-awesome-icon>
+                                            <span class="d-none d-md-inline">View</span>
+                                        </router-link>
+                                        <router-link :to="{name: 'TopicEdit', params: {topicId: topic.id}}"  tag="button" class="btn btn-primary btn-sm edit">
+                                            <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
+                                            <span class="d-none d-md-inline">Edit</span>
+                                        </router-link>
+                                        <b-button v-on:click="prepareRemove(topic)"
+                                            variant="danger"
+                                            class="btn btn-sm"
+                                            v-b-modal.removeEntity>
+                                            <font-awesome-icon icon="times"></font-awesome-icon>
+                                            <span class="d-none d-md-inline">Delete</span>
+                                        </b-button>
+                                    </div>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                
+
                 <h4><span>Brokers</span></h4>
                 <div class="table-responsive" v-if="cluster.id">
                     <table class="table table-sm table-striped table-bordered">
@@ -63,17 +89,29 @@
                                 <th><span>Host</span></th>
                                 <th><span>Port</span></th>
                                 <th><span>Is controller?</span></th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="broker in cluster.brokers" :key="broker.host">
-                                <td><span>
-                                    <router-link :to="{name: 'BrokerView', params: {clusterId: cluster.id, brokerId: broker.brokerId}}">{{broker.brokerId}}
+                                <td>
+                                    <span>
+                                        <router-link :to="{name: 'BrokerView', params: {clusterId: cluster.id, brokerId: broker.brokerId}}">
+                                            broker {{broker.brokerId}}
                                         </router-link>
-                                </span></td>
+                                    </span>
+                                </td>
                                 <td><span>{{broker.host}}</span></td>
                                 <td><span>{{broker.port}}</span></td>
                                 <td><span>{{isController(broker)}}</span></td>
+                                <td class="text-left">
+                                    <div class="btn-group">
+                                        <router-link :to="{name: 'BrokerView', params: {clusterId: cluster.id, brokerId: broker.brokerId}}" tag="button" class="btn btn-info btn-sm details">
+                                            <font-awesome-icon icon="eye"></font-awesome-icon>
+                                            <span class="d-none d-md-inline">View</span>
+                                        </router-link>
+                                    </div>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
