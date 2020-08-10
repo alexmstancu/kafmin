@@ -59,8 +59,10 @@ public class TopicService {
         return topic;
     }
 
-    public void delete(Long id) {
-        log.debug("Request to delete Topic : {}", id);
+    public void delete(Long clusterDbId, String topicName) throws ExecutionException, InterruptedException {
+        log.debug("Request to delete Topic : {} from cluster {}", topicName, clusterDbId);
+        Cluster cluster = retrieveCluster(clusterDbId);
+        adminCenter.deleteTopic(cluster.getClusterId(), topicName);
     }
 
     public List<Topic> findAll() {

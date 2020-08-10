@@ -105,13 +105,13 @@ public class TopicResource {
     /**
      * {@code DELETE  /topics/:id} : delete the "id" topic.
      *
-     * @param id the id of the topic to delete.
+     * @param topicName the id of the topic to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/topics/{id}")
-    public ResponseEntity<Void> deleteTopic(@PathVariable Long id) {
-        log.debug("REST request to delete Topic : {}", id);
-        topicService.delete(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
+    @DeleteMapping("/topics/{clusterDbId}/{topicName}")
+    public ResponseEntity<Void> deleteTopic(@PathVariable Long clusterDbId, String topicName) throws ExecutionException, InterruptedException {
+        log.debug("Request to delete Topic : {} from cluster {}", topicName, clusterDbId);
+        topicService.delete(clusterDbId, topicName);
+        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, topicName)).build();
     }
 }

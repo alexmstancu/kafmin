@@ -24,6 +24,7 @@ public class KafkaAdministrationCenter {
     private static final DescribeTopicsOptions DESCRIBE_TOPICS_OPTIONS = new DescribeTopicsOptions().timeoutMs(TIMEOUT_MS);
     private static final DescribeConfigsOptions DESCRIBE_CONFIGS_OPTIONS = new DescribeConfigsOptions().timeoutMs(TIMEOUT_MS);
     private static final CreateTopicsOptions CREATE_TOPICS_OPTIONS = new CreateTopicsOptions().timeoutMs(TIMEOUT_MS);
+    private static final DeleteTopicsOptions DELETE_TOPICS_RESULT = new DeleteTopicsOptions().timeoutMs(TIMEOUT_MS);
     private static final ListTopicsOptions LIST_TOPICS_OPTIONS = new ListTopicsOptions().timeoutMs(3000);
 
     private final Map<String, Admin> kafkaAdminByClusterId = new HashMap<>();
@@ -100,7 +101,7 @@ public class KafkaAdministrationCenter {
 
     private CreateTopicsResult createTopicsResultGet(CreateTopicsResult createTopicResultGet, String clusterId) {
         try {
-            logger.debug("Topics listing for cluster: {}, listing: {}", clusterId, createTopicResultGet.all());
+            logger.debug("Topics listing for cluster: {}, listing: {}", clusterId, createTopicResultGet.all().get());
         } catch (Exception e) {
             logger.error("Could not 'get' the CreateTopicsResult fpr cluster {}.", clusterId, e);
             return null;
@@ -116,13 +117,29 @@ public class KafkaAdministrationCenter {
         return createTopicsResultGet(createTopicsResult, clusterId);
     }
 
+    private DeleteTopicsResult deleteTopicsResultGet(DeleteTopicsResult deleteTopicsResult, String clusterId, String topicName) {
+        try {
+            logger.debug("DeleteTopicResult for cluster{} is {}", clusterId, deleteTopicsResult.all().get());
+        } catch (Exception e) {
+            logger.error("Could not 'get' the DeleteTopicsResult for cluster {} and topic {}", clusterId, topicName);
+            return null;
+        }
+        return deleteTopicsResult;
+    }
+
+    public DeleteTopicsResult deleteTopic(String clusterId, String topicName) {
+        Admin clusterAdmin = getClusterAdmin(clusterId);
+        DeleteTopicsResult deleteTopicsResult = clusterAdmin.deleteTopics(Collections.singletonList(topicName), DELETE_TOPICS_RESULT);
+        return deleteTopicsResultGet(deleteTopicsResult, clusterId, topicName);
+    }
+
     public ListTopicsResult listTopics(String clusterId) {
         return listTopicsResultGet(getClusterAdmin(clusterId).listTopics(LIST_TOPICS_OPTIONS), clusterId);
     }
 
     private ListTopicsResult listTopicsResultGet(ListTopicsResult listTopicsResult, String clusterId) {
         try {
-            logger.debug("Topics listing for cluster: {}, listing: {}", clusterId, listTopicsResult.namesToListings());
+            logger.debug("Topics listing for cluster: {}, listing: {}", clusterId, listTopicsResult.namesToListings().get());
         } catch (Exception e) {
             logger.error("Could not 'get' the topics listing for cluster {}.", clusterId, e);
             return null;
