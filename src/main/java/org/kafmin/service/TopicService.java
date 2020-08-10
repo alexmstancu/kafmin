@@ -1,5 +1,6 @@
 package org.kafmin.service;
 
+import org.apache.kafka.clients.admin.DescribeTopicsResult;
 import org.kafmin.domain.Cluster;
 import org.kafmin.domain.Topic;
 import org.kafmin.kafka.KafkaAdministrationCenter;
@@ -32,10 +33,12 @@ public class TopicService {
         return null;
     }
 
-    public Optional<Topic> findOne(Long clusterDbId, String name) throws ExecutionException, InterruptedException {
-        log.debug("Request to get Topic : {} for cluster {}", name, clusterDbId);
+    public Optional<Topic> findOne(Long clusterDbId, String topicName) throws ExecutionException, InterruptedException {
+        log.debug("Request to get Topic : {} for cluster {}", topicName, clusterDbId);
 
         Cluster cluster = retrieveCluster(clusterDbId);
+
+        DescribeTopicsResult describeTopicsResult = adminCenter.describeTopics(cluster.getClusterId(), Collections.singletonList(topicName));
 
         return Optional.empty();
     }
@@ -53,6 +56,5 @@ public class TopicService {
         Optional<Cluster> clusterOptional = clusterService.get(clusterDbId);
         return clusterOptional.get();
     }
-
 
 }

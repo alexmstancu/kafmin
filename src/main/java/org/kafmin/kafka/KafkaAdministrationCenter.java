@@ -94,7 +94,7 @@ public class KafkaAdministrationCenter {
         return clusterResult;
     }
 
-    // TOPICS MANAGEMENT
+    // TOPICS & PARTITIONS MANAGEMENT
 
     public ListTopicsResult listTopics(String clusterId) {
         return listTopicsResultGet(getClusterAdmin(clusterId).listTopics(LIST_TOPICS_OPTIONS), clusterId);
@@ -134,8 +134,6 @@ public class KafkaAdministrationCenter {
         }
         return describeTopicsResult;
     }
-
-    // PARTITION MANAGEMENT
 
     // BROKER MANAGEMENT
 

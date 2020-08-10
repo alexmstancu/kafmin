@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-public class TopicDetailsMapper {
+public class TopicMapper {
     public static List<TopicDetails> from(DescribeTopicsResult describeTopicsResult) throws ExecutionException, InterruptedException {
         return describeTopicsResult
             .all()
