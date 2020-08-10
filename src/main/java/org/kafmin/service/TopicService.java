@@ -15,7 +15,6 @@ import java.util.Optional;
  * Service Implementation for managing {@link Topic}.
  */
 @Service
-@Transactional
 public class TopicService {
 
     private final Logger log = LoggerFactory.getLogger(TopicService.class);
@@ -26,26 +25,11 @@ public class TopicService {
         this.topicRepository = topicRepository;
     }
 
-    /**
-     * Save a topic.
-     *
-     * @param topic the entity to save.
-     * @return the persisted entity.
-     */
     public Topic save(Topic topic) {
         log.debug("Request to save Topic : {}", topic);
         return topicRepository.save(topic);
     }
 
-
-    /**
-     * Get one topic by id.
-     *
-     * @param clusterDbId
-     * @param name the name of the entity.
-     * @return the entity.
-     */
-    @Transactional(readOnly = true)
     public Optional<Topic> findOne(Long clusterDbId, String name) {
         log.debug("Request to get Topic : {} for cluster {}", name, clusterDbId);
 
@@ -53,22 +37,11 @@ public class TopicService {
         return topicRepository.findById(0L);
     }
 
-    /**
-     * Delete the topic by id.
-     *
-     * @param id the id of the entity.
-     */
     public void delete(Long id) {
         log.debug("Request to delete Topic : {}", id);
         topicRepository.deleteById(id);
     }
 
-    /**
-     * Get all the topics.
-     *
-     * @return the list of entities.
-     */
-    @Transactional(readOnly = true)
     public List<Topic> findAll() {
         log.debug("Request to get all Topics");
         return topicRepository.findAll();
