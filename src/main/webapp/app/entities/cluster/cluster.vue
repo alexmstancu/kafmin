@@ -58,7 +58,7 @@
                                    class="btn btn-sm"
                                    v-b-modal.removeEntity>
                                 <font-awesome-icon icon="times"></font-awesome-icon>
-                                <span class="d-none d-md-inline">Disconnct</span>
+                                <span class="d-none d-md-inline">Disconnect</span>
                             </b-button>
                         </div>
                     </td>
