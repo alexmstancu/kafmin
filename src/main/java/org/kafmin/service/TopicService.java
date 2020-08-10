@@ -1,15 +1,17 @@
 package org.kafmin.service;
 
+import org.kafmin.domain.Cluster;
 import org.kafmin.domain.Topic;
-import org.kafmin.repository.TopicRepository;
+import org.kafmin.kafka.KafkaAdministrationCenter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Service Implementation for managing {@link Topic}.
@@ -19,31 +21,38 @@ public class TopicService {
 
     private final Logger log = LoggerFactory.getLogger(TopicService.class);
 
-    private final TopicRepository topicRepository;
+    @Autowired
+    private KafkaAdministrationCenter adminCenter;
 
-    public TopicService(TopicRepository topicRepository) {
-        this.topicRepository = topicRepository;
-    }
+    @Autowired
+    private ClusterService clusterService;
 
     public Topic save(Topic topic) {
         log.debug("Request to save Topic : {}", topic);
-        return topicRepository.save(topic);
+        return null;
     }
 
-    public Optional<Topic> findOne(Long clusterDbId, String name) {
+    public Optional<Topic> findOne(Long clusterDbId, String name) throws ExecutionException, InterruptedException {
         log.debug("Request to get Topic : {} for cluster {}", name, clusterDbId);
 
+        Cluster cluster = retrieveCluster(clusterDbId);
 
-        return topicRepository.findById(0L);
+        return Optional.empty();
     }
 
     public void delete(Long id) {
         log.debug("Request to delete Topic : {}", id);
-        topicRepository.deleteById(id);
     }
 
     public List<Topic> findAll() {
         log.debug("Request to get all Topics");
-        return topicRepository.findAll();
+        return Collections.emptyList();
     }
+
+    private Cluster retrieveCluster(Long clusterDbId) throws ExecutionException, InterruptedException {
+        Optional<Cluster> clusterOptional = clusterService.get(clusterDbId);
+        return clusterOptional.get();
+    }
+
+
 }

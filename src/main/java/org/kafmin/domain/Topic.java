@@ -1,11 +1,13 @@
 package org.kafmin.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * A Topic.
@@ -26,6 +28,18 @@ public class Topic implements Serializable {
 
     @Column(name = "is_internal")
     private Boolean isInternal;
+
+    @Transient
+    @JsonSerialize
+    private List<GenericConfig> configs;
+
+    @Transient
+    @JsonSerialize
+    private List<TopicPartition> partitions;
+
+    @Transient
+    @JsonSerialize
+    private Cluster cluster;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -87,5 +101,29 @@ public class Topic implements Serializable {
             ", name='" + getName() + "'" +
             ", isInternal='" + isIsInternal() + "'" +
             "}";
+    }
+
+    public List<GenericConfig> getConfigs() {
+        return configs;
+    }
+
+    public void setConfigs(List<GenericConfig> configs) {
+        this.configs = configs;
+    }
+
+    public List<TopicPartition> getPartitions() {
+        return partitions;
+    }
+
+    public void setPartitions(List<TopicPartition> partitions) {
+        this.partitions = partitions;
+    }
+
+    public Cluster getCluster() {
+        return cluster;
+    }
+
+    public void setCluster(Cluster cluster) {
+        this.cluster = cluster;
     }
 }
