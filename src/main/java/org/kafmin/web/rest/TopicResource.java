@@ -53,7 +53,7 @@ public class TopicResource {
         }
         Topic result = topicService.create(clusterDbId, topic);
         return ResponseEntity.created(new URI("/api/topics/" + clusterDbId + "/" + result.getName()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getName()))
             .body(result);
     }
 

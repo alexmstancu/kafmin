@@ -24,11 +24,15 @@ export default class TopicUpdate extends Vue {
   public topic: ITopic = new Topic();
   public isSaving = false;
   public currentLanguage = '';
+  public savedClusterDbId: number = -1;
 
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      if (to.params.clusterDbId && to.params.topicId) {
-        vm.retrieveTopic(to.params.clusterDbId, to.params.topicId);
+      if (to.params.clusterDbId) {
+        vm.savedClusterDbId = to.params.clusterDbId
+        if (to.params.topicId) {
+          vm.retrieveTopic(to.params.clusterDbId, to.params.topicId);
+        }
       }
     });
   }
@@ -45,22 +49,24 @@ export default class TopicUpdate extends Vue {
 
   public save(): void {
     this.isSaving = true;
-    if (this.topic.cluster) {
+    if (this.topic.cluster !== undefined) {
       this.topicService()
         .update(this.topic)
         .then(param => {
           this.isSaving = false;
           this.$router.go(-1);
-          const message = 'A Topic is updated with identifier ' + param.id;
+          const message = 'Topic with name ' + param.name + ' was updated.';
           this.alertService().showAlert(message, 'info');
         });
     } else {
+      console.log("INAINTE DE CREATE")
+      console.log(this.topic);
       this.topicService()
-        .create(this.topic.cluster.id, this.topic)
+        .create(this.savedClusterDbId, this.topic)
         .then(param => {
           this.isSaving = false;
           this.$router.go(-1);
-          const message = 'A Topic is created with identifier ' + param.id;
+          const message = 'A topic was created with name ' + param.name;
           this.alertService().showAlert(message, 'success');
         });
     }

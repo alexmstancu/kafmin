@@ -4,7 +4,6 @@
             <form name="editForm" role="form" novalidate v-on:submit.prevent="save()">
                 <h2 id="kafminApp.topic.home.createOrEditLabel">Create or edit a Topic</h2>
                 <div>
-
                     <div class="form-group">
                         <label class="form-control-label" for="topic-name">Name</label>
                         <input type="text" class="form-control" name="name" id="topic-name"
@@ -12,14 +11,14 @@
                     </div>
                     <div class="form-group">
                         <label class="form-control-label" for="topic-numPartitions">Number of partitions</label>
-                        <input type="text" class="form-control" name="numPartitions" id="topic-numPartitions" 
-                            :class="{'valid': !$v.topic.numPartitions.$invalid, 'invalid': $v.topic.numPartitions.$invalid }" v-model="$v.topic.numPartitions.$model" />
+                        <input class="form-control" name="numPartitions" id="topic-numPartitions" 
+                            :class="{'valid': !$v.topic.numPartitions.$invalid, 'invalid': $v.topic.numPartitions.$invalid }" v-model.number="$v.topic.numPartitions.$model" />
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-control-label" for="topic-repl">Replication factor</label>
-                        <input type="text" class="form-control" name="repl" id="topic-repl"
-                            :class="{'valid': !$v.topic.replicationFactor.$invalid, 'invalid': $v.replicationFactor.name.$invalid }" v-model="$v.topic.replicationFactor.$model" />
+                        <label class="form-control-label" for="topic-replicationFactor">Replication factor</label>
+                        <input  class="form-control" name="replicationFactor" id="topic-replicationFactor"
+                            :class="{'valid': !$v.topic.replicationFactor.$invalid, 'invalid': $v.topic.replicationFactor.$invalid }" v-model.number="$v.topic.replicationFactor.$model" />
                     </div>
                 </div>
                 <div>
