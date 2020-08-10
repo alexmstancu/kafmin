@@ -31,7 +31,13 @@
                 </dl>
                 <!-- TODO ADD BUTTON TO CREATE TOPIC -->
 
-                <h4><span>Topics</span></h4>
+                <h4>
+                    <span>Topics</span>
+                    <router-link :to="{name: 'TopicCreate', params: {clusterDbId: cluster.id}}" tag="button" id="jh-create-entity" class="btn btn-primary btn-sm float-right jh-create-entity create-topic">
+                        <font-awesome-icon icon="plus"></font-awesome-icon>
+                    <span>Create a new Topic</span>
+                    </router-link>
+                </h4>
 
                 <div class="table-responsive" v-if="cluster.id">
                     <table class="table table-sm table-striped table-bordered">
