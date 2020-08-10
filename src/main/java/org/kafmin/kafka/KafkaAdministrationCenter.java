@@ -23,7 +23,6 @@ public class KafkaAdministrationCenter {
     private static final DescribeTopicsOptions DESCRIBE_TOPICS_OPTIONS = new DescribeTopicsOptions().timeoutMs(TIMEOUT_MS);
     private static final DescribeConfigsOptions DESCRIBE_CONFIGS_OPTIONS = new DescribeConfigsOptions().timeoutMs(TIMEOUT_MS);
     private static final ListTopicsOptions LIST_TOPICS_OPTIONS = new ListTopicsOptions().timeoutMs(3000);
-    public static final String HTTP_LOCALHOST_9093 = "http://localhost:9092";
 
     private final Map<String, Admin> kafkaAdminByClusterId = new HashMap<>();
 
