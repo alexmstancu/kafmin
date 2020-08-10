@@ -2,6 +2,7 @@ import { Component, Vue, Inject } from 'vue-property-decorator';
 
 import { ITopic } from '@/shared/model/topic.model';
 import TopicService from './topic.service';
+import { IGenericConfig } from '@/shared/model/genericConfig.model';
 
 @Component
 export default class TopicDetails extends Vue {
@@ -26,5 +27,12 @@ export default class TopicDetails extends Vue {
 
   public previousState() {
     this.$router.go(-1);
+  }
+
+  public isReadonly(config: IGenericConfig): string {
+    if (config.isReadOnly) {
+      return "yes";
+    }
+    return "no";
   }
 }

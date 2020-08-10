@@ -2,7 +2,7 @@
     <div class="row justify-content-center">
         <div class="col-8">
             <div v-if="topic">
-                <h2 class="jh-entity-heading"><span>Topic</span> {{topic.id}}</h2>
+                <h2 class="jh-entity-heading"><span>Topic</span> '{{topic.name}}'</h2>
                 <dl class="row jh-entity-details">
                     <dt>
                         <span>Name</span>
@@ -16,7 +16,37 @@
                     <dd>
                         <span>{{topic.isInternal}}</span>
                     </dd>
+                    <dt>
+                        <span>Cluster</span>
+                    </dt>
+                    <dd>
+                        <div v-if="topic.cluster">
+                            <router-link :to="{name: 'ClusterView', params: {clusterId: topic.cluster.id}}">{{topic.cluster.name}} ({{topic.cluster.clusterId}})</router-link>
+                        </div>
+                    </dd>
                 </dl>
+
+                <h4><span> Topic Configurations</span></h4>
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th><span>Name</span></th>
+                                <th><span>Value</span></th>
+                                <th><span>Is readonly?</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="config in topic.configs" :key="config.name">
+                                <td><span>{{config.name}}</span></td>
+                                <td><span>{{config.value}}</span></td>
+                                <td><span>{{isReadonly(config)}}</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
                 <button type="submit"
                         v-on:click.prevent="previousState()"
                         class="btn btn-info">
