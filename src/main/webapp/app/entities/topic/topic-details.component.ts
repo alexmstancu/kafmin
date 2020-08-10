@@ -3,6 +3,7 @@ import { Component, Vue, Inject } from 'vue-property-decorator';
 import { ITopic } from '@/shared/model/topic.model';
 import TopicService from './topic.service';
 import { IGenericConfig } from '@/shared/model/genericConfig.model';
+import { Broker } from '@/shared/model/broker.model';
 
 @Component
 export default class TopicDetails extends Vue {
@@ -34,5 +35,19 @@ export default class TopicDetails extends Vue {
       return "yes";
     }
     return "no";
+  }
+
+  public getPartitionsCount(): number {
+    if (this.topic.partitions) {
+      return this.topic.partitions.length;
+    }
+    return 0;
+  }
+
+  public isInternal(): string {
+    if (this.topic.isInternal) {
+      return 'yes';
+    }
+    return 'no';
   }
 }

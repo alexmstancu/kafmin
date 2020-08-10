@@ -14,7 +14,13 @@
                         <span>Is Internal</span>
                     </dt>
                     <dd>
-                        <span>{{topic.isInternal}}</span>
+                        <span>{{isInternal()}}</span>
+                    </dd>
+                    <dt>
+                        <span># of partitions</span>
+                    </dt>
+                    <dd>
+                        <span>{{getPartitionsCount()}}</span>
                     </dd>
                     <dt>
                         <span>Cluster</span>
@@ -25,6 +31,45 @@
                         </div>
                     </dd>
                 </dl>
+
+                <h4><span>Partitions</span></h4>
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th><span>Partition</span></th>
+                                <th><span>Leader broker</span></th>
+                                <th><span>Replica brokers</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="partition in topic.partitions" :key="partition.id">
+                                
+                                <td><span>{{topic.name}}-<b>{{partition.id}}</b></span></td>
+                                <td>
+                                    <span>
+                                        <router-link :to="{name: 'BrokerView', params: {clusterId: topic.cluster.id, brokerId: partition.leader.brokerId}}">
+                                            broker {{partition.leader.brokerId}} ({{partition.leader.host}}:{{partition.leader.port}}) 
+                                        </router-link>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span v-for="(replica, index) in partition.replicas" :key="replica.id">
+                                       <small>
+                                           <router-link :to="{name: 'BrokerView', params: {clusterId: topic.cluster.id, brokerId: replica.brokerId}}">
+                                                broker {{replica.brokerId}} ({{replica.host}}:{{replica.port}})  
+                                            </router-link>
+                                            <span v-if="index !== partition.replicas.length - 1">&#8226; </span>
+
+                                       </small>
+                                         
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
 
                 <h4><span> Topic Configurations</span></h4>
                 <div class="table-responsive">
