@@ -135,6 +135,13 @@ public class KafkaAdministrationCenter {
         return describeTopicsResult;
     }
 
+    public DescribeConfigsResult describeTopicConfig(String clusterId, String topicName) {
+        Admin clusterAdmin = getClusterAdmin(clusterId);
+        ConfigResource topicResource = new ConfigResource(ConfigResource.Type.TOPIC, topicName);
+        DescribeConfigsResult describeConfigsResult = clusterAdmin.describeConfigs(Collections.singletonList(topicResource), DESCRIBE_CONFIGS_OPTIONS);
+        return describeConfigResourceGet(describeConfigsResult, clusterId);
+    }
+
     // BROKER MANAGEMENT
 
     private DescribeConfigsResult describeConfigResourceGet(DescribeConfigsResult describeConfigsResult, String clusterId) {

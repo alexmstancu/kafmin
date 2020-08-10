@@ -1,9 +1,13 @@
 package org.kafmin.service;
 
+import org.apache.kafka.clients.admin.DescribeConfigsResult;
 import org.apache.kafka.clients.admin.DescribeTopicsResult;
 import org.kafmin.domain.Cluster;
+import org.kafmin.domain.GenericConfig;
 import org.kafmin.domain.Topic;
 import org.kafmin.kafka.KafkaAdministrationCenter;
+import org.kafmin.service.mapper.ConfigMapper;
+import org.kafmin.service.mapper.TopicMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +41,11 @@ public class TopicService {
         log.debug("Request to get Topic : {} for cluster {}", topicName, clusterDbId);
 
         Cluster cluster = retrieveCluster(clusterDbId);
-
-        DescribeTopicsResult describeTopicsResult = adminCenter.describeTopics(cluster.getClusterId(), Collections.singletonList(topicName));
-
-        return Optional.empty();
+        Topic topic = retrieveTopic(cluster.getClusterId(), topicName);
+        topic.setCluster(cluster);
+        topic.setConfigs(retrieveConfigs(cluster.getClusterId(), topicName));
+        removeUnusedFields(cluster);
+        return Optional.of(topic);
     }
 
     public void delete(Long id) {
@@ -57,4 +62,18 @@ public class TopicService {
         return clusterOptional.get();
     }
 
+    private Topic retrieveTopic(String clusterId, String topicName) throws ExecutionException, InterruptedException {
+        DescribeTopicsResult describeTopicsResult = adminCenter.describeTopics(clusterId, Collections.singletonList(topicName));
+        return TopicMapper.from(describeTopicsResult, topicName);
+    }
+
+    private List<GenericConfig> retrieveConfigs(String clusterId, String topicName) throws ExecutionException, InterruptedException {
+        DescribeConfigsResult describeConfigsResult = adminCenter.describeTopicConfig(clusterId, topicName);
+        return ConfigMapper.fromSingleResource(describeConfigsResult);
+    }
+
+    private void removeUnusedFields(Cluster cluster ) {
+        cluster.setTopics(Collections.emptyList());
+        cluster.setBrokers(Collections.emptySet());
+    }
 }

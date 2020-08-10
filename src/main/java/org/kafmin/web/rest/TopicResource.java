@@ -16,6 +16,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 /**
  * REST controller for managing {@link org.kafmin.domain.Topic}.
@@ -95,7 +96,7 @@ public class TopicResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the topic, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/topics/{clusterDbId}/{name}")
-    public ResponseEntity<Topic> getTopic(@PathVariable Long clusterDbId, @PathVariable String name) {
+    public ResponseEntity<Topic> getTopic(@PathVariable Long clusterDbId, @PathVariable String name) throws ExecutionException, InterruptedException {
         log.debug("REST request to get Topic : {} for clusterDbId: {}", name, clusterDbId);
         Optional<Topic> topic = topicService.findOne(clusterDbId, name);
         return ResponseUtil.wrapOrNotFound(topic);
