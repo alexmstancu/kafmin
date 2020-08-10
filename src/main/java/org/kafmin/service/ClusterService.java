@@ -1,18 +1,14 @@
 package org.kafmin.service;
 
 import org.apache.kafka.clients.admin.DescribeClusterResult;
-import org.apache.kafka.clients.admin.DescribeConfigsResult;
 import org.apache.kafka.clients.admin.DescribeTopicsResult;
-import org.kafmin.domain.Broker;
 import org.kafmin.domain.Cluster;
-import org.kafmin.domain.GenericConfig;
 import org.kafmin.kafka.KafkaAdministrationCenter;
 import org.kafmin.kafka.TopicPartitionCount;
 import org.kafmin.repository.ClusterRepository;
 import org.kafmin.service.mapper.BrokerMapper;
 import org.kafmin.service.mapper.ClusterMapper;
-import org.kafmin.service.mapper.ConfigMapper;
-import org.kafmin.service.mapper.TopicDetailsMapper;
+import org.kafmin.service.mapper.TopicMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -118,7 +114,7 @@ public class ClusterService {
         TopicPartitionCount topicPartitionCount = TopicPartitionCount.extract(describeTopicsResult);
         kafkaCluster.setTopicsCount(topicPartitionCount.getTopics());
         kafkaCluster.setPartitionsCount(topicPartitionCount.getPartitions());
-        kafkaCluster.setTopics(TopicDetailsMapper.from(describeTopicsResult));
+        kafkaCluster.setTopics(TopicMapper.from(describeTopicsResult));
     }
 
 }

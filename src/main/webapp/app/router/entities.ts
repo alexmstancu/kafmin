@@ -14,6 +14,12 @@ const Cluster = () => import('@/entities/cluster/cluster.vue');
 const ClusterUpdate = () => import('@/entities/cluster/cluster-update.vue');
 // prettier-ignore
 const ClusterDetails = () => import('@/entities/cluster/cluster-details.vue');
+// prettier-ignore
+const Topic = () => import('@/entities/topic/topic.vue');
+// prettier-ignore
+const TopicUpdate = () => import('@/entities/topic/topic-update.vue');
+// prettier-ignore
+const TopicDetails = () => import('@/entities/topic/topic-details.vue');
 // jhipster-needle-add-entity-to-router-import - JHipster will import entities to the router here
 
 export default [
@@ -63,6 +69,31 @@ export default [
     path: '/cluster/:clusterId/view',
     name: 'ClusterView',
     component: ClusterDetails,
+    meta: { authorities: [Authority.USER] },
+  },
+
+  {
+    path: '/topic',
+    name: 'Topic',
+    component: Topic,
+    meta: { authorities: [Authority.USER] },
+  },
+  {
+    path: '/topic/new',
+    name: 'TopicCreate',
+    component: TopicUpdate,
+    meta: { authorities: [Authority.USER] },
+  },
+  {
+    path: '/topic/:topicId/edit',
+    name: 'TopicEdit',
+    component: TopicUpdate,
+    meta: { authorities: [Authority.USER] },
+  },
+  {
+    path: '/topic/:clusterDbId/:topicName/view',
+    name: 'TopicView',
+    component: TopicDetails,
     meta: { authorities: [Authority.USER] },
   },
   // jhipster-needle-add-entity-to-router - JHipster will add entities to the router here

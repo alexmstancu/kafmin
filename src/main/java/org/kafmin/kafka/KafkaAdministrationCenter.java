@@ -23,7 +23,6 @@ public class KafkaAdministrationCenter {
     private static final DescribeTopicsOptions DESCRIBE_TOPICS_OPTIONS = new DescribeTopicsOptions().timeoutMs(TIMEOUT_MS);
     private static final DescribeConfigsOptions DESCRIBE_CONFIGS_OPTIONS = new DescribeConfigsOptions().timeoutMs(TIMEOUT_MS);
     private static final ListTopicsOptions LIST_TOPICS_OPTIONS = new ListTopicsOptions().timeoutMs(3000);
-    public static final String HTTP_LOCALHOST_9093 = "http://localhost:9092";
 
     private final Map<String, Admin> kafkaAdminByClusterId = new HashMap<>();
 
@@ -95,7 +94,7 @@ public class KafkaAdministrationCenter {
         return clusterResult;
     }
 
-    // TOPICS MANAGEMENT
+    // TOPICS & PARTITIONS MANAGEMENT
 
     public ListTopicsResult listTopics(String clusterId) {
         return listTopicsResultGet(getClusterAdmin(clusterId).listTopics(LIST_TOPICS_OPTIONS), clusterId);
@@ -136,7 +135,12 @@ public class KafkaAdministrationCenter {
         return describeTopicsResult;
     }
 
-    // PARTITION MANAGEMENT
+    public DescribeConfigsResult describeTopicConfig(String clusterId, String topicName) {
+        Admin clusterAdmin = getClusterAdmin(clusterId);
+        ConfigResource topicResource = new ConfigResource(ConfigResource.Type.TOPIC, topicName);
+        DescribeConfigsResult describeConfigsResult = clusterAdmin.describeConfigs(Collections.singletonList(topicResource), DESCRIBE_CONFIGS_OPTIONS);
+        return describeConfigResourceGet(describeConfigsResult, clusterId);
+    }
 
     // BROKER MANAGEMENT
 

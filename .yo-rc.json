@@ -45,6 +45,7 @@
         "name": "generator-jhipster-vuejs",
         "version": "1.9.1"
       }
-    ]
+    ],
+    "lastLiquibaseTimestamp": 1597051680000
   }
 }

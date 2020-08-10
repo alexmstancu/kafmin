@@ -30,10 +30,9 @@
                             <router-link :to="{name: 'ClusterView', params: {clusterId: broker.cluster.id}}">{{broker.cluster.name}} ({{broker.cluster.clusterId}})</router-link>
                         </div>
                     </dd>
-                    <!-- TODO print the configs -->
                 </dl>
 
-                <h4><span>Configurations</span></h4>
+                <h4><span>Broker Configurations</span></h4>
                 <div class="table-responsive">
                     <table class="table table-sm table-striped table-bordered">
                         <thead>
