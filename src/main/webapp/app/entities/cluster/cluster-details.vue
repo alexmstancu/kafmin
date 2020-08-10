@@ -2,7 +2,20 @@
     <div class="row justify-content-center">
         <div class="col-8">
             <div v-if="cluster">
-                <h2 class="jh-entity-heading"><span>Cluster</span> '{{cluster.name}}'</h2>
+                <h2 class="jh-entity-heading">
+                    <span>Cluster</span> '{{cluster.name}}'
+
+                    <router-link v-if="cluster.id" :to="{name: 'ClusterEdit', params: {clusterId: cluster.id}}" tag="button" class="btn btn-primary float-right">
+                        <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span> Edit cluster name</span>
+                    </router-link>
+
+                    <button type="submit"
+                            v-on:click.prevent="previousState()"
+                            class="btn btn-info float-right">
+                        <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span> Back</span>
+                    </button>
+                </h2>
+
                 <dl class="row jh-entity-details">
                     <dt>
                         <span>Cluster Id</span>
@@ -29,13 +42,12 @@
                         <span>{{getPartitionsCount()}}</span>
                     </dd>
                 </dl>
-                <!-- TODO ADD BUTTON TO CREATE TOPIC -->
 
                 <h4>
                     <span>Topics</span>
                     <router-link :to="{name: 'TopicCreate', params: {clusterDbId: cluster.id}}" tag="button" id="jh-create-entity" class="btn btn-primary btn-sm float-right jh-create-entity create-topic">
                         <font-awesome-icon icon="plus"></font-awesome-icon>
-                    <span>Create a new Topic</span>
+                    <span>Create new Topic</span>
                     </router-link>
                 </h4>
 
@@ -129,7 +141,7 @@
                     <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span> Back</span>
                 </button>
                 <router-link v-if="cluster.id" :to="{name: 'ClusterEdit', params: {clusterId: cluster.id}}" tag="button" class="btn btn-primary">
-                    <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span> Edit</span>
+                    <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span> Edit cluster name</span>
                 </router-link>
             </div>
         </div>

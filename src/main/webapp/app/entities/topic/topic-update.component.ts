@@ -59,8 +59,6 @@ export default class TopicUpdate extends Vue {
           this.alertService().showAlert(message, 'info');
         });
     } else {
-      console.log("INAINTE DE CREATE")
-      console.log(this.topic);
       this.topicService()
         .create(this.savedClusterDbId, this.topic)
         .then(param => {

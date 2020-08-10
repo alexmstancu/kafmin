@@ -2,19 +2,42 @@
     <div class="row justify-content-center">
         <div class="col-8">
             <form name="editForm" role="form" novalidate v-on:submit.prevent="save()" >
-                <h2 id="kafminApp.cluster.home.createOrEditLabel">Create or edit a Cluster</h2>
+                <h2 v-if="cluster.id" id="kafminApp.cluster.home.createOrEditLabel">Edit a Cluster</h2>
+                <h2 v-if="!cluster.id" id="kafminApp.cluster.home.createOrEditLabel1">Connect to a new Cluster</h2>
                 <div>
-                    <div class="form-group" v-if="cluster.id">
+                    <!-- <div class="form-group" v-if="cluster.id">
                         <label for="id">ID</label>
                         <input type="text" class="form-control" id="id" name="id"
                                v-model="cluster.id" readonly />
-                    </div>
-                    <div class="form-group" v-if="cluster.id">
+                    </div> -->
+
+                    <dl class="row jh-entity-details">
+                        <dt>
+                            <span>Cluster Id</span>
+                        </dt>
+                        <dd>
+                            <span>{{cluster.clusterId}}</span>
+                        </dd>
+                        <dt>
+                            <span>Total # of topics</span>
+                        </dt>
+                        <dd>
+                            <span>{{getTopicsCount()}}</span>
+                        </dd>
+                        <dt>
+                            <span>Total # of partitions</span>
+                        </dt>
+                        <dd>
+                            <span>{{getPartitionsCount()}}</span>
+                        </dd>
+                    </dl>
+
+                    <!-- <div class="form-group" v-if="cluster.id">
                         <label class="form-control-label" for="cluster-clusterId">Cluster Id</label>
                         <input type="text" class="form-control" id="id" name="id" v-model="cluster.clusterId" readonly />
-                    </div>
+                    </div> -->
                     <div class="form-group">
-                        <label class="form-control-label" for="cluster-name">Cluster Name</label>
+                        <label class="form-control-label" for="cluster-name">New cluster name</label>
                         <input type="text" class="form-control" name="name" id="cluster-name"
                             :class="{'valid': !$v.cluster.name.$invalid, 'invalid': $v.cluster.name.$invalid }" v-model="$v.cluster.name.$model" />
                     </div>

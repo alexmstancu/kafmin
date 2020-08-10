@@ -2,7 +2,8 @@
     <div class="row justify-content-center">
         <div class="col-8">
             <form name="editForm" role="form" novalidate v-on:submit.prevent="save()">
-                <h2 id="kafminApp.topic.home.createOrEditLabel">Create or edit a Topic</h2>
+                <h2 v-if="topic.cluster === undefined" id="kafminApp.topic.home.createOrEditLabel">Create a Topic</h2>
+                <h2 v-if="topic.cluster !== undefined" id="kafminApp.topic.home.createOrEditLabel2">Edit a Topic</h2>
                 <div>
                     <div class="form-group">
                         <label class="form-control-label" for="topic-name">Name</label>

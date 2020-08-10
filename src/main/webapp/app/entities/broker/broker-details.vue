@@ -2,7 +2,16 @@
     <div class="row justify-content-center">
         <div class="col-8">
             <div v-if="broker">
-                <h2 class="jh-entity-heading"><span>Broker</span> {{broker.brokerId}}</h2>
+                <h2 class="jh-entity-heading">
+                    <span>Broker</span> {{broker.brokerId}}
+                    
+                    <button type="submit"
+                            v-on:click.prevent="previousState()"
+                            class="btn btn-info float-right">
+                        <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span> Back</span>
+                    </button>
+                    
+                </h2>
                 <dl class="row jh-entity-details">
                     <dt>
                         <span>Host</span>
@@ -58,9 +67,9 @@
                         class="btn btn-info">
                     <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span> Back</span>
                 </button>
-                <router-link v-if="broker.id" :to="{name: 'BrokerEdit', params: {clusterId: broker.cluster.id, brokerId: broker.id}}" tag="button" class="btn btn-primary">
+                <!-- <router-link v-if="broker.id" :to="{name: 'BrokerEdit', params: {clusterId: broker.cluster.id, brokerId: broker.id}}" tag="button" class="btn btn-primary">
                     <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span> Edit</span>
-                </router-link>
+                </router-link> -->
             </div>
         </div>
     </div>
