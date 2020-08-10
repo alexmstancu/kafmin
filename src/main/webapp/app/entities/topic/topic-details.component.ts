@@ -10,15 +10,15 @@ export default class TopicDetails extends Vue {
 
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      if (to.params.topicId) {
-        vm.retrieveTopic(to.params.topicId);
+      if (to.params.clusterDbId && to.params.topicName) {
+        vm.retrieveTopic(to.params.clusterDbId, to.params.topicName);
       }
     });
   }
 
-  public retrieveTopic(topicId) {
+  public retrieveTopic(clusterDbId, topicName) {
     this.topicService()
-      .find(topicId)
+      .find(clusterDbId, topicName)
       .then(res => {
         this.topic = res;
       });

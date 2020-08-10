@@ -5,10 +5,10 @@ import { ITopic } from '@/shared/model/topic.model';
 const baseApiUrl = 'api/topics';
 
 export default class TopicService {
-  public find(id: number): Promise<ITopic> {
+  public find(clusterDbId: number, topicName: number): Promise<ITopic> {
     return new Promise<ITopic>((resolve, reject) => {
       axios
-        .get(`${baseApiUrl}/${id}`)
+        .get(`${baseApiUrl}/${clusterDbId}/${topicName}`)
         .then(res => {
           resolve(res.data);
         })

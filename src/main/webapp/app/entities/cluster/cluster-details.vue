@@ -48,7 +48,7 @@
                             <tr v-for="topic in cluster.topics" :key="topic.name">
                                 <td>
                                     <span>
-                                        <router-link :to="{name: 'TopicView', params: {topicId: topic.id}}">
+                                        <router-link :to="{name: 'TopicView', params: {clusterDbId: cluster.id, topicName: topic.name}}">
                                             {{topic.name}}
                                         </router-link>
 
@@ -58,7 +58,7 @@
                                 <td><span>{{isInternal(topic)}}</span></td>
                                 <td class="text-right">
                                     <div class="btn-group">
-                                        <router-link :to="{name: 'TopicView', params: {topicId: topic.id}}" tag="button" class="btn btn-info btn-sm details">
+                                        <router-link :to="{name: 'TopicView', params: {clusterDbId: cluster.id, topicName: topic.name}}" tag="button" class="btn btn-info btn-sm details">
                                             <font-awesome-icon icon="eye"></font-awesome-icon>
                                             <span class="d-none d-md-inline">View</span>
                                         </router-link>

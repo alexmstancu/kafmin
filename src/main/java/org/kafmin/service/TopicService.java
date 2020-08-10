@@ -52,13 +52,14 @@ public class TopicService {
     /**
      * Get one topic by id.
      *
-     * @param id the id of the entity.
+     * @param clusterDbId
+     * @param name the name of the entity.
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<Topic> findOne(Long id) {
-        log.debug("Request to get Topic : {}", id);
-        return topicRepository.findById(id);
+    public Optional<Topic> findOne(Long clusterDbId, String name) {
+        log.debug("Request to get Topic : {} for cluster {}", name, clusterDbId);
+        return topicRepository.findById(0L);
     }
 
     /**

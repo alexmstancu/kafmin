@@ -91,13 +91,13 @@ public class TopicResource {
     /**
      * {@code GET  /topics/:id} : get the "id" topic.
      *
-     * @param id the id of the topic to retrieve.
+     * @param name the id of the topic to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the topic, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/topics/{id}")
-    public ResponseEntity<Topic> getTopic(@PathVariable Long id) {
-        log.debug("REST request to get Topic : {}", id);
-        Optional<Topic> topic = topicService.findOne(id);
+    @GetMapping("/topics/{clusterDbId}/{name}")
+    public ResponseEntity<Topic> getTopic(@PathVariable Long clusterDbId, @PathVariable String name) {
+        log.debug("REST request to get Topic : {}", name);
+        Optional<Topic> topic = topicService.findOne(clusterDbId, name);
         return ResponseUtil.wrapOrNotFound(topic);
     }
 

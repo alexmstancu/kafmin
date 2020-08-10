@@ -91,7 +91,7 @@ export default [
     meta: { authorities: [Authority.USER] },
   },
   {
-    path: '/topic/:topicId/view',
+    path: '/topic/:clusterDbId/:topicName/view',
     name: 'TopicView',
     component: TopicDetails,
     meta: { authorities: [Authority.USER] },
