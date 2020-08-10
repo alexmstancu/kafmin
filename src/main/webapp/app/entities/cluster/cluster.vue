@@ -5,7 +5,7 @@
             <router-link :to="{name: 'ClusterCreate'}" tag="button" id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-cluster">
                 <font-awesome-icon icon="plus"></font-awesome-icon>
                 <span >
-                    Create a new Cluster
+                    Connect to a new Cluster
                 </span>
             </router-link>
         </h2>
@@ -58,7 +58,7 @@
                                    class="btn btn-sm"
                                    v-b-modal.removeEntity>
                                 <font-awesome-icon icon="times"></font-awesome-icon>
-                                <span class="d-none d-md-inline">Delete</span>
+                                <span class="d-none d-md-inline">Disconnct</span>
                             </b-button>
                         </div>
                     </td>
