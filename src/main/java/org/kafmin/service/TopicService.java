@@ -37,17 +37,6 @@ public class TopicService {
         return topicRepository.save(topic);
     }
 
-    /**
-     * Get all the topics.
-     *
-     * @return the list of entities.
-     */
-    @Transactional(readOnly = true)
-    public List<Topic> findAll() {
-        log.debug("Request to get all Topics");
-        return topicRepository.findAll();
-    }
-
 
     /**
      * Get one topic by id.
@@ -59,6 +48,8 @@ public class TopicService {
     @Transactional(readOnly = true)
     public Optional<Topic> findOne(Long clusterDbId, String name) {
         log.debug("Request to get Topic : {} for cluster {}", name, clusterDbId);
+
+
         return topicRepository.findById(0L);
     }
 
@@ -70,5 +61,16 @@ public class TopicService {
     public void delete(Long id) {
         log.debug("Request to delete Topic : {}", id);
         topicRepository.deleteById(id);
+    }
+
+    /**
+     * Get all the topics.
+     *
+     * @return the list of entities.
+     */
+    @Transactional(readOnly = true)
+    public List<Topic> findAll() {
+        log.debug("Request to get all Topics");
+        return topicRepository.findAll();
     }
 }

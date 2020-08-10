@@ -96,7 +96,7 @@ public class TopicResource {
      */
     @GetMapping("/topics/{clusterDbId}/{name}")
     public ResponseEntity<Topic> getTopic(@PathVariable Long clusterDbId, @PathVariable String name) {
-        log.debug("REST request to get Topic : {}", name);
+        log.debug("REST request to get Topic : {} for clusterDbId: {}", name, clusterDbId);
         Optional<Topic> topic = topicService.findOne(clusterDbId, name);
         return ResponseUtil.wrapOrNotFound(topic);
     }
