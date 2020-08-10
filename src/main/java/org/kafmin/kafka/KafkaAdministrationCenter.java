@@ -4,6 +4,7 @@ import org.apache.kafka.clients.admin.*;
 import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.config.ConfigResource;
 import org.kafmin.domain.Cluster;
+import org.kafmin.domain.Topic;
 import org.kafmin.repository.ClusterRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,7 @@ public class KafkaAdministrationCenter {
     private static final DescribeClusterOptions DESCRIBE_CLUSTER_OPTIONS = new DescribeClusterOptions().timeoutMs(TIMEOUT_MS);
     private static final DescribeTopicsOptions DESCRIBE_TOPICS_OPTIONS = new DescribeTopicsOptions().timeoutMs(TIMEOUT_MS);
     private static final DescribeConfigsOptions DESCRIBE_CONFIGS_OPTIONS = new DescribeConfigsOptions().timeoutMs(TIMEOUT_MS);
+    private static final CreateTopicsOptions CREATE_TOPICS_OPTIONS = new CreateTopicsOptions().timeoutMs(TIMEOUT_MS);
     private static final ListTopicsOptions LIST_TOPICS_OPTIONS = new ListTopicsOptions().timeoutMs(3000);
 
     private final Map<String, Admin> kafkaAdminByClusterId = new HashMap<>();
@@ -95,6 +97,24 @@ public class KafkaAdministrationCenter {
     }
 
     // TOPICS & PARTITIONS MANAGEMENT
+
+    private CreateTopicsResult createTopicsResultGet(CreateTopicsResult createTopicResultGet, String clusterId) {
+        try {
+            logger.debug("Topics listing for cluster: {}, listing: {}", clusterId, createTopicResultGet.all());
+        } catch (Exception e) {
+            logger.error("Could not 'get' the CreateTopicsResult fpr cluster {}.", clusterId, e);
+            return null;
+        }
+        return createTopicResultGet;
+    }
+
+    public CreateTopicsResult createTopic(String clusterId, Topic topic) {
+        Admin clusterAdmin = getClusterAdmin(clusterId);
+        NewTopic newTopic = new NewTopic(topic.getName(), topic.getNumPartitions(), topic.getReplicationFactor());
+        CreateTopicsResult createTopicsResult = clusterAdmin.createTopics(Collections.singletonList(newTopic), CREATE_TOPICS_OPTIONS);
+        // TODO check for failure
+        return createTopicsResultGet(createTopicsResult, clusterId);
+    }
 
     public ListTopicsResult listTopics(String clusterId) {
         return listTopicsResultGet(getClusterAdmin(clusterId).listTopics(LIST_TOPICS_OPTIONS), clusterId);

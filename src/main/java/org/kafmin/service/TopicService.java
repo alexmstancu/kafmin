@@ -32,6 +32,13 @@ public class TopicService {
     @Autowired
     private ClusterService clusterService;
 
+    public Topic create(Long clusterDbId, Topic incomingTopic) throws ExecutionException, InterruptedException {
+        log.debug("Request to get Topic : {} for cluster {}", incomingTopic.getName(), clusterDbId);
+        Cluster cluster = retrieveCluster(clusterDbId);
+        adminCenter.createTopic(cluster.getClusterId(), incomingTopic);
+        return retrieveAndPopulateTopic(incomingTopic.getName(), cluster);
+    }
+
     public Topic save(Topic topic) {
         log.debug("Request to save Topic : {}", topic);
         return null;
@@ -39,13 +46,17 @@ public class TopicService {
 
     public Optional<Topic> findOne(Long clusterDbId, String topicName) throws ExecutionException, InterruptedException {
         log.debug("Request to get Topic : {} for cluster {}", topicName, clusterDbId);
-
         Cluster cluster = retrieveCluster(clusterDbId);
+        Topic topic = retrieveAndPopulateTopic(topicName, cluster);
+        return Optional.of(topic);
+    }
+
+    private Topic retrieveAndPopulateTopic(String topicName, Cluster cluster) throws ExecutionException, InterruptedException {
         Topic topic = retrieveTopic(cluster.getClusterId(), topicName);
         topic.setCluster(cluster);
         topic.setConfigs(retrieveConfigs(cluster.getClusterId(), topicName));
         removeUnusedFields(cluster);
-        return Optional.of(topic);
+        return topic;
     }
 
     public void delete(Long id) {

@@ -41,6 +41,14 @@ public class Topic implements Serializable {
     @JsonSerialize
     private Cluster cluster;
 
+    @Transient
+    @JsonSerialize
+    private int numPartitions;
+
+    @Transient
+    @JsonSerialize
+    private short replicationFactor;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -125,5 +133,21 @@ public class Topic implements Serializable {
 
     public void setCluster(Cluster cluster) {
         this.cluster = cluster;
+    }
+
+    public int getNumPartitions() {
+        return numPartitions;
+    }
+
+    public void setNumPartitions(int numPartitions) {
+        this.numPartitions = numPartitions;
+    }
+
+    public short getReplicationFactor() {
+        return replicationFactor;
+    }
+
+    public void setReplicationFactor(short replicationFactor) {
+        this.replicationFactor = replicationFactor;
     }
 }

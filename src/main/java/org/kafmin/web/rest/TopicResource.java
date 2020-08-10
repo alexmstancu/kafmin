@@ -45,14 +45,14 @@ public class TopicResource {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new topic, or with status {@code 400 (Bad Request)} if the topic has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/topics")
-    public ResponseEntity<Topic> createTopic(@RequestBody Topic topic) throws URISyntaxException {
+    @PostMapping("/topics/{clusterDbId}")
+    public ResponseEntity<Topic> createTopic(@PathVariable Long clusterDbId,  @RequestBody Topic topic) throws URISyntaxException, ExecutionException, InterruptedException {
         log.debug("REST request to save Topic : {}", topic);
         if (topic.getId() != null) {
             throw new BadRequestAlertException("A new topic cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Topic result = topicService.save(topic);
-        return ResponseEntity.created(new URI("/api/topics/" + result.getId()))
+        Topic result = topicService.create(clusterDbId, topic);
+        return ResponseEntity.created(new URI("/api/topics/" + clusterDbId + "/" + result.getName()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
