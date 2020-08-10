@@ -31,10 +31,10 @@ export default class TopicService {
     });
   }
 
-  public delete(id: number): Promise<any> {
+  public delete(clusterDbId: number, topicName: string): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       axios
-        .delete(`${baseApiUrl}/${id}`)
+        .delete(`${baseApiUrl}/${clusterDbId}/${topicName}`)
         .then(res => {
           resolve(res);
         })

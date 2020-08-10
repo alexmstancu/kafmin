@@ -62,7 +62,6 @@
                             </tr>
                         </thead>
                         <tbody>
-
                             <tr v-for="topic in cluster.topics" :key="topic.name">
                                 <td>
                                     <span>
@@ -80,7 +79,7 @@
                                             <font-awesome-icon icon="eye"></font-awesome-icon>
                                             <span class="d-none d-md-inline">View</span>
                                         </router-link>
-                                        <router-link :to="{name: 'TopicEdit', params: {topicId: topic.id}}"  tag="button" class="btn btn-primary btn-sm edit">
+                                        <router-link :to="{name: 'TopicEdit', params: {clusterDbId: cluster.id, topicName: topic.name}}"  tag="button" class="btn btn-primary btn-sm edit">
                                             <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
                                             <span class="d-none d-md-inline">Edit</span>
                                         </router-link>
@@ -145,6 +144,18 @@
                 </router-link>
             </div>
         </div>
+
+
+    <b-modal ref="removeEntity" id="removeEntity" >
+            <span slot="modal-title"><span id="kafminApp.cluster.delete.topic.question">Confirm topic deletion operation</span></span>
+            <div class="modal-body">
+                <p id="jhi-delete-cluster-heading">Are you sure you want to delete this topic?</p>
+            </div>
+            <div slot="modal-footer">
+                <button type="button" class="btn btn-secondary" v-on:click="closeDialog()">Cancel</button>
+                <button type="button" class="btn btn-primary" id="jhi-confirm-delete-cluster" v-on:click="removeTopic()">Delete</button>
+            </div>
+        </b-modal>
     </div>
 </template>
 

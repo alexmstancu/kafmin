@@ -109,7 +109,7 @@ public class TopicResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/topics/{clusterDbId}/{topicName}")
-    public ResponseEntity<Void> deleteTopic(@PathVariable Long clusterDbId, String topicName) throws ExecutionException, InterruptedException {
+    public ResponseEntity<Void> deleteTopic(@PathVariable Long clusterDbId, @PathVariable String topicName) throws ExecutionException, InterruptedException {
         log.debug("Request to delete Topic : {} from cluster {}", topicName, clusterDbId);
         topicService.delete(clusterDbId, topicName);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, topicName)).build();

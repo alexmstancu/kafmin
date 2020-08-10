@@ -97,7 +97,7 @@
                         class="btn btn-info">
                     <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span> Back</span>
                 </button>
-                <router-link v-if="topic.id" :to="{name: 'TopicEdit', params: {topicId: topic.id}}" tag="button" class="btn btn-primary">
+                <router-link v-if="topic.cluster !== undefined" :to="{name: 'TopicEdit', params: {topicId: topic.id}}" tag="button" class="btn btn-primary">
                     <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span> Edit</span>
                 </router-link>
             </div>
