@@ -44,10 +44,10 @@ export default class TopicService {
     });
   }
 
-  public create(entity: ITopic): Promise<ITopic> {
+  public create(clusterDbId: number, entity: ITopic): Promise<ITopic> {
     return new Promise<ITopic>((resolve, reject) => {
       axios
-        .post(`${baseApiUrl}`, entity)
+        .post(`${baseApiUrl}/${clusterDbId}`, entity)
         .then(res => {
           resolve(res.data);
         })

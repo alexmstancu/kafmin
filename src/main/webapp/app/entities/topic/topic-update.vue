@@ -4,20 +4,22 @@
             <form name="editForm" role="form" novalidate v-on:submit.prevent="save()">
                 <h2 id="kafminApp.topic.home.createOrEditLabel">Create or edit a Topic</h2>
                 <div>
-                    <div class="form-group" v-if="topic.id">
-                        <label for="id">ID</label>
-                        <input type="text" class="form-control" id="id" name="id"
-                               v-model="topic.id" readonly />
-                    </div>
+
                     <div class="form-group">
                         <label class="form-control-label" for="topic-name">Name</label>
                         <input type="text" class="form-control" name="name" id="topic-name"
                             :class="{'valid': !$v.topic.name.$invalid, 'invalid': $v.topic.name.$invalid }" v-model="$v.topic.name.$model" />
                     </div>
                     <div class="form-group">
-                        <label class="form-control-label" for="topic-isInternal">Is Internal</label>
-                        <input type="checkbox" class="form-check" name="isInternal" id="topic-isInternal"
-                            :class="{'valid': !$v.topic.isInternal.$invalid, 'invalid': $v.topic.isInternal.$invalid }" v-model="$v.topic.isInternal.$model" />
+                        <label class="form-control-label" for="topic-numPartitions">Number of partitions</label>
+                        <input type="text" class="form-control" name="numPartitions" id="topic-numPartitions" 
+                            :class="{'valid': !$v.topic.numPartitions.$invalid, 'invalid': $v.topic.numPartitions.$invalid }" v-model="$v.topic.numPartitions.$model" />
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-control-label" for="topic-repl">Replication factor</label>
+                        <input type="text" class="form-control" name="repl" id="topic-repl"
+                            :class="{'valid': !$v.topic.replicationFactor.$invalid, 'invalid': $v.replicationFactor.name.$invalid }" v-model="$v.topic.replicationFactor.$model" />
                     </div>
                 </div>
                 <div>

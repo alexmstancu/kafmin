@@ -12,8 +12,6 @@
                     <div class="form-group" v-if="cluster.id">
                         <label class="form-control-label" for="cluster-clusterId">Cluster Id</label>
                         <input type="text" class="form-control" id="id" name="id" v-model="cluster.clusterId" readonly />
-                        <!-- <input type="text" class="form-control" name="clusterId" id="cluster-clusterId"
-                            :class="{'valid': !$v.cluster.clusterId.$invalid, 'invalid': $v.cluster.clusterId.$invalid }" v-model="$v.cluster.clusterId.$model" /> -->
                     </div>
                     <div class="form-group">
                         <label class="form-control-label" for="cluster-name">Cluster Name</label>

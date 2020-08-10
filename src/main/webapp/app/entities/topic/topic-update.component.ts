@@ -10,6 +10,8 @@ const validations: any = {
   topic: {
     name: {},
     isInternal: {},
+    numPartitions: {},
+    replicationFactor: {}
   },
 };
 
@@ -25,8 +27,8 @@ export default class TopicUpdate extends Vue {
 
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      if (to.params.topicId) {
-        vm.retrieveTopic(to.params.topicId);
+      if (to.params.clusterDbId && to.params.topicId) {
+        vm.retrieveTopic(to.params.clusterDbId, to.params.topicId);
       }
     });
   }
@@ -43,7 +45,7 @@ export default class TopicUpdate extends Vue {
 
   public save(): void {
     this.isSaving = true;
-    if (this.topic.id) {
+    if (this.topic.cluster) {
       this.topicService()
         .update(this.topic)
         .then(param => {
@@ -54,7 +56,7 @@ export default class TopicUpdate extends Vue {
         });
     } else {
       this.topicService()
-        .create(this.topic)
+        .create(this.topic.cluster.id, this.topic)
         .then(param => {
           this.isSaving = false;
           this.$router.go(-1);
@@ -64,9 +66,9 @@ export default class TopicUpdate extends Vue {
     }
   }
 
-  public retrieveTopic(topicId): void {
+  public retrieveTopic(clusterDbId, topicName): void {
     this.topicService()
-      .find(topicId)
+      .find(clusterDbId, topicName)
       .then(res => {
         this.topic = res;
       });
