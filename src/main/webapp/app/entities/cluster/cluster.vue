@@ -1,7 +1,7 @@
 <template>
     <div>
         <h2 id="page-heading">
-            <span id="cluster-heading">Clusters</span>
+            <span id="cluster-heading">Connected Clusters</span>
             <router-link :to="{name: 'ClusterCreate'}" tag="button" id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-cluster">
                 <font-awesome-icon icon="plus"></font-awesome-icon>
                 <span >
@@ -24,22 +24,19 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th><span>ID</span></th>
-                    <th><span>Name</span></th>
                     <th><span>Cluster Id</span></th>
+                    <th><span>Name</span></th>
                     <th><span># of brokers</span></th>
                     <th><span># of topics</span></th>
                     <th><span># of partitions</span></th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="cluster in clusters"
-                    :key="cluster.id">
+                <tr v-for="cluster in clusters" :key="cluster.id">
                     <td>
-                        <router-link :to="{name: 'ClusterView', params: {clusterId: cluster.id}}">{{cluster.id}}</router-link>
+                        <router-link :to="{name: 'ClusterView', params: {clusterId: cluster.id}}">{{cluster.clusterId}}</router-link>
                     </td>
                     <td>{{cluster.name}}</td>
-                    <td>{{cluster.clusterId}}</td>
                     <td>{{getBrokersCount(cluster)}}</td>
                     <td>{{cluster.topicsCount}}</td>
                     <td>{{cluster.partitionsCount}}</td>
