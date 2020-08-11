@@ -13,10 +13,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing {@link Topic}.
@@ -39,10 +39,16 @@ public class TopicService {
         return retrieveAndPopulateTopic(incomingTopic.getName(), cluster);
     }
 
-    public Topic update(Long clusterDbId, Topic topic) {
-        log.debug("Request to update Topic : {} for cluster {}", topic, clusterDbId);
-
-        return null;
+    public Topic update(Long clusterDbId, Topic incomingUpdatedTopic) throws ExecutionException, InterruptedException {
+        log.debug("Request to update Topic : {} for cluster {}", incomingUpdatedTopic, clusterDbId);
+        Cluster cluster = retrieveCluster(clusterDbId);
+        Topic originalTopic = retrieveAndPopulateTopic(incomingUpdatedTopic.getName(), cluster);
+        List<GenericConfig> configsToUpdate = diff(originalTopic.getConfigs(), incomingUpdatedTopic.getConfigs());
+        if (configsToUpdate.isEmpty()) {
+            return originalTopic;
+        }
+        adminCenter.updateTopicConfig(cluster.getClusterId(), incomingUpdatedTopic.getName(), configsToUpdate);
+        return retrieveAndPopulateTopic(incomingUpdatedTopic.getName(), cluster);
     }
 
     public Optional<Topic> findOne(Long clusterDbId, String topicName) throws ExecutionException, InterruptedException {
@@ -89,5 +95,21 @@ public class TopicService {
     private void removeUnusedFields(Cluster cluster ) {
         cluster.setTopics(Collections.emptyList());
         cluster.setBrokers(Collections.emptySet());
+    }
+
+    private List<GenericConfig> diff(List<GenericConfig> original, List<GenericConfig> updated) {
+        Map<String, GenericConfig> originalConfigMap = toMap(original);
+        List<GenericConfig> diffResult = new ArrayList<>();
+        updated.forEach(updatedConfig -> {
+            String originalConfigValue = originalConfigMap.get(updatedConfig.getName()).getValue();
+            if (!originalConfigValue.equals(updatedConfig.getValue())) {
+                diffResult.add(updatedConfig);
+            }
+        });
+        return diffResult;
+    }
+
+    private Map<String, GenericConfig> toMap(List<GenericConfig> configs) {
+        return configs.stream().collect(Collectors.toMap(GenericConfig::getName, config -> config));
     }
 }

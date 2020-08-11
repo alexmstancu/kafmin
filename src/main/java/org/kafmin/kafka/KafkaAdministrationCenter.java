@@ -7,6 +7,7 @@ import org.kafmin.domain.Cluster;
 import org.kafmin.domain.GenericConfig;
 import org.kafmin.domain.Topic;
 import org.kafmin.repository.ClusterRepository;
+import org.kafmin.service.mapper.ConfigMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,7 +116,6 @@ public class KafkaAdministrationCenter {
         Admin clusterAdmin = getClusterAdmin(clusterId);
         NewTopic newTopic = new NewTopic(topic.getName(), topic.getNumPartitions(), topic.getReplicationFactor());
         CreateTopicsResult createTopicsResult = clusterAdmin.createTopics(Collections.singletonList(newTopic), CREATE_TOPICS_OPTIONS);
-        // TODO check for failure
         return createTopicsResultGet(createTopicsResult, clusterId);
     }
 
@@ -134,12 +134,22 @@ public class KafkaAdministrationCenter {
         DeleteTopicsResult deleteTopicsResult = clusterAdmin.deleteTopics(Collections.singletonList(topicName), DELETE_TOPICS_RESULT);
         return deleteTopicsResultGet(deleteTopicsResult, clusterId, topicName);
     }
+    private AlterConfigsResult alterConfigsResultGet(AlterConfigsResult alterConfigsResult, String clusterId, String topicName) {
+        try {
+            logger.debug("AlterConfigsResult for topic {} in cluster: {}, listing: {}", topicName, clusterId, alterConfigsResult.all().get());
+        } catch (Exception e) {
+            logger.error("Could not 'get' the AlterConfigsResult for topic {} in cluster {}.", topicName, clusterId, e);
+            return null;
+        }
+        return alterConfigsResult;
+    }
 
     public void updateTopicConfig(String clusterId, String topicName, List<GenericConfig> configsToUpdate) {
         Admin clusterAdmin = getClusterAdmin(clusterId);
         Map<ConfigResource, Collection<AlterConfigOp>> configsToUpdateMap = new HashMap<>();
         ConfigResource topicResource = new ConfigResource(ConfigResource.Type.TOPIC, topicName);
-        clusterAdmin.incrementalAlterConfigs(configsToUpdateMap, ALTER_CONFIGS_OPTIONS);
+        configsToUpdateMap.put(topicResource, ConfigMapper.toAlterOpList(configsToUpdate));
+        alterConfigsResultGet(clusterAdmin.incrementalAlterConfigs(configsToUpdateMap, ALTER_CONFIGS_OPTIONS), clusterId, topicName);
     }
 
     public ListTopicsResult listTopics(String clusterId) {
@@ -228,5 +238,4 @@ public class KafkaAdministrationCenter {
             return null;
         }
     }
-
 }
