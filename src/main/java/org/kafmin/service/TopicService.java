@@ -39,8 +39,9 @@ public class TopicService {
         return retrieveAndPopulateTopic(incomingTopic.getName(), cluster);
     }
 
-    public Topic save(Topic topic) {
-        log.debug("Request to save Topic : {}", topic);
+    public Topic update(Long clusterDbId, Topic topic) {
+        log.debug("Request to save Topic : {} for cluster {}", topic, clusterDbId);
+
         return null;
     }
 

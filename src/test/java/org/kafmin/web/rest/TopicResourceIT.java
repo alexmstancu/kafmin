@@ -132,7 +132,7 @@ public class TopicResourceIT {
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].isInternal").value(hasItem(DEFAULT_IS_INTERNAL.booleanValue())));
     }
-    
+
     @Test
     @Transactional
     public void getTopic() throws Exception {
@@ -159,7 +159,7 @@ public class TopicResourceIT {
     @Transactional
     public void updateTopic() throws Exception {
         // Initialize the database
-        topicService.save(topic);
+        topicService.update(1L, topic);
 
         int databaseSizeBeforeUpdate = topicRepository.findAll().size();
 
@@ -204,7 +204,7 @@ public class TopicResourceIT {
     @Transactional
     public void deleteTopic() throws Exception {
         // Initialize the database
-        topicService.save(topic);
+        topicService.update(1L, topic);
 
         int databaseSizeBeforeDelete = topicRepository.findAll().size();
 
