@@ -1,6 +1,7 @@
 <template>
     <div id="footer" class="footer">
         <p>Kafmin © 2020 </p>
+        <a href="https://github.com/alexmstancu/kafmin" target="_blank" rel="noopener">Kafka documentation</a>
     </div>
 </template>
 
