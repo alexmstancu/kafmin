@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -78,8 +77,7 @@ public class TopicService {
     }
 
     private Cluster retrieveCluster(Long clusterDbId) throws ExecutionException, InterruptedException {
-        Optional<Cluster> clusterOptional = clusterService.get(clusterDbId);
-        return clusterOptional.get();
+        return clusterService.get(clusterDbId).get();
     }
 
     private Topic retrieveTopic(String clusterId, String topicName) throws ExecutionException, InterruptedException {
@@ -98,7 +96,7 @@ public class TopicService {
     }
 
     private List<GenericConfig> diff(List<GenericConfig> original, List<GenericConfig> updated) {
-        Map<String, GenericConfig> originalConfigMap = toMap(original);
+        Map<String, GenericConfig> originalConfigMap = original.stream().collect(Collectors.toMap(GenericConfig::getName, config -> config));
         List<GenericConfig> diffResult = new ArrayList<>();
         updated.forEach(updatedConfig -> {
             String originalConfigValue = originalConfigMap.get(updatedConfig.getName()).getValue();
@@ -107,9 +105,5 @@ public class TopicService {
             }
         });
         return diffResult;
-    }
-
-    private Map<String, GenericConfig> toMap(List<GenericConfig> configs) {
-        return configs.stream().collect(Collectors.toMap(GenericConfig::getName, config -> config));
     }
 }

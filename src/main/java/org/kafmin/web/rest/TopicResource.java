@@ -66,7 +66,7 @@ public class TopicResource {
      * or with status {@code 500 (Internal Server Error)} if the topic couldn't be updated.
      */
     @PutMapping("/topics/{clusterDbId}")
-    public ResponseEntity<Topic> updateTopic(@PathVariable Long clusterDbId, @RequestBody Topic topic) {
+    public ResponseEntity<Topic> updateTopic(@PathVariable Long clusterDbId, @RequestBody Topic topic) throws ExecutionException, InterruptedException {
         log.debug("REST request to update Topic : {} for cluster {}", topic, clusterDbId);
         if (topic.getName() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
