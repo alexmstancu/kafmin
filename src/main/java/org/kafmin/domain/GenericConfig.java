@@ -5,6 +5,9 @@ public class GenericConfig {
     private String value;
     private boolean isReadOnly;
 
+    public GenericConfig() {
+    }
+
     public GenericConfig(String name, String value, boolean isReadOnly) {
         this.name = name;
         this.value = value;

@@ -40,7 +40,7 @@ public class TopicService {
     }
 
     public Topic update(Long clusterDbId, Topic topic) {
-        log.debug("Request to save Topic : {} for cluster {}", topic, clusterDbId);
+        log.debug("Request to update Topic : {} for cluster {}", topic, clusterDbId);
 
         return null;
     }
