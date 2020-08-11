@@ -60,7 +60,7 @@ export default class TopicService {
   public update(entity: ITopic): Promise<ITopic> {
     return new Promise<ITopic>((resolve, reject) => {
       axios
-        .put(`${baseApiUrl}`, entity)
+        .put(`${baseApiUrl}/${entity.cluster.id}`, entity)
         .then(res => {
           resolve(res.data);
         })

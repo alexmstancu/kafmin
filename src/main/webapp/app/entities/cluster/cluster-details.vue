@@ -30,13 +30,13 @@
                         <span>{{cluster.name}}</span>
                     </dd>
                     <dt>
-                        <span>Total # of topics</span>
+                        <span>Total number of topics</span>
                     </dt>
                     <dd>
                         <span>{{getTopicsCount()}}</span>
                     </dd>
                      <dt>
-                        <span>Total # of partitions</span>
+                        <span>Total number of partitions</span>
                     </dt>
                     <dd>
                         <span>{{getPartitionsCount()}}</span>

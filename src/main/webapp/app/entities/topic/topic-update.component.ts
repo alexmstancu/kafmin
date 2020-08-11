@@ -5,6 +5,7 @@ import { numeric, required, minLength, maxLength, minValue, maxValue } from 'vue
 import AlertService from '@/shared/alert/alert.service';
 import { ITopic, Topic } from '@/shared/model/topic.model';
 import TopicService from './topic.service';
+import { IGenericConfig } from '@/shared/model/genericConfig.model';
 
 const validations: any = {
   topic: {
@@ -30,8 +31,8 @@ export default class TopicUpdate extends Vue {
     next(vm => {
       if (to.params.clusterDbId) {
         vm.savedClusterDbId = to.params.clusterDbId
-        if (to.params.topicId) {
-          vm.retrieveTopic(to.params.clusterDbId, to.params.topicId);
+        if (to.params.topicName) {
+          vm.retrieveTopic(to.params.clusterDbId, to.params.topicName);
         }
       }
     });
@@ -83,4 +84,26 @@ export default class TopicUpdate extends Vue {
   }
 
   public initRelationships(): void {}
+
+
+  public isReadonly(config: IGenericConfig): string {
+    if (config.isReadOnly) {
+      return "yes";
+    }
+    return "no";
+  }
+
+  public getPartitionsCount(): number {
+    if (this.topic.partitions) {
+      return this.topic.partitions.length;
+    }
+    return 0;
+  }
+
+  public isInternal(): string {
+    if (this.topic.isInternal) {
+      return 'yes';
+    }
+    return 'no';
+  }
 }

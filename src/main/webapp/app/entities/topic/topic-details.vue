@@ -3,7 +3,7 @@
         <div class="col-8">
             <div v-if="topic">
                 <h2 class="jh-entity-heading"><span>Topic</span> '{{topic.name}}'
-                    <router-link v-if="topic.cluster !== undefined" :to="{name: 'TopicEdit', params: {topicId: topic.id}}" tag="button" class="btn btn-primary float-right">
+                    <router-link v-if="topic.cluster !== undefined" :to="{name: 'TopicEdit', params: {clusterDbId: topic.cluster.id, topicName: topic.name}}" tag="button" class="btn btn-primary float-right">
                         <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span> Edit</span>
                     </router-link>
                     <button type="submit"
@@ -27,7 +27,7 @@
                         <span>{{isInternal()}}</span>
                     </dd>
                     <dt>
-                        <span># of partitions</span>
+                        <span>Number of partitions</span>
                     </dt>
                     <dd>
                         <span>{{getPartitionsCount()}}</span>
