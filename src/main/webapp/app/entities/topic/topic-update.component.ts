@@ -106,4 +106,8 @@ export default class TopicUpdate extends Vue {
     }
     return 'no';
   }
+
+  public getNonReadOnlyConfigs(): IGenericConfig[] {
+    return this.topic.configs.filter(config => !config.isReadOnly)
+  }
 }
