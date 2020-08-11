@@ -4,6 +4,7 @@ import org.apache.kafka.clients.admin.*;
 import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.config.ConfigResource;
 import org.kafmin.domain.Cluster;
+import org.kafmin.domain.GenericConfig;
 import org.kafmin.domain.Topic;
 import org.kafmin.repository.ClusterRepository;
 import org.slf4j.Logger;
@@ -25,6 +26,7 @@ public class KafkaAdministrationCenter {
     private static final DescribeConfigsOptions DESCRIBE_CONFIGS_OPTIONS = new DescribeConfigsOptions().timeoutMs(TIMEOUT_MS);
     private static final CreateTopicsOptions CREATE_TOPICS_OPTIONS = new CreateTopicsOptions().timeoutMs(TIMEOUT_MS);
     private static final DeleteTopicsOptions DELETE_TOPICS_RESULT = new DeleteTopicsOptions().timeoutMs(TIMEOUT_MS);
+    private static final AlterConfigsOptions ALTER_CONFIGS_OPTIONS = new AlterConfigsOptions().timeoutMs(TIMEOUT_MS);
     private static final ListTopicsOptions LIST_TOPICS_OPTIONS = new ListTopicsOptions().timeoutMs(3000);
 
     private final Map<String, Admin> kafkaAdminByClusterId = new HashMap<>();
@@ -131,6 +133,13 @@ public class KafkaAdministrationCenter {
         Admin clusterAdmin = getClusterAdmin(clusterId);
         DeleteTopicsResult deleteTopicsResult = clusterAdmin.deleteTopics(Collections.singletonList(topicName), DELETE_TOPICS_RESULT);
         return deleteTopicsResultGet(deleteTopicsResult, clusterId, topicName);
+    }
+
+    public void updateTopicConfig(String clusterId, String topicName, List<GenericConfig> configsToUpdate) {
+        Admin clusterAdmin = getClusterAdmin(clusterId);
+        Map<ConfigResource, Collection<AlterConfigOp>> configsToUpdateMap = new HashMap<>();
+        ConfigResource topicResource = new ConfigResource(ConfigResource.Type.TOPIC, topicName);
+        clusterAdmin.incrementalAlterConfigs(configsToUpdateMap, ALTER_CONFIGS_OPTIONS);
     }
 
     public ListTopicsResult listTopics(String clusterId) {

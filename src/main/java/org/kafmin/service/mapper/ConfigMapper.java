@@ -1,6 +1,7 @@
 package org.kafmin.service.mapper;
 
 import org.apache.kafka.clients.admin.Config;
+import org.apache.kafka.clients.admin.ConfigEntry;
 import org.apache.kafka.clients.admin.DescribeConfigsResult;
 import org.apache.kafka.common.config.ConfigResource;
 import org.kafmin.domain.GenericConfig;
@@ -21,4 +22,10 @@ public class ConfigMapper {
             .map(configEntry -> new GenericConfig(configEntry.name(), configEntry.value(), configEntry.isReadOnly()))
             .collect(Collectors.toList());
     }
+
+    public static List<ConfigEntry> from (List<GenericConfig> configs) {
+//        configs.stream().map()
+        return null;
+    }
+
 }
