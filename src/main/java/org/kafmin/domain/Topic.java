@@ -32,6 +32,7 @@ public class Topic implements Serializable {
 
     @Transient
     @JsonSerialize
+    @JsonDeserialize
     private List<GenericConfig> configs;
 
     @Transient
