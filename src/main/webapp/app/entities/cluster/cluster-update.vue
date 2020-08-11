@@ -44,8 +44,6 @@
 
                     <!-- list the brokers and let the user add more brokers (host & port only) ONLY IN CASE OF CREATE -->
                     <label v-if="!cluster.id" class="form-control-label" for="brokers-table">Add the initial bootstrap server</label>
-                    <!-- <div class="table-responsive" v-if="brokers && brokers.length > 0"> -->
-
                     <div class="table-responsive" v-if="!cluster.id">
                         <table class="table table-striped">
                             <thead>

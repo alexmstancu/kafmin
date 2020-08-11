@@ -68,7 +68,7 @@ public class TopicResource {
     @PutMapping("/topics/{clusterDbId}")
     public ResponseEntity<Topic> updateTopic(@PathVariable Long clusterDbId, @RequestBody Topic topic) {
         log.debug("REST request to update Topic : {}", topic);
-        if (topic.getId() == null) {
+        if (topic.getName() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Topic result = topicService.update(clusterDbId, topic);

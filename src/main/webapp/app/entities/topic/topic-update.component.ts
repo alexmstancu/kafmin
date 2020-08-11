@@ -26,6 +26,30 @@ export default class TopicUpdate extends Vue {
   public isSaving = false;
   public currentLanguage = '';
   public savedClusterDbId: number = -1;
+  public originalConfigsMap: Map<string, IGenericConfig> = new Map();
+
+  public configEditedStyle = {
+    'background-color': '#f5e5a4'
+  };
+
+  public applyStyleIfEdited(config: IGenericConfig): object {
+    if (this.wasEdited(config)) {
+      return this.configEditedStyle;
+    }
+    return {};
+  }
+
+  public wasEdited(config: IGenericConfig): boolean {
+    return this.originalConfigsMap.get(config.name).value != config.value;
+  }
+
+  public cacheOriginalConfigs(configs: IGenericConfig[]) {
+    var configsCopy = configs.map(x => Object.assign({}, x));
+    return configsCopy.reduce((map, config) => {
+      map.set(config.name, config);
+      return map;
+    }, this.originalConfigsMap);
+  }
 
   beforeRouteEnter(to, from, next) {
     next(vm => {
@@ -76,6 +100,7 @@ export default class TopicUpdate extends Vue {
       .find(clusterDbId, topicName)
       .then(res => {
         this.topic = res;
+        this.cacheOriginalConfigs(this.topic.configs);
       });
   }
 

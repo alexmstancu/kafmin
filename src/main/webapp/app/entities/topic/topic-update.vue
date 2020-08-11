@@ -81,7 +81,7 @@
                             <tbody>
                                 <tr v-for="config in getNonReadOnlyConfigs()" :key="config.name">
                                     <td><span>{{config.name}}</span></td>
-                                    <td><span>{{config.value}}</span></td>
+                                    <td ><span><input v-bind:style="applyStyleIfEdited(config)" type="text" class="form-control" id="cfg" name="cfg" v-model="config.value"/></span></td>
                                 </tr>
                             </tbody>
                         </table>
