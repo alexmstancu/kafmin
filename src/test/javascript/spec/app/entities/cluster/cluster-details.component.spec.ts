@@ -2,10 +2,12 @@
 import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
 import sinon, { SinonStubbedInstance } from 'sinon';
 
+import AlertService from '@/shared/alert/alert.service';
 import * as config from '@/shared/config/config';
 import ClusterDetailComponent from '@/entities/cluster/cluster-details.vue';
 import ClusterClass from '@/entities/cluster/cluster-details.component';
 import ClusterService from '@/entities/cluster/cluster.service';
+import TopicService from '@/entities/topic/topic.service';
 
 const localVue = createLocalVue();
 
@@ -13,6 +15,14 @@ config.initVueApp(localVue);
 const store = config.initVueXStore(localVue);
 localVue.component('font-awesome-icon', {});
 localVue.component('router-link', {});
+
+const bModalStub = {
+  render: () => {},
+  methods: {
+    hide: () => {},
+    show: () => {},
+  },
+};
 
 describe('Component Tests', () => {
   describe('Cluster Management Detail Component', () => {
@@ -26,7 +36,12 @@ describe('Component Tests', () => {
       wrapper = shallowMount<ClusterClass>(ClusterDetailComponent, {
         store,
         localVue,
-        provide: { clusterService: () => clusterServiceStub },
+        stubs: { bModal: bModalStub as any },
+        provide: {
+          clusterService: () => clusterServiceStub,
+          topicService: () => new TopicService(),
+          alertService: () => new AlertService(store)
+        },
       });
       comp = wrapper.vm;
     });

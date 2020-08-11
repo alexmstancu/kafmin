@@ -4,7 +4,10 @@ import org.apache.kafka.clients.admin.*;
 import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.config.ConfigResource;
 import org.kafmin.domain.Cluster;
+import org.kafmin.domain.GenericConfig;
+import org.kafmin.domain.Topic;
 import org.kafmin.repository.ClusterRepository;
+import org.kafmin.service.mapper.ConfigMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,9 @@ public class KafkaAdministrationCenter {
     private static final DescribeClusterOptions DESCRIBE_CLUSTER_OPTIONS = new DescribeClusterOptions().timeoutMs(TIMEOUT_MS);
     private static final DescribeTopicsOptions DESCRIBE_TOPICS_OPTIONS = new DescribeTopicsOptions().timeoutMs(TIMEOUT_MS);
     private static final DescribeConfigsOptions DESCRIBE_CONFIGS_OPTIONS = new DescribeConfigsOptions().timeoutMs(TIMEOUT_MS);
+    private static final CreateTopicsOptions CREATE_TOPICS_OPTIONS = new CreateTopicsOptions().timeoutMs(TIMEOUT_MS);
+    private static final DeleteTopicsOptions DELETE_TOPICS_RESULT = new DeleteTopicsOptions().timeoutMs(TIMEOUT_MS);
+    private static final AlterConfigsOptions ALTER_CONFIGS_OPTIONS = new AlterConfigsOptions().timeoutMs(TIMEOUT_MS);
     private static final ListTopicsOptions LIST_TOPICS_OPTIONS = new ListTopicsOptions().timeoutMs(3000);
 
     private final Map<String, Admin> kafkaAdminByClusterId = new HashMap<>();
@@ -96,13 +102,63 @@ public class KafkaAdministrationCenter {
 
     // TOPICS & PARTITIONS MANAGEMENT
 
+    private CreateTopicsResult createTopicsResultGet(CreateTopicsResult createTopicResultGet, String clusterId) {
+        try {
+            logger.debug("Topics listing for cluster: {}, listing: {}", clusterId, createTopicResultGet.all().get());
+        } catch (Exception e) {
+            logger.error("Could not 'get' the CreateTopicsResult fpr cluster {}.", clusterId, e);
+            return null;
+        }
+        return createTopicResultGet;
+    }
+
+    public CreateTopicsResult createTopic(String clusterId, Topic topic) {
+        Admin clusterAdmin = getClusterAdmin(clusterId);
+        NewTopic newTopic = new NewTopic(topic.getName(), topic.getNumPartitions(), topic.getReplicationFactor());
+        CreateTopicsResult createTopicsResult = clusterAdmin.createTopics(Collections.singletonList(newTopic), CREATE_TOPICS_OPTIONS);
+        return createTopicsResultGet(createTopicsResult, clusterId);
+    }
+
+    private DeleteTopicsResult deleteTopicsResultGet(DeleteTopicsResult deleteTopicsResult, String clusterId, String topicName) {
+        try {
+            logger.debug("DeleteTopicResult for cluster{} is {}", clusterId, deleteTopicsResult.all().get());
+        } catch (Exception e) {
+            logger.error("Could not 'get' the DeleteTopicsResult for cluster {} and topic {}", clusterId, topicName);
+            return null;
+        }
+        return deleteTopicsResult;
+    }
+
+    public DeleteTopicsResult deleteTopic(String clusterId, String topicName) {
+        Admin clusterAdmin = getClusterAdmin(clusterId);
+        DeleteTopicsResult deleteTopicsResult = clusterAdmin.deleteTopics(Collections.singletonList(topicName), DELETE_TOPICS_RESULT);
+        return deleteTopicsResultGet(deleteTopicsResult, clusterId, topicName);
+    }
+    private AlterConfigsResult alterConfigsResultGet(AlterConfigsResult alterConfigsResult, String clusterId, String topicName) {
+        try {
+            logger.debug("AlterConfigsResult for topic {} in cluster: {}, listing: {}", topicName, clusterId, alterConfigsResult.all().get());
+        } catch (Exception e) {
+            logger.error("Could not 'get' the AlterConfigsResult for topic {} in cluster {}.", topicName, clusterId, e);
+            return null;
+        }
+        return alterConfigsResult;
+    }
+
+    public void updateTopicConfig(String clusterId, String topicName, List<GenericConfig> configsToUpdate) {
+        Admin clusterAdmin = getClusterAdmin(clusterId);
+        Map<ConfigResource, Collection<AlterConfigOp>> configsToUpdateMap = new HashMap<>();
+        ConfigResource topicResource = new ConfigResource(ConfigResource.Type.TOPIC, topicName);
+        configsToUpdateMap.put(topicResource, ConfigMapper.toAlterOpList(configsToUpdate));
+        alterConfigsResultGet(clusterAdmin.incrementalAlterConfigs(configsToUpdateMap, ALTER_CONFIGS_OPTIONS), clusterId, topicName);
+    }
+
     public ListTopicsResult listTopics(String clusterId) {
         return listTopicsResultGet(getClusterAdmin(clusterId).listTopics(LIST_TOPICS_OPTIONS), clusterId);
     }
 
     private ListTopicsResult listTopicsResultGet(ListTopicsResult listTopicsResult, String clusterId) {
         try {
-            logger.debug("Topics listing for cluster: {}, listing: {}", clusterId, listTopicsResult.namesToListings());
+            logger.debug("Topics listing for cluster: {}, listing: {}", clusterId, listTopicsResult.namesToListings().get());
         } catch (Exception e) {
             logger.error("Could not 'get' the topics listing for cluster {}.", clusterId, e);
             return null;
@@ -182,5 +238,4 @@ public class KafkaAdministrationCenter {
             return null;
         }
     }
-
 }

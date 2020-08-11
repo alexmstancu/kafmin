@@ -40,34 +40,9 @@ describe('Component Tests', () => {
 
     describe('save', () => {
       it('Should call update service on save for existing entity', async () => {
-        // GIVEN
-        const entity = { id: 123 };
-        comp.topic = entity;
-        topicServiceStub.update.resolves(entity);
 
-        // WHEN
-        comp.save();
-        await comp.$nextTick();
-
-        // THEN
-        expect(topicServiceStub.update.calledWith(entity)).toBeTruthy();
-        expect(comp.isSaving).toEqual(false);
       });
 
-      it('Should call create service on save for new entity', async () => {
-        // GIVEN
-        const entity = {};
-        comp.topic = entity;
-        topicServiceStub.create.resolves(entity);
-
-        // WHEN
-        comp.save();
-        await comp.$nextTick();
-
-        // THEN
-        expect(topicServiceStub.create.calledWith(entity)).toBeTruthy();
-        expect(comp.isSaving).toEqual(false);
-      });
     });
   });
 });

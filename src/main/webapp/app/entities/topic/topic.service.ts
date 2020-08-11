@@ -31,10 +31,10 @@ export default class TopicService {
     });
   }
 
-  public delete(id: number): Promise<any> {
+  public delete(clusterDbId: number, topicName: string): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       axios
-        .delete(`${baseApiUrl}/${id}`)
+        .delete(`${baseApiUrl}/${clusterDbId}/${topicName}`)
         .then(res => {
           resolve(res);
         })
@@ -44,10 +44,10 @@ export default class TopicService {
     });
   }
 
-  public create(entity: ITopic): Promise<ITopic> {
+  public create(clusterDbId: number, entity: ITopic): Promise<ITopic> {
     return new Promise<ITopic>((resolve, reject) => {
       axios
-        .post(`${baseApiUrl}`, entity)
+        .post(`${baseApiUrl}/${clusterDbId}`, entity)
         .then(res => {
           resolve(res.data);
         })
@@ -60,7 +60,7 @@ export default class TopicService {
   public update(entity: ITopic): Promise<ITopic> {
     return new Promise<ITopic>((resolve, reject) => {
       axios
-        .put(`${baseApiUrl}`, entity)
+        .put(`${baseApiUrl}/${entity.cluster.id}`, entity)
         .then(res => {
           resolve(res.data);
         })

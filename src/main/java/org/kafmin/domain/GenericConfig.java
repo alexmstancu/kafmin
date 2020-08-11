@@ -1,9 +1,12 @@
 package org.kafmin.domain;
 
 public class GenericConfig {
-    private final String name;
-    private final String value;
-    private final boolean isReadOnly;
+    private String name;
+    private String value;
+    private boolean isReadOnly;
+
+    public GenericConfig() {
+    }
 
     public GenericConfig(String name, String value, boolean isReadOnly) {
         this.name = name;
@@ -21,6 +24,18 @@ public class GenericConfig {
 
     public boolean isReadOnly() {
         return isReadOnly;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public void setReadOnly(boolean readOnly) {
+        isReadOnly = readOnly;
     }
 
     @Override

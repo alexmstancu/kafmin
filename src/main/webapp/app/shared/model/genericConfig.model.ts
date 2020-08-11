@@ -3,7 +3,7 @@ export interface IGenericConfig {
     value?: string;
     isReadOnly?: boolean;
   }
-  
+
   export class GenericConfig implements IGenericConfig {
     constructor(
       public name?: string,
@@ -11,4 +11,3 @@ export interface IGenericConfig {
       public isReadOnly?: boolean
     ) {}
   }
-  

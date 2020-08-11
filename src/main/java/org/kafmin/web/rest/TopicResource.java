@@ -45,15 +45,15 @@ public class TopicResource {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new topic, or with status {@code 400 (Bad Request)} if the topic has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/topics")
-    public ResponseEntity<Topic> createTopic(@RequestBody Topic topic) throws URISyntaxException {
+    @PostMapping("/topics/{clusterDbId}")
+    public ResponseEntity<Topic> createTopic(@PathVariable Long clusterDbId,  @RequestBody Topic topic) throws URISyntaxException, ExecutionException, InterruptedException {
         log.debug("REST request to save Topic : {}", topic);
         if (topic.getId() != null) {
             throw new BadRequestAlertException("A new topic cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Topic result = topicService.save(topic);
-        return ResponseEntity.created(new URI("/api/topics/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
+        Topic result = topicService.create(clusterDbId, topic);
+        return ResponseEntity.created(new URI("/api/topics/" + clusterDbId + "/" + result.getName()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getName()))
             .body(result);
     }
 
@@ -64,17 +64,16 @@ public class TopicResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated topic,
      * or with status {@code 400 (Bad Request)} if the topic is not valid,
      * or with status {@code 500 (Internal Server Error)} if the topic couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/topics")
-    public ResponseEntity<Topic> updateTopic(@RequestBody Topic topic) throws URISyntaxException {
-        log.debug("REST request to update Topic : {}", topic);
-        if (topic.getId() == null) {
+    @PutMapping("/topics/{clusterDbId}")
+    public ResponseEntity<Topic> updateTopic(@PathVariable Long clusterDbId, @RequestBody Topic topic) throws ExecutionException, InterruptedException {
+        log.debug("REST request to update Topic : {} for cluster {}", topic, clusterDbId);
+        if (topic.getName() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Topic result = topicService.save(topic);
+        Topic result = topicService.update(clusterDbId, topic);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, topic.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, topic.getName()))
             .body(result);
     }
 
@@ -105,13 +104,13 @@ public class TopicResource {
     /**
      * {@code DELETE  /topics/:id} : delete the "id" topic.
      *
-     * @param id the id of the topic to delete.
+     * @param topicName the id of the topic to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/topics/{id}")
-    public ResponseEntity<Void> deleteTopic(@PathVariable Long id) {
-        log.debug("REST request to delete Topic : {}", id);
-        topicService.delete(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
+    @DeleteMapping("/topics/{clusterDbId}/{topicName}")
+    public ResponseEntity<Void> deleteTopic(@PathVariable Long clusterDbId, @PathVariable String topicName) throws ExecutionException, InterruptedException {
+        log.debug("Request to delete Topic : {} from cluster {}", topicName, clusterDbId);
+        topicService.delete(clusterDbId, topicName);
+        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, topicName)).build();
     }
 }

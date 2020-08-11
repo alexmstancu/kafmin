@@ -1,5 +1,6 @@
 package org.kafmin.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -31,6 +32,7 @@ public class Topic implements Serializable {
 
     @Transient
     @JsonSerialize
+    @JsonDeserialize
     private List<GenericConfig> configs;
 
     @Transient
@@ -40,6 +42,16 @@ public class Topic implements Serializable {
     @Transient
     @JsonSerialize
     private Cluster cluster;
+
+    @Transient
+    @JsonSerialize
+    @JsonDeserialize
+    private Integer numPartitions;
+
+    @Transient
+    @JsonSerialize
+    @JsonDeserialize
+    private Short replicationFactor;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -93,14 +105,18 @@ public class Topic implements Serializable {
         return 31;
     }
 
-    // prettier-ignore
     @Override
     public String toString() {
         return "Topic{" +
-            "id=" + getId() +
-            ", name='" + getName() + "'" +
-            ", isInternal='" + isIsInternal() + "'" +
-            "}";
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", isInternal=" + isInternal +
+            ", configs=" + configs +
+            ", partitions=" + partitions +
+            ", cluster=" + cluster +
+            ", numPartitions=" + numPartitions +
+            ", replicationFactor=" + replicationFactor +
+            '}';
     }
 
     public List<GenericConfig> getConfigs() {
@@ -125,5 +141,21 @@ public class Topic implements Serializable {
 
     public void setCluster(Cluster cluster) {
         this.cluster = cluster;
+    }
+
+    public Integer getNumPartitions() {
+        return numPartitions;
+    }
+
+    public void setNumPartitions(Integer numPartitions) {
+        this.numPartitions = numPartitions;
+    }
+
+    public Short getReplicationFactor() {
+        return replicationFactor;
+    }
+
+    public void setReplicationFactor(Short replicationFactor) {
+        this.replicationFactor = replicationFactor;
     }
 }

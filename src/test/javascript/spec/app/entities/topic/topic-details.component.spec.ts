@@ -34,7 +34,7 @@ describe('Component Tests', () => {
         topicServiceStub.find.resolves(foundTopic);
 
         // WHEN
-        comp.retrieveTopic(123);
+        comp.retrieveTopic(123, '');
         await comp.$nextTick();
 
         // THEN

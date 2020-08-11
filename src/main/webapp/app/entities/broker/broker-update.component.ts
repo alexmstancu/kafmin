@@ -76,7 +76,7 @@ export default class BrokerUpdate extends Vue {
 
   public retrieveBroker(brokerId): void {
     this.brokerService()
-      .find('dummyClusterId', brokerId)
+      .find(1, brokerId)
       .then(res => {
         this.broker = res;
       });

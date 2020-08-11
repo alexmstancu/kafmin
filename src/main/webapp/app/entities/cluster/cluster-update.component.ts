@@ -103,4 +103,18 @@ export default class ClusterUpdate extends Vue {
     broker.port = port;
     this.brokers.push(broker);
   }
+
+  public getTopicsCount(): number {
+    if (this.cluster.topicsCount == null) {
+      return 0;
+    }
+    return this.cluster.topicsCount;
+  }
+
+  public getPartitionsCount(): number {
+    if (this.cluster.partitionsCount == null) {
+      return 0;
+    }
+    return this.cluster.partitionsCount;
+  }
 }

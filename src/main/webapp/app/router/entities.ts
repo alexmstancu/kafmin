@@ -79,13 +79,13 @@ export default [
     meta: { authorities: [Authority.USER] },
   },
   {
-    path: '/topic/new',
+    path: '/topic/:clusterDbId/new',
     name: 'TopicCreate',
     component: TopicUpdate,
     meta: { authorities: [Authority.USER] },
   },
   {
-    path: '/topic/:topicId/edit',
+    path: '/topic/:clusterDbId/:topicName/edit',
     name: 'TopicEdit',
     component: TopicUpdate,
     meta: { authorities: [Authority.USER] },

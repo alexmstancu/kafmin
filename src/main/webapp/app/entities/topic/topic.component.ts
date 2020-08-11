@@ -42,6 +42,7 @@ export default class Topic extends mixins(AlertMixin) {
       );
   }
 
+  // not used
   public prepareRemove(instance: ITopic): void {
     this.removeId = instance.id;
     if (<any>this.$refs.removeEntity) {
@@ -49,9 +50,10 @@ export default class Topic extends mixins(AlertMixin) {
     }
   }
 
+  // not used
   public removeTopic(): void {
     this.topicService()
-      .delete(this.removeId)
+      .delete(1, 'dummy')
       .then(() => {
         const message = 'A Topic is deleted with identifier ' + this.removeId;
         this.alertService().showAlert(message, 'danger');

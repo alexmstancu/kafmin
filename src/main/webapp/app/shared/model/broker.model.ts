@@ -19,7 +19,7 @@ export class Broker implements IBroker {
     public port?: number,
     public isController?: boolean,
     public cluster?: ICluster,
-    public configs? :IGenericConfig[]
+    public configs?: IGenericConfig[]
   ) {
     this.isController = this.isController || false;
   }

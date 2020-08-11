@@ -2,7 +2,20 @@
     <div class="row justify-content-center">
         <div class="col-8">
             <div v-if="cluster">
-                <h2 class="jh-entity-heading"><span>Cluster</span> '{{cluster.name}}'</h2>
+                <h2 class="jh-entity-heading">
+                    <span>Cluster</span> '{{cluster.name}}'
+
+                    <router-link v-if="cluster.id" :to="{name: 'ClusterEdit', params: {clusterId: cluster.id}}" tag="button" class="btn btn-primary float-right">
+                        <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span> Edit cluster name</span>
+                    </router-link>
+
+                    <button type="submit"
+                            v-on:click.prevent="previousState()"
+                            class="btn btn-info float-right">
+                        <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span> Back</span>
+                    </button>
+                </h2>
+
                 <dl class="row jh-entity-details">
                     <dt>
                         <span>Cluster Id</span>
@@ -17,22 +30,28 @@
                         <span>{{cluster.name}}</span>
                     </dd>
                     <dt>
-                        <span>Total # of topics</span>
+                        <span>Total number of topics</span>
                     </dt>
                     <dd>
                         <span>{{getTopicsCount()}}</span>
                     </dd>
                      <dt>
-                        <span>Total # of partitions</span>
+                        <span>Total number of partitions</span>
                     </dt>
                     <dd>
                         <span>{{getPartitionsCount()}}</span>
                     </dd>
                 </dl>
-                <!-- TODO ADD BUTTON TO CREATE TOPIC -->
 
-                <h4><span>Topics</span></h4>
+                <h4>
+                    <span>Topics</span>
+                    <router-link :to="{name: 'TopicCreate', params: {clusterDbId: cluster.id}}" tag="button" id="jh-create-entity" class="btn btn-primary btn-sm float-right jh-create-entity create-topic">
+                        <font-awesome-icon icon="plus"></font-awesome-icon>
+                    <span>Create new Topic</span>
+                    </router-link>
+                </h4>
 
+                <!-- <div class="table-responsive" v-if="cluster.id && !isFetchingTopics"> -->
                 <div class="table-responsive" v-if="cluster.id">
                     <table class="table table-sm table-striped table-bordered">
                         <thead>
@@ -44,7 +63,6 @@
                             </tr>
                         </thead>
                         <tbody>
-
                             <tr v-for="topic in cluster.topics" :key="topic.name">
                                 <td>
                                     <span>
@@ -62,7 +80,7 @@
                                             <font-awesome-icon icon="eye"></font-awesome-icon>
                                             <span class="d-none d-md-inline">View</span>
                                         </router-link>
-                                        <router-link :to="{name: 'TopicEdit', params: {topicId: topic.id}}"  tag="button" class="btn btn-primary btn-sm edit">
+                                        <router-link :to="{name: 'TopicEdit', params: {clusterDbId: cluster.id, topicName: topic.name}}"  tag="button" class="btn btn-primary btn-sm edit">
                                             <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
                                             <span class="d-none d-md-inline">Edit</span>
                                         </router-link>
@@ -123,10 +141,22 @@
                     <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span> Back</span>
                 </button>
                 <router-link v-if="cluster.id" :to="{name: 'ClusterEdit', params: {clusterId: cluster.id}}" tag="button" class="btn btn-primary">
-                    <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span> Edit</span>
+                    <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span> Edit cluster name</span>
                 </router-link>
             </div>
         </div>
+
+
+    <b-modal ref="removeEntity" id="removeEntity" >
+            <span slot="modal-title"><span id="kafminApp.cluster.delete.topic.question">Confirm topic deletion operation</span></span>
+            <div class="modal-body">
+                <p id="jhi-delete-cluster-heading">Are you sure you want to delete this topic?</p>
+            </div>
+            <div slot="modal-footer">
+                <button type="button" class="btn btn-secondary" v-on:click="closeDialog()">Cancel</button>
+                <button type="button" class="btn btn-primary" id="jhi-confirm-delete-cluster" v-on:click="removeTopic()">Delete</button>
+            </div>
+        </b-modal>
     </div>
 </template>
 

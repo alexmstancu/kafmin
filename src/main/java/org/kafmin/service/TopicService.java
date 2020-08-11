@@ -13,10 +13,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing {@link Topic}.
@@ -32,24 +31,45 @@ public class TopicService {
     @Autowired
     private ClusterService clusterService;
 
-    public Topic save(Topic topic) {
-        log.debug("Request to save Topic : {}", topic);
-        return null;
+    public Topic create(Long clusterDbId, Topic incomingTopic) throws ExecutionException, InterruptedException {
+        log.debug("Request to get Topic : {} for cluster {}", incomingTopic.getName(), clusterDbId);
+        Cluster cluster = retrieveCluster(clusterDbId);
+        adminCenter.createTopic(cluster.getClusterId(), incomingTopic);
+        return retrieveAndPopulateTopic(incomingTopic.getName(), cluster);
+    }
+
+    public Topic update(Long clusterDbId, Topic incomingUpdatedTopic) throws ExecutionException, InterruptedException {
+        log.debug("Request to update Topic : {} for cluster {}", incomingUpdatedTopic, clusterDbId);
+        Cluster cluster = retrieveCluster(clusterDbId);
+        Topic originalTopic = retrieveAndPopulateTopic(incomingUpdatedTopic.getName(), cluster);
+        List<GenericConfig> configsToUpdate = diff(originalTopic.getConfigs(), incomingUpdatedTopic.getConfigs());
+        if (configsToUpdate.isEmpty()) {
+            log.debug("Topic '{}' was not changed, nothing to update.", incomingUpdatedTopic.getName());
+            return originalTopic;
+        }
+        adminCenter.updateTopicConfig(cluster.getClusterId(), incomingUpdatedTopic.getName(), configsToUpdate);
+        return retrieveAndPopulateTopic(incomingUpdatedTopic.getName(), cluster);
     }
 
     public Optional<Topic> findOne(Long clusterDbId, String topicName) throws ExecutionException, InterruptedException {
         log.debug("Request to get Topic : {} for cluster {}", topicName, clusterDbId);
-
         Cluster cluster = retrieveCluster(clusterDbId);
+        Topic topic = retrieveAndPopulateTopic(topicName, cluster);
+        return Optional.of(topic);
+    }
+
+    private Topic retrieveAndPopulateTopic(String topicName, Cluster cluster) throws ExecutionException, InterruptedException {
         Topic topic = retrieveTopic(cluster.getClusterId(), topicName);
         topic.setCluster(cluster);
         topic.setConfigs(retrieveConfigs(cluster.getClusterId(), topicName));
         removeUnusedFields(cluster);
-        return Optional.of(topic);
+        return topic;
     }
 
-    public void delete(Long id) {
-        log.debug("Request to delete Topic : {}", id);
+    public void delete(Long clusterDbId, String topicName) throws ExecutionException, InterruptedException {
+        log.debug("Request to delete Topic : {} from cluster {}", topicName, clusterDbId);
+        Cluster cluster = retrieveCluster(clusterDbId);
+        adminCenter.deleteTopic(cluster.getClusterId(), topicName);
     }
 
     public List<Topic> findAll() {
@@ -58,8 +78,7 @@ public class TopicService {
     }
 
     private Cluster retrieveCluster(Long clusterDbId) throws ExecutionException, InterruptedException {
-        Optional<Cluster> clusterOptional = clusterService.get(clusterDbId);
-        return clusterOptional.get();
+        return clusterService.get(clusterDbId).get();
     }
 
     private Topic retrieveTopic(String clusterId, String topicName) throws ExecutionException, InterruptedException {
@@ -75,5 +94,17 @@ public class TopicService {
     private void removeUnusedFields(Cluster cluster ) {
         cluster.setTopics(Collections.emptyList());
         cluster.setBrokers(Collections.emptySet());
+    }
+
+    private List<GenericConfig> diff(List<GenericConfig> original, List<GenericConfig> updated) {
+        Map<String, GenericConfig> originalConfigMap = original.stream().collect(Collectors.toMap(GenericConfig::getName, config -> config));
+        List<GenericConfig> diffResult = new ArrayList<>();
+        updated.forEach(updatedConfig -> {
+            String originalConfigValue = originalConfigMap.get(updatedConfig.getName()).getValue();
+            if (!originalConfigValue.equals(updatedConfig.getValue())) {
+                diffResult.add(updatedConfig);
+            }
+        });
+        return diffResult;
     }
 }
