@@ -45,7 +45,7 @@ export default class Cluster extends mixins(AlertMixin) {
 
   public prepareRemove(instance: ICluster): void {
     this.removeId = instance.id;
-    this.removedClusterId = instance.clusterId
+    this.removedClusterId = instance.clusterId;
     if (<any>this.$refs.removeEntity) {
       (<any>this.$refs.removeEntity).show();
     }

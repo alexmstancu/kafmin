@@ -53,7 +53,7 @@ export default class Topic extends mixins(AlertMixin) {
   // not used
   public removeTopic(): void {
     this.topicService()
-      .delete(1, "dummy")
+      .delete(1, 'dummy')
       .then(() => {
         const message = 'A Topic is deleted with identifier ' + this.removeId;
         this.alertService().showAlert(message, 'danger');

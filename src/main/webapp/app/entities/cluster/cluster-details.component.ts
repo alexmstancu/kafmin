@@ -12,9 +12,8 @@ export default class ClusterDetails extends Vue {
   @Inject('topicService') private topicService: () => TopicService;
   @Inject('alertService') private alertService: () => AlertService;
   public cluster: ICluster = {};
-  public removedTopicName: string = '';
-  
-  public isFetchingTopics: boolean = false;
+  public removedTopicName = '';
+  public isFetchingTopics = false;
 
   beforeRouteEnter(to, from, next) {
     next(vm => {
@@ -71,7 +70,6 @@ export default class ClusterDetails extends Vue {
   }
 
   public prepareRemove(instance: ITopic): void {
-    console.log("o sa il sterg pe dansul " + instance.name)
     this.removedTopicName = instance.name;
     if (<any>this.$refs.removeEntity) {
       (<any>this.$refs.removeEntity).show();
@@ -79,7 +77,6 @@ export default class ClusterDetails extends Vue {
   }
 
   public removeTopic(): void {
-    console.log("in remove topic stergem pe " + this.removedTopicName)
     this.topicService()
       .delete(this.cluster.id, this.removedTopicName)
       .then(() => {
@@ -90,7 +87,7 @@ export default class ClusterDetails extends Vue {
         // this.retrieveCluster(this.cluster.clusterId)
         // this.retrieveAllTopics();
         this.closeDialog();
-        this.$router.go(0)
+        this.$router.go(0);
       });
   }
 

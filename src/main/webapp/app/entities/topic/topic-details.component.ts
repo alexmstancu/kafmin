@@ -32,9 +32,9 @@ export default class TopicDetails extends Vue {
 
   public isReadonly(config: IGenericConfig): string {
     if (config.isReadOnly) {
-      return "yes";
+      return 'yes';
     }
-    return "no";
+    return 'no';
   }
 
   public getPartitionsCount(): number {

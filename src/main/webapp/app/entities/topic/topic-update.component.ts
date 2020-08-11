@@ -25,7 +25,7 @@ export default class TopicUpdate extends Vue {
   public topic: ITopic = new Topic();
   public isSaving = false;
   public currentLanguage = '';
-  public savedClusterDbId: number = -1;
+  public savedClusterDbId = -1;
   public originalConfigsMap: Map<string, IGenericConfig> = new Map();
 
   public configEditedStyle = {
@@ -40,12 +40,12 @@ export default class TopicUpdate extends Vue {
   }
 
   public wasEdited(config: IGenericConfig): boolean {
-    return this.originalConfigsMap.get(config.name).value != config.value;
+    return this.originalConfigsMap.get(config.name).value !== config.value;
   }
 
   public areConfigsUnchanged(): boolean {
-    for (let updatedConfig of this.topic.configs) {
-      let originalConfigValue = this.originalConfigsMap.get(updatedConfig.name).value;
+    for (const updatedConfig of this.topic.configs) {
+      const originalConfigValue = this.originalConfigsMap.get(updatedConfig.name).value;
       if (updatedConfig.value !== originalConfigValue) {
         return false;
       }
@@ -54,7 +54,7 @@ export default class TopicUpdate extends Vue {
   }
 
   public cacheOriginalConfigs(configs: IGenericConfig[]) {
-    var configsCopy = configs.map(x => Object.assign({}, x));
+    const configsCopy = configs.map(x => Object.assign({}, x));
     return configsCopy.reduce((map, config) => {
       map.set(config.name, config);
       return map;
@@ -64,7 +64,7 @@ export default class TopicUpdate extends Vue {
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.clusterDbId) {
-        vm.savedClusterDbId = to.params.clusterDbId
+        vm.savedClusterDbId = to.params.clusterDbId;
         if (to.params.topicName) {
           vm.retrieveTopic(to.params.clusterDbId, to.params.topicName);
         }
@@ -126,12 +126,11 @@ export default class TopicUpdate extends Vue {
 
   public initRelationships(): void {}
 
-
   public isReadonly(config: IGenericConfig): string {
     if (config.isReadOnly) {
-      return "yes";
+      return 'yes';
     }
-    return "no";
+    return 'no';
   }
 
   public getPartitionsCount(): number {
@@ -149,6 +148,6 @@ export default class TopicUpdate extends Vue {
   }
 
   public getNonReadOnlyConfigs(): IGenericConfig[] {
-    return this.topic.configs.filter(config => !config.isReadOnly)
+    return this.topic.configs.filter(config => !config.isReadOnly);
   }
 }
