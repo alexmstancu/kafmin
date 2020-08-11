@@ -43,6 +43,16 @@ export default class TopicUpdate extends Vue {
     return this.originalConfigsMap.get(config.name).value != config.value;
   }
 
+  public areConfigsUnchanged(): boolean {
+    for (let updatedConfig of this.topic.configs) {
+      let originalConfigValue = this.originalConfigsMap.get(updatedConfig.name).value;
+      if (updatedConfig.value !== originalConfigValue) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   public cacheOriginalConfigs(configs: IGenericConfig[]) {
     var configsCopy = configs.map(x => Object.assign({}, x));
     return configsCopy.reduce((map, config) => {
@@ -75,15 +85,21 @@ export default class TopicUpdate extends Vue {
   public save(): void {
     this.isSaving = true;
     if (this.topic.cluster !== undefined) {
-      this.topicService()
-        .update(this.topic)
-        .then(param => {
-          this.isSaving = false;
-          this.$router.go(-1);
-          const message = 'Topic with name ' + param.name + ' was updated.';
-          this.alertService().showAlert(message, 'info');
-        });
+      // UPDATE
+      if (this.areConfigsUnchanged()) {
+        this.$router.go(-1);
+      } else {
+        this.topicService()
+          .update(this.topic)
+          .then(param => {
+            this.isSaving = false;
+            this.$router.go(-1);
+            const message = 'Topic with name ' + param.name + ' was updated.';
+            this.alertService().showAlert(message, 'info');
+          });
+      }
     } else {
+      // CREATE
       this.topicService()
         .create(this.savedClusterDbId, this.topic)
         .then(param => {

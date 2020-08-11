@@ -44,6 +44,7 @@ public class TopicService {
         Topic originalTopic = retrieveAndPopulateTopic(incomingUpdatedTopic.getName(), cluster);
         List<GenericConfig> configsToUpdate = diff(originalTopic.getConfigs(), incomingUpdatedTopic.getConfigs());
         if (configsToUpdate.isEmpty()) {
+            log.debug("Topic '{}' was not changed, nothing to update.", incomingUpdatedTopic.getName());
             return originalTopic;
         }
         adminCenter.updateTopicConfig(cluster.getClusterId(), incomingUpdatedTopic.getName(), configsToUpdate);
