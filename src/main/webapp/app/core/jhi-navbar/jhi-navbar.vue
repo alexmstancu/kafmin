@@ -23,7 +23,13 @@
                         <span>Home</span>
                     </span>
                 </b-nav-item>
-                <b-nav-item-dropdown
+                <b-nav-item to="/cluster" exact>
+                    <span>
+                        <font-awesome-icon icon="th-list" />
+                        <span>Clusters</span>
+                    </span>
+                </b-nav-item>
+                <!-- <b-nav-item-dropdown
                     right
                     id="entity-menu"
                     v-if="authenticated"
@@ -32,10 +38,10 @@
                         <font-awesome-icon icon="th-list" />
                         <span>Entities</span>
                     </span>
-                    <!-- <b-dropdown-item to="/broker">
+                    <b-dropdown-item to="/broker">
                         <font-awesome-icon icon="asterisk" />
                         <span>Broker</span>
-                    </b-dropdown-item> -->
+                    </b-dropdown-item>
                     <b-dropdown-item to="/cluster">
                         <font-awesome-icon icon="asterisk" />
                         <span>Cluster</span>
@@ -48,8 +54,8 @@
                         <font-awesome-icon icon="asterisk" />
                         <span >Message</span>
                     </b-dropdown-item>
-                    <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
-                </b-nav-item-dropdown>
+                    jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here
+                </b-nav-item-dropdown> -->
                 <b-nav-item-dropdown
                     right
                     id="admin-menu"
