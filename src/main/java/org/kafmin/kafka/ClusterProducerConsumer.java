@@ -41,7 +41,7 @@ public class ClusterProducerConsumer implements Closeable {
 
     public RecordMetadata produceMessage(String topic, String key, String message) throws ExecutionException, InterruptedException {
         RecordMetadata metadata = producer.send(new ProducerRecord<>(topic, key, message)).get();
-        logger.debug("Produced message to topic {}: key {}, message {}", topic, key, message);
+        logger.debug("Produced message to topic {}: key {}, message {}. Metadata: {}", topic, key, message, metadata);
         return metadata;
     }
 

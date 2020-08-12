@@ -1,11 +1,14 @@
 package org.kafmin.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * A Message.
@@ -29,6 +32,15 @@ public class Message implements Serializable {
 
     @Column(name = "partition")
     private Integer partition;
+
+    @Transient
+    @JsonSerialize
+    @JsonDeserialize
+    private String topic;
+
+    @Transient
+    @JsonSerialize
+    private Date date;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -104,5 +116,21 @@ public class Message implements Serializable {
             ", message='" + getMessage() + "'" +
             ", partition=" + getPartition() +
             "}";
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

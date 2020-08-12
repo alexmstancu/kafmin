@@ -7,6 +7,7 @@ import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.config.ConfigResource;
 import org.kafmin.domain.Cluster;
 import org.kafmin.domain.GenericConfig;
+import org.kafmin.domain.Message;
 import org.kafmin.domain.Topic;
 import org.kafmin.repository.ClusterRepository;
 import org.kafmin.service.mapper.ConfigMapper;
@@ -108,7 +109,7 @@ public class KafkaAdministrationCenter {
         kafkaAdminByClusterId.get(clusterId).close(Duration.ofSeconds(4));
         kafkaAdminByClusterId.remove(clusterId);
 
-        clusterProducerConsumerByClusterId.get(clusterId).close();;
+        clusterProducerConsumerByClusterId.get(clusterId).close();
         clusterProducerConsumerByClusterId.remove(clusterId);
     }
 
@@ -222,6 +223,18 @@ public class KafkaAdministrationCenter {
         ConfigResource topicResource = new ConfigResource(ConfigResource.Type.TOPIC, topicName);
         DescribeConfigsResult describeConfigsResult = clusterAdmin.describeConfigs(Collections.singletonList(topicResource), DESCRIBE_CONFIGS_OPTIONS);
         return describeConfigResourceGet(describeConfigsResult, clusterId);
+    }
+
+    // MESSAGES MANAGEMENT
+
+    public RecordMetadata produceMessage(String clusterId, Message message) throws ExecutionException, InterruptedException {
+        ClusterProducerConsumer clusterProducerConsumer = clusterProducerConsumerByClusterId.get(clusterId);
+        return clusterProducerConsumer.produceMessage(message.getTopic(), message.getKey(), message.getMessage());
+    }
+
+    public Iterable<ConsumerRecord<String, String>> consumeMessages(String clusterId, String topic) throws ExecutionException, InterruptedException {
+        ClusterProducerConsumer clusterProducerConsumer = clusterProducerConsumerByClusterId.get(clusterId);
+        return clusterProducerConsumer.consumerRecords(topic);
     }
 
     // BROKER MANAGEMENT
