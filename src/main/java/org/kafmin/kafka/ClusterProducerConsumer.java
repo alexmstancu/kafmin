@@ -46,6 +46,7 @@ public class ClusterProducerConsumer implements Closeable {
         try {
             consumer.seekToBeginning(Collections.emptyList());
             ConsumerRecords<String, String> consumerRecords = consumer.poll(shortDuration);
+            logger.debug("Consumed {} messages from topic {} cluster {}", consumerRecords.count(), topic, clusterId);
             return consumerRecords.records(topic);
         } catch (Exception e) {
             logger.error("Could not consume from topic {} cluster {}", topic, clusterId, e);
