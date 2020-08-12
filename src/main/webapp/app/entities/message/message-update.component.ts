@@ -23,11 +23,14 @@ export default class MessageUpdate extends Vue {
   public message: IMessage = new Message();
   public isSaving = false;
   public currentLanguage = '';
+  public topicName;
+  public clusterDbId;
 
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      if (to.params.messageId) {
-        vm.retrieveMessage(to.params.messageId);
+      if (to.params.clusterDbId && to.params.topicName) {
+        vm.clusterDbId = to.params.clusterDbId;
+        vm.topicName = to.params.topicName;
       }
     });
   }
@@ -44,25 +47,15 @@ export default class MessageUpdate extends Vue {
 
   public save(): void {
     this.isSaving = true;
-    if (this.message.id) {
-      this.messageService()
-        .update(this.message)
-        .then(param => {
-          this.isSaving = false;
-          this.$router.go(-1);
-          const message = 'A Message is updated with identifier ' + param.id;
-          this.alertService().showAlert(message, 'info');
-        });
-    } else {
-      this.messageService()
-        .create(this.message)
-        .then(param => {
-          this.isSaving = false;
-          this.$router.go(-1);
-          const message = 'A Message is created with identifier ' + param.id;
-          this.alertService().showAlert(message, 'success');
-        });
-    }
+    this.message.topic = this.topicName;
+    this.messageService()
+      .create(this.clusterDbId, this.message)
+      .then(param => {
+        this.isSaving = false;
+        this.$router.go(-1);
+        const message = 'A Message is created with key ' + param.key + ' for topic ' + param.topic;
+        this.alertService().showAlert(message, 'success');
+      });
   }
 
   public retrieveMessage(messageId): void {

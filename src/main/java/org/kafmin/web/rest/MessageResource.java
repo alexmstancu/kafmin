@@ -44,16 +44,16 @@ public class MessageResource {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new message, or with status {@code 400 (Bad Request)} if the message has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/messages")
-    public ResponseEntity<Message> createMessage(@RequestBody Message message) throws URISyntaxException {
+    @PostMapping("/messages/{clusterDbId}")
+    public ResponseEntity<Message> createMessage(@PathVariable Long clusterDbId, @RequestBody Message message) throws URISyntaxException, ExecutionException, InterruptedException {
         log.debug("REST request to save Message : {}", message);
         if (message.getId() != null) {
             throw new BadRequestAlertException("A new message cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Message result = messageService.save(message);
-        return ResponseEntity.created(new URI("/api/messages/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
-            .body(result);
+        messageService.produce(clusterDbId, message);
+        return ResponseEntity.created(new URI("/api/messages/"))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, message.getKey()))
+            .body(message);
     }
 
     /**
@@ -65,21 +65,6 @@ public class MessageResource {
     public MessageList getAllMessages(@PathVariable Long clusterDbId, @PathVariable String topicName) throws ExecutionException, InterruptedException {
         log.debug("REST request to get all Messages");
         return messageService.consume(clusterDbId, topicName);
-    }
-
-    /**
-     * will not be used
-     */
-    @PutMapping("/messages")
-    public ResponseEntity<Message> updateMessage(@RequestBody Message message) throws URISyntaxException {
-        log.debug("REST request to update Message : {}", message);
-        if (message.getId() == null) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
-        }
-        Message result = messageService.save(message);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, message.getId().toString()))
-            .body(result);
     }
 
     /**

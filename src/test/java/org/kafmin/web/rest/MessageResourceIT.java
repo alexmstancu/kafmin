@@ -139,7 +139,7 @@ public class MessageResourceIT {
             .andExpect(jsonPath("$.[*].message").value(hasItem(DEFAULT_MESSAGE)))
             .andExpect(jsonPath("$.[*].partition").value(hasItem(DEFAULT_PARTITION)));
     }
-    
+
     @Test
     @Transactional
     public void getMessage() throws Exception {
@@ -165,37 +165,6 @@ public class MessageResourceIT {
 
     @Test
     @Transactional
-    public void updateMessage() throws Exception {
-        // Initialize the database
-        messageService.save(message);
-
-        int databaseSizeBeforeUpdate = messageRepository.findAll().size();
-
-        // Update the message
-        Message updatedMessage = messageRepository.findById(message.getId()).get();
-        // Disconnect from session so that the updates on updatedMessage are not directly saved in db
-        em.detach(updatedMessage);
-        updatedMessage
-            .key(UPDATED_KEY)
-            .message(UPDATED_MESSAGE)
-            .partition(UPDATED_PARTITION);
-
-        restMessageMockMvc.perform(put("/api/messages")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedMessage)))
-            .andExpect(status().isOk());
-
-        // Validate the Message in the database
-        List<Message> messageList = messageRepository.findAll();
-        assertThat(messageList).hasSize(databaseSizeBeforeUpdate);
-        Message testMessage = messageList.get(messageList.size() - 1);
-        assertThat(testMessage.getKey()).isEqualTo(UPDATED_KEY);
-        assertThat(testMessage.getMessage()).isEqualTo(UPDATED_MESSAGE);
-        assertThat(testMessage.getPartition()).isEqualTo(UPDATED_PARTITION);
-    }
-
-    @Test
-    @Transactional
     public void updateNonExistingMessage() throws Exception {
         int databaseSizeBeforeUpdate = messageRepository.findAll().size();
 
@@ -208,23 +177,5 @@ public class MessageResourceIT {
         // Validate the Message in the database
         List<Message> messageList = messageRepository.findAll();
         assertThat(messageList).hasSize(databaseSizeBeforeUpdate);
-    }
-
-    @Test
-    @Transactional
-    public void deleteMessage() throws Exception {
-        // Initialize the database
-        messageService.save(message);
-
-        int databaseSizeBeforeDelete = messageRepository.findAll().size();
-
-        // Delete the message
-        restMessageMockMvc.perform(delete("/api/messages/{id}", message.getId())
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isNoContent());
-
-        // Validate the database contains one less item
-        List<Message> messageList = messageRepository.findAll();
-        assertThat(messageList).hasSize(databaseSizeBeforeDelete - 1);
     }
 }

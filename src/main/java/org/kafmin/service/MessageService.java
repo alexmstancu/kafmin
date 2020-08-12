@@ -41,9 +41,10 @@ public class MessageService {
      * @param message the entity to save.
      * @return the persisted entity.
      */
-    public Message save(Message message) {
+    public void produce(Long clusterDbId, Message message) throws ExecutionException, InterruptedException {
         log.debug("Request to save Message : {}", message);
-        return messageRepository.save(message);
+        Cluster cluster = retrieveCluster(clusterDbId);
+        adminCenter.produceMessage(cluster.getClusterId(), message);
     }
 
     /**

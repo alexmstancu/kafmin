@@ -45,10 +45,10 @@ export default class MessageService {
     });
   }
 
-  public create(entity: IMessage): Promise<IMessage> {
+  public create(clusterDbId: number, entity: IMessage): Promise<IMessage> {
     return new Promise<IMessage>((resolve, reject) => {
       axios
-        .post(`${baseApiUrl}`, entity)
+        .post(`${baseApiUrl}/${clusterDbId}`, entity)
         .then(res => {
           resolve(res.data);
         })
