@@ -39,7 +39,7 @@ public class KafkaAdministrationCenter {
     private ClusterRepository clusterRepository;
 
     @PostConstruct
-    public void init() {
+    public void init() throws ExecutionException, InterruptedException {
         List<Cluster> existingClusters = clusterRepository.findAll();
         logger.debug("Initializing the KafkaAdminClients for the existing clusters in the DB: {}", existingClusters);
         existingClusters.forEach(cluster -> {
@@ -49,19 +49,19 @@ public class KafkaAdministrationCenter {
                 logger.error("Could not initialize KafkaAdminClient at startup for cluster {}", cluster, e);
             }
         });
-//        tmpDELETE_THIS_METHOD();
+        tmpDELETE_THIS_METHOD();
     }
 
     private void tmpDELETE_THIS_METHOD() throws ExecutionException, InterruptedException {
         ClusterProducerConsumer producerConsumer = clusterProducerConsumerByClusterId.get("wrd2tnF3T6efxMnMO40yDQ");
-        RecordMetadata recordMetadata = producerConsumer.produceMessage("topic1", "alex", "salut");
+        RecordMetadata recordMetadata = producerConsumer.produceMessage("topic1", "alex", "salut" + new Date());
         logger.debug("RecordMetadata: {}", recordMetadata);
         Iterable<ConsumerRecord<String, String>> records = producerConsumer.consumerRecords("topic1");
         records.forEach(record -> {
             logger.debug("Key: {}, Record: {}", record.key(), record.value());
         });
 
-        recordMetadata = producerConsumer.produceMessage("topic2", "alex2", "salut2");
+        recordMetadata = producerConsumer.produceMessage("topic2", "alex2", "salut2" + new Date());
         logger.debug("RecordMetadata: {}", recordMetadata);
         records = producerConsumer.consumerRecords("topic2");
         records.forEach(record -> {

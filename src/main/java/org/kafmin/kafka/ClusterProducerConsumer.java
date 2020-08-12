@@ -47,27 +47,23 @@ public class ClusterProducerConsumer implements Closeable {
 
     public Iterable<ConsumerRecord<String, String>> consumerRecords(String topic) {
         List<PartitionInfo> partitionInfoList = consumer.partitionsFor(topic);
-        List<TopicPartition> topicPartitions = toTopicPartitionList(partitionInfoList);
-        consumer.assign(topicPartitions);
+        consumer.assign(toTopicPartitionList(partitionInfoList));
+        // "If no partitions are provided, seek to the first offset for all of the currently assigned partitions"
         consumer.seekToBeginning(Collections.emptyList());
-        Optional<ConsumerRecords<String, String>> optionalConsumerRecords = poll();
-        if (!optionalConsumerRecords.isPresent()) {
-            return Collections.emptyList();
-        }
-        return optionalConsumerRecords.get().records(topic);
+        return poll(topic);
     }
 
-    private Optional<ConsumerRecords<String, String>> poll() {
+    private Iterable<ConsumerRecord<String, String>> poll(String topic) {
         int maxRetries = 3;
         int retires = 0;
-        while (retires <= maxRetries) {
+        while (retires < maxRetries) {
             ConsumerRecords<String, String> consumerRecords = consumer.poll(pollTimeout);
             if (!consumerRecords.isEmpty()) {
-                return Optional.of(consumerRecords);
+                return consumerRecords.records(topic);
             }
             retires++;
         }
-        return Optional.empty();
+        return Collections.emptyList();
     }
 
     private List<TopicPartition> toTopicPartitionList(List<PartitionInfo> partitionInfoList) {
