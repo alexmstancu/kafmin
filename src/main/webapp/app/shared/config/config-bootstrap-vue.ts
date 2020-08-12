@@ -24,6 +24,15 @@ import {
   BFormDatepicker,
   BInputGroup,
   BInputGroupPrepend,
+  BCard,
+  BCardText,
+  BCardSubTitle,
+  BCardTitle,
+  BCardGroup,
+  BListGroup,
+  BListGroupItem,
+  BCardBody,
+  BCardFooter,
 } from 'bootstrap-vue';
 
 export function initBootstrapVue(vue) {
@@ -53,4 +62,13 @@ export function initBootstrapVue(vue) {
   vue.component('b-form-datepicker', BFormDatepicker);
   vue.component('b-input-group', BInputGroup);
   vue.component('b-input-group-prepend', BInputGroupPrepend);
+  vue.component('b-card', BCard);
+  vue.component('b-card-text', BCardText);
+  vue.component('b-card-title', BCardTitle);
+  vue.component('b-card-subtitle', BCardSubTitle);
+  vue.component('b-card-group', BCardGroup);
+  vue.component('b-list-group', BListGroup);
+  vue.component('b-list-group-item', BListGroupItem);
+  vue.component('b-card-body', BCardBody);
+  vue.component('b-card-footer', BCardFooter);
 }

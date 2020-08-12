@@ -4,7 +4,7 @@ export interface IMessage {
   message?: string;
   partition?: number;
   topic?: string;
-  date?: Date;
+  date?: string;
   offest?: number
 }
 
@@ -15,7 +15,7 @@ export class Message implements IMessage {
     public message?: string,
     public partition?: number,
     public topic?: string,
-    public date?: Date,
+    public date?: string,
     public offest?: number,
   ) {}
 }

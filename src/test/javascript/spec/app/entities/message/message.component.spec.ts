@@ -59,7 +59,7 @@ describe('Component Tests', () => {
 
       // THEN
       expect(messageServiceStub.retrieve.called).toBeTruthy();
-      expect(comp.messages[0]).toEqual(jasmine.objectContaining({ id: 123 }));
+      expect(comp.messageList[0]).toEqual(jasmine.objectContaining({ id: 123 }));
     });
     it('Should call delete service on confirmDelete', async () => {
       // GIVEN
