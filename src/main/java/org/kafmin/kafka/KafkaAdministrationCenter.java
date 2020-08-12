@@ -54,14 +54,14 @@ public class KafkaAdministrationCenter {
 
     private void tmpDELETE_THIS_METHOD() throws ExecutionException, InterruptedException {
         ClusterProducerConsumer producerConsumer = clusterProducerConsumerByClusterId.get("wrd2tnF3T6efxMnMO40yDQ");
-        RecordMetadata recordMetadata = producerConsumer.produceMessage("topic1", "alex", "salut" + new Date());
+        RecordMetadata recordMetadata = producerConsumer.produceMessage("topic1", "alex", "salut " + new Date());
         logger.debug("RecordMetadata: {}", recordMetadata);
         Iterable<ConsumerRecord<String, String>> records = producerConsumer.consumerRecords("topic1");
         records.forEach(record -> {
             logger.debug("Key: {}, Record: {}", record.key(), record.value());
         });
 
-        recordMetadata = producerConsumer.produceMessage("topic2", "alex2", "salut2" + new Date());
+        recordMetadata = producerConsumer.produceMessage("topic2", "alex2", "salut2 " + new Date());
         logger.debug("RecordMetadata: {}", recordMetadata);
         records = producerConsumer.consumerRecords("topic2");
         records.forEach(record -> {
