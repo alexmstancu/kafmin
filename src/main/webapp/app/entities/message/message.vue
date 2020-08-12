@@ -50,24 +50,34 @@
                 <span>No messages found</span>
             </div>
 
-                <div v-if="messageList.messages && messageList.messages.length > 0" >
-                    <b-card v-for="message in messagesSortedByOffsetDescending()" :key="message.date" no-body header-tag="header" footer-tag="footer" style="margin-bottom: 20px">
-                        <template v-slot:header >
-                            <p style="margin: 0px">
-                                <b-badge variant="success">Key</b-badge>  <b>{{message.key}}</b>
-                                <b-badge variant="info">Offset</b-badge>  <small>{{message.offset}}</small>
-                                <b-badge variant="info">Partition</b-badge> <small>{{message.partition}}</small>
-                                <b-badge variant="info">Timestamp</b-badge>  <small>{{getPrettyDate(message.date)}}</small> 
-                            </p>
-                        </template>
-                        <b-card-body>
-                            <b-card-text>
-                                {{message.message}}
-                            </b-card-text>
-                        </b-card-body>
-                    </b-card>
-                </div>
-
+            <div v-if="messageList.messages && messageList.messages.length > 0" >
+                <b-card v-for="message in messagesSortedByOffsetDescending()" :key="message.date" no-body header-tag="header" footer-tag="footer" style="margin-bottom: 20px">
+                    <template v-slot:header >
+                        <p style="margin: 0px">
+                            <b-badge variant="success">Key</b-badge>  <b>{{message.key}}</b>
+                            <b-badge variant="info">Offset</b-badge>  <small>{{message.offset}}</small>
+                            <b-badge variant="info">Partition</b-badge> <small>{{message.partition}}</small>
+                            <b-badge variant="info">Timestamp</b-badge>  <small>{{getPrettyDate(message.date)}}</small> 
+                        </p>
+                    </template>
+                    <b-card-body>
+                        <b-card-text>
+                            {{message.message}}
+                        </b-card-text>
+                    </b-card-body>
+                </b-card>
+            </div>
+            <button type="submit"
+                    v-on:click.prevent="previousState()"
+                    class="btn btn-info">
+                <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span> Back</span>
+            </button>
+            <router-link :to="{name: 'MessageCreate'}" tag="button" id="jh-create-entity" class="btn btn-primary jh-create-entity create-message">
+                <font-awesome-icon icon="plus"></font-awesome-icon>
+                <span >
+                    Produce a new Message
+                </span>
+            </router-link>
             
             <b-modal ref="removeEntity" id="removeEntity" >
                 <span slot="modal-title"><span id="kafminApp.message.delete.question">Confirm delete operation</span></span>
