@@ -52,6 +52,7 @@ public class CacheConfiguration {
             createCache(cm, org.kafmin.domain.Cluster.class.getName());
             createCache(cm, org.kafmin.domain.Cluster.class.getName() + ".brokers");
             createCache(cm, org.kafmin.domain.Topic.class.getName());
+            createCache(cm, org.kafmin.domain.Message.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }
