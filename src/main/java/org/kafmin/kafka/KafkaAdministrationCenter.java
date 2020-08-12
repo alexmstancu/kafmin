@@ -31,6 +31,7 @@ public class KafkaAdministrationCenter {
     private static final ListTopicsOptions LIST_TOPICS_OPTIONS = new ListTopicsOptions().timeoutMs(3000);
 
     private final Map<String, Admin> kafkaAdminByClusterId = new HashMap<>();
+    private final Map<String, ClusterProducerConsumer> clusterProducerConsumerByClusterId = new HashMap<>();
 
     @Autowired
     private ClusterRepository clusterRepository;
@@ -78,6 +79,7 @@ public class KafkaAdministrationCenter {
             }
 
             addClusterAdmin(clusterId, admin);
+            addClusterProducerConsumer(clusterId, bootstrapServers);
         }
         return clusterResult;
     }
@@ -85,6 +87,9 @@ public class KafkaAdministrationCenter {
     public void deleteCluster(String clusterId) {
         kafkaAdminByClusterId.get(clusterId).close(Duration.ofSeconds(5));
         kafkaAdminByClusterId.remove(clusterId);
+
+        clusterProducerConsumerByClusterId.get(clusterId).close();;
+        clusterProducerConsumerByClusterId.remove(clusterId);
     }
 
     private DescribeClusterResult describeClusterResultGet(DescribeClusterResult clusterResult) {
@@ -116,7 +121,11 @@ public class KafkaAdministrationCenter {
         Admin clusterAdmin = getClusterAdmin(clusterId);
         NewTopic newTopic = new NewTopic(topic.getName(), topic.getNumPartitions(), topic.getReplicationFactor());
         CreateTopicsResult createTopicsResult = clusterAdmin.createTopics(Collections.singletonList(newTopic), CREATE_TOPICS_OPTIONS);
-        return createTopicsResultGet(createTopicsResult, clusterId);
+        CreateTopicsResult result = createTopicsResultGet(createTopicsResult, clusterId);
+        if (result != null) {
+            clusterProducerConsumerByClusterId.get(clusterId).addConsumer(topic.getName());
+        }
+        return result;
     }
 
     private DeleteTopicsResult deleteTopicsResultGet(DeleteTopicsResult deleteTopicsResult, String clusterId, String topicName) {
@@ -132,8 +141,13 @@ public class KafkaAdministrationCenter {
     public DeleteTopicsResult deleteTopic(String clusterId, String topicName) {
         Admin clusterAdmin = getClusterAdmin(clusterId);
         DeleteTopicsResult deleteTopicsResult = clusterAdmin.deleteTopics(Collections.singletonList(topicName), DELETE_TOPICS_RESULT);
-        return deleteTopicsResultGet(deleteTopicsResult, clusterId, topicName);
+        DeleteTopicsResult result = deleteTopicsResultGet(deleteTopicsResult, clusterId, topicName);
+        if (result != null) {
+            clusterProducerConsumerByClusterId.get(clusterId).removeConsumer(topicName);
+        }
+        return result;
     }
+
     private AlterConfigsResult alterConfigsResultGet(AlterConfigsResult alterConfigsResult, String clusterId, String topicName) {
         try {
             logger.debug("AlterConfigsResult for topic {} in cluster: {}, listing: {}", topicName, clusterId, alterConfigsResult.all().get());
@@ -225,6 +239,17 @@ public class KafkaAdministrationCenter {
 
     private void addClusterAdmin(String clusterId, Admin admin) {
         kafkaAdminByClusterId.put(clusterId, admin);
+    }
+
+    private List<String> getTopics(String clusterId) throws ExecutionException, InterruptedException {
+        Set<String> topics = listTopicsResultGet(listTopics(clusterId), clusterId).names().get();
+        return new ArrayList<>(topics);
+    }
+
+    private void addClusterProducerConsumer(String clusterId, String bootstrapServers) throws ExecutionException, InterruptedException {
+        List<String> topics = getTopics(clusterId);
+        ClusterProducerConsumer clusterProducerConsumer = new ClusterProducerConsumer(clusterId, bootstrapServers, topics);
+        clusterProducerConsumerByClusterId.put(clusterId, clusterProducerConsumer);
     }
 
     private Admin createAdmin(String bootstrapServers) {

@@ -13,11 +13,12 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Closeable;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
-public class ClusterProducerConsumer {
+public class ClusterProducerConsumer implements Closeable {
     private static final Logger logger = LoggerFactory.getLogger(ClusterProducerConsumer.class);
     private final Duration longDuration = Duration.ofSeconds(4);
     private final Duration shortDuration = Duration.ofMillis(500);
@@ -99,5 +100,15 @@ public class ClusterProducerConsumer {
         consumerProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG, consumerId);
         return consumerProperties;
+    }
+
+    @Override
+    public void close() {
+        try {
+            producer.close(longDuration);
+            consumersByTopic.values().forEach(c -> c.close(longDuration));
+        } catch (Exception e) {
+            logger.error("Could not close the ClusterProducerConsumer for cluster {}", clusterId, e);
+        }
     }
 }
