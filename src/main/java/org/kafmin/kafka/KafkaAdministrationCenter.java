@@ -1,10 +1,13 @@
 package org.kafmin.kafka;
 
 import org.apache.kafka.clients.admin.*;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.config.ConfigResource;
 import org.kafmin.domain.Cluster;
 import org.kafmin.domain.GenericConfig;
+import org.kafmin.domain.Message;
 import org.kafmin.domain.Topic;
 import org.kafmin.repository.ClusterRepository;
 import org.kafmin.service.mapper.ConfigMapper;
@@ -31,12 +34,13 @@ public class KafkaAdministrationCenter {
     private static final ListTopicsOptions LIST_TOPICS_OPTIONS = new ListTopicsOptions().timeoutMs(3000);
 
     private final Map<String, Admin> kafkaAdminByClusterId = new HashMap<>();
+    private final Map<String, ClusterProducerConsumer> clusterProducerConsumerByClusterId = new HashMap<>();
 
     @Autowired
     private ClusterRepository clusterRepository;
 
     @PostConstruct
-    public void init() {
+    public void init() throws ExecutionException, InterruptedException {
         List<Cluster> existingClusters = clusterRepository.findAll();
         logger.debug("Initializing the KafkaAdminClients for the existing clusters in the DB: {}", existingClusters);
         existingClusters.forEach(cluster -> {
@@ -45,6 +49,24 @@ public class KafkaAdministrationCenter {
             } catch (Exception e) {
                 logger.error("Could not initialize KafkaAdminClient at startup for cluster {}", cluster, e);
             }
+        });
+        tmpDELETE_THIS_METHOD();
+    }
+
+    private void tmpDELETE_THIS_METHOD() throws ExecutionException, InterruptedException {
+        ClusterProducerConsumer producerConsumer = clusterProducerConsumerByClusterId.get("wrd2tnF3T6efxMnMO40yDQ");
+        RecordMetadata recordMetadata = producerConsumer.produceMessage("topic1", "alex", "salut " + new Date());
+        logger.debug("RecordMetadata: {}", recordMetadata);
+        Iterable<ConsumerRecord<String, String>> records = producerConsumer.consumerRecords("topic1");
+        records.forEach(record -> {
+            logger.debug("Key: {}, Record: {}", record.key(), record.value());
+        });
+
+        recordMetadata = producerConsumer.produceMessage("topic2", "alex2", "salut2 " + new Date());
+        logger.debug("RecordMetadata: {}", recordMetadata);
+        records = producerConsumer.consumerRecords("topic2");
+        records.forEach(record -> {
+            logger.debug("Key: {}, Record: {}", record.key(), record.value());
         });
     }
 
@@ -78,13 +100,17 @@ public class KafkaAdministrationCenter {
             }
 
             addClusterAdmin(clusterId, admin);
+            addClusterProducerConsumer(clusterId, bootstrapServers);
         }
         return clusterResult;
     }
 
     public void deleteCluster(String clusterId) {
-        kafkaAdminByClusterId.get(clusterId).close(Duration.ofSeconds(5));
+        kafkaAdminByClusterId.get(clusterId).close(Duration.ofSeconds(4));
         kafkaAdminByClusterId.remove(clusterId);
+
+        clusterProducerConsumerByClusterId.get(clusterId).close();
+        clusterProducerConsumerByClusterId.remove(clusterId);
     }
 
     private DescribeClusterResult describeClusterResultGet(DescribeClusterResult clusterResult) {
@@ -134,6 +160,7 @@ public class KafkaAdministrationCenter {
         DeleteTopicsResult deleteTopicsResult = clusterAdmin.deleteTopics(Collections.singletonList(topicName), DELETE_TOPICS_RESULT);
         return deleteTopicsResultGet(deleteTopicsResult, clusterId, topicName);
     }
+
     private AlterConfigsResult alterConfigsResultGet(AlterConfigsResult alterConfigsResult, String clusterId, String topicName) {
         try {
             logger.debug("AlterConfigsResult for topic {} in cluster: {}, listing: {}", topicName, clusterId, alterConfigsResult.all().get());
@@ -198,6 +225,18 @@ public class KafkaAdministrationCenter {
         return describeConfigResourceGet(describeConfigsResult, clusterId);
     }
 
+    // MESSAGES MANAGEMENT
+
+    public RecordMetadata produceMessage(String clusterId, Message message) throws ExecutionException, InterruptedException {
+        ClusterProducerConsumer clusterProducerConsumer = clusterProducerConsumerByClusterId.get(clusterId);
+        return clusterProducerConsumer.produceMessage(message.getTopic(), message.getKey(), message.getMessage());
+    }
+
+    public Iterable<ConsumerRecord<String, String>> consumeMessages(String clusterId, String topic) throws ExecutionException, InterruptedException {
+        ClusterProducerConsumer clusterProducerConsumer = clusterProducerConsumerByClusterId.get(clusterId);
+        return clusterProducerConsumer.consumerRecords(topic);
+    }
+
     // BROKER MANAGEMENT
 
     private DescribeConfigsResult describeConfigResourceGet(DescribeConfigsResult describeConfigsResult, String clusterId) {
@@ -225,6 +264,11 @@ public class KafkaAdministrationCenter {
 
     private void addClusterAdmin(String clusterId, Admin admin) {
         kafkaAdminByClusterId.put(clusterId, admin);
+    }
+
+    private void addClusterProducerConsumer(String clusterId, String bootstrapServers) {
+        ClusterProducerConsumer clusterProducerConsumer = new ClusterProducerConsumer(clusterId, bootstrapServers);
+        clusterProducerConsumerByClusterId.put(clusterId, clusterProducerConsumer);
     }
 
     private Admin createAdmin(String bootstrapServers) {

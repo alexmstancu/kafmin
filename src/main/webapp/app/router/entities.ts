@@ -20,6 +20,12 @@ const Topic = () => import('@/entities/topic/topic.vue');
 const TopicUpdate = () => import('@/entities/topic/topic-update.vue');
 // prettier-ignore
 const TopicDetails = () => import('@/entities/topic/topic-details.vue');
+// prettier-ignore
+const Message = () => import('@/entities/message/message.vue');
+// prettier-ignore
+const MessageUpdate = () => import('@/entities/message/message-update.vue');
+// prettier-ignore
+const MessageDetails = () => import('@/entities/message/message-details.vue');
 // jhipster-needle-add-entity-to-router-import - JHipster will import entities to the router here
 
 export default [
@@ -94,6 +100,30 @@ export default [
     path: '/topic/:clusterDbId/:topicName/view',
     name: 'TopicView',
     component: TopicDetails,
+    meta: { authorities: [Authority.USER] },
+  },
+  {
+    path: '/messages/:clusterDbId/:topicName',
+    name: 'Message',
+    component: Message,
+    meta: { authorities: [Authority.USER] },
+  },
+  {
+    path: '/messages/:clusterDbId/:topicName/new',
+    name: 'MessageCreate',
+    component: MessageUpdate,
+    meta: { authorities: [Authority.USER] },
+  },
+  {
+    path: '/message/:messageId/edit',
+    name: 'MessageEdit',
+    component: MessageUpdate,
+    meta: { authorities: [Authority.USER] },
+  },
+  {
+    path: '/message/:messageId/view',
+    name: 'MessageView',
+    component: MessageDetails,
     meta: { authorities: [Authority.USER] },
   },
   // jhipster-needle-add-entity-to-router - JHipster will add entities to the router here

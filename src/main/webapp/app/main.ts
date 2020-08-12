@@ -31,6 +31,7 @@ import ConfigurationService from '@/admin/configuration/configuration.service';
 import BrokerService from '@/entities/broker/broker.service';
 import ClusterService from '@/entities/cluster/cluster.service';
 import TopicService from '@/entities/topic/topic.service';
+import MessageService from '@/entities/message/message.service';
 // jhipster-needle-add-entity-service-to-main-import - JHipster will import entities services here
 
 /* tslint:enable */
@@ -93,6 +94,7 @@ new Vue({
     brokerService: () => new BrokerService(),
     clusterService: () => new ClusterService(),
     topicService: () => new TopicService(),
+    messageService: () => new MessageService(),
     // jhipster-needle-add-entity-service-to-main - JHipster will import entities services here
     accountService: () => accountService,
   },

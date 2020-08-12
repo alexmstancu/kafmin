@@ -35,7 +35,7 @@
                     <dd>
                         <span>{{getTopicsCount()}}</span>
                     </dd>
-                     <dt>
+                    <dt>
                         <span>Total number of partitions</span>
                     </dt>
                     <dd>
@@ -58,7 +58,7 @@
                             <tr>
                                 <th><span>Topic name</span></th>
                                 <th><span># of partitions</span></th>
-                                <th><span>Is internal?</span></th>
+                                <!-- <th><span>Is internal?</span></th> -->
                                 <th></th>
                             </tr>
                         </thead>
@@ -73,9 +73,17 @@
                                     </span>
                                 </td>
                                 <td><span>{{topic.partitions}}</span></td>
-                                <td><span>{{isInternal(topic)}}</span></td>
+                                <!-- <td><span>{{isInternal(topic)}}</span></td> -->
                                 <td class="text-right">
                                     <div class="btn-group">
+                                        <router-link :to="{name: 'Message', params: {clusterDbId: cluster.id, topicName: topic.name}}" tag="button" class="btn btn-outline-secondary btn-sm details">
+                                            <font-awesome-icon icon="envelope-open-text"></font-awesome-icon>
+                                            <span class="d-none d-md-inline">Consume</span>
+                                        </router-link>
+                                        <router-link :to="{name: 'MessageCreate', params: {clusterDbId: cluster.id, topicName: topic.name}}" tag="button" class="btn btn-outline-success btn-sm details">
+                                            <font-awesome-icon icon="paper-plane"></font-awesome-icon>
+                                            <span class="d-none d-md-inline">Produce</span>
+                                        </router-link>
                                         <router-link :to="{name: 'TopicView', params: {clusterDbId: cluster.id, topicName: topic.name}}" tag="button" class="btn btn-info btn-sm details">
                                             <font-awesome-icon icon="eye"></font-awesome-icon>
                                             <span class="d-none d-md-inline">View</span>

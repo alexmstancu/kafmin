@@ -116,5 +116,4 @@ public class ClusterService {
         kafkaCluster.setPartitionsCount(topicPartitionCount.getPartitions());
         kafkaCluster.setTopics(TopicMapper.from(describeTopicsResult));
     }
-
 }
