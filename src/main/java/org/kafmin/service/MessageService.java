@@ -1,30 +1,37 @@
 package org.kafmin.service;
 
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.kafmin.domain.Cluster;
 import org.kafmin.domain.Message;
+import org.kafmin.domain.MessageList;
+import org.kafmin.kafka.KafkaAdministrationCenter;
 import org.kafmin.repository.MessageRepository;
+import org.kafmin.service.mapper.MessageMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Service Implementation for managing {@link Message}.
  */
 @Service
-@Transactional
 public class MessageService {
-
     private final Logger log = LoggerFactory.getLogger(MessageService.class);
 
-    private final MessageRepository messageRepository;
-
-    public MessageService(MessageRepository messageRepository) {
-        this.messageRepository = messageRepository;
-    }
+    @Autowired
+    private MessageRepository messageRepository;
+    @Autowired
+    private ClusterService clusterService;
+    @Autowired
+    private KafkaAdministrationCenter adminCenter;
 
     /**
      * Save a message.
@@ -42,10 +49,13 @@ public class MessageService {
      *
      * @return the list of entities.
      */
-    @Transactional(readOnly = true)
-    public List<Message> findAll() {
-        log.debug("Request to get all Messages");
-        return messageRepository.findAll();
+    public MessageList consume(Long clusterDbId, String topic) throws ExecutionException, InterruptedException {
+        log.debug("Request to get all Messages for topic {} in cluster {}", topic, clusterDbId);
+        Cluster cluster = retrieveCluster(clusterDbId);
+        Iterable<ConsumerRecord<String, String>> consumerRecords = adminCenter.consumeMessages(cluster.getClusterId(), topic);
+        List<Message> messages = MessageMapper.from(consumerRecords);
+        removeUnusedFields(cluster);
+        return MessageMapper.toMessageList(topic, cluster, messages);
     }
 
 
@@ -69,5 +79,14 @@ public class MessageService {
     public void delete(Long id) {
         log.debug("Request to delete Message : {}", id);
         messageRepository.deleteById(id);
+    }
+
+    private Cluster retrieveCluster(Long clusterDbId) throws ExecutionException, InterruptedException {
+        return clusterService.get(clusterDbId).get();
+    }
+
+    private void removeUnusedFields(Cluster cluster) {
+        cluster.setTopics(Collections.emptyList());
+        cluster.setBrokers(Collections.emptySet());
     }
 }

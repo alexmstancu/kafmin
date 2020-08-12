@@ -1,11 +1,11 @@
 package org.kafmin.web.rest;
 
-import org.kafmin.domain.Message;
-import org.kafmin.service.MessageService;
-import org.kafmin.web.rest.errors.BadRequestAlertException;
-
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
+import org.kafmin.domain.Message;
+import org.kafmin.domain.MessageList;
+import org.kafmin.service.MessageService;
+import org.kafmin.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 /**
  * REST controller for managing {@link org.kafmin.domain.Message}.
@@ -57,13 +57,18 @@ public class MessageResource {
     }
 
     /**
-     * {@code PUT  /messages} : Updates an existing message.
+     * {@code GET  /messages} : get all the messages.
      *
-     * @param message the message to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated message,
-     * or with status {@code 400 (Bad Request)} if the message is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the message couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of messages in body.
+     */
+    @GetMapping("/messages/{clusterDbId}/{topicName}")
+    public MessageList getAllMessages(@PathVariable Long clusterDbId, String topicName) throws ExecutionException, InterruptedException {
+        log.debug("REST request to get all Messages");
+        return messageService.consume(clusterDbId, topicName);
+    }
+
+    /**
+     * will not be used
      */
     @PutMapping("/messages")
     public ResponseEntity<Message> updateMessage(@RequestBody Message message) throws URISyntaxException {
@@ -78,21 +83,7 @@ public class MessageResource {
     }
 
     /**
-     * {@code GET  /messages} : get all the messages.
-     *
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of messages in body.
-     */
-    @GetMapping("/messages")
-    public List<Message> getAllMessages() {
-        log.debug("REST request to get all Messages");
-        return messageService.findAll();
-    }
-
-    /**
-     * {@code GET  /messages/:id} : get the "id" message.
-     *
-     * @param id the id of the message to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the message, or with status {@code 404 (Not Found)}.
+     * will not be used
      */
     @GetMapping("/messages/{id}")
     public ResponseEntity<Message> getMessage(@PathVariable Long id) {
@@ -102,10 +93,7 @@ public class MessageResource {
     }
 
     /**
-     * {@code DELETE  /messages/:id} : delete the "id" message.
-     *
-     * @param id the id of the message to delete.
-     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
+     * will not be used
      */
     @DeleteMapping("/messages/{id}")
     public ResponseEntity<Void> deleteMessage(@PathVariable Long id) {

@@ -42,6 +42,10 @@ public class Message implements Serializable {
     @JsonSerialize
     private Date date;
 
+    @Transient
+    @JsonSerialize
+    private Long offset;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -132,5 +136,13 @@ public class Message implements Serializable {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public Long getOffset() {
+        return offset;
+    }
+
+    public void setOffset(Long offset) {
+        this.offset = offset;
     }
 }
