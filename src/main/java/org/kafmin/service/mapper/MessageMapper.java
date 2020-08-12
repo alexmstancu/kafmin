@@ -30,11 +30,12 @@ public class MessageMapper {
             .collect(Collectors.toList());
     }
 
-    public static MessageList toMessageList(String topic, Cluster cluster, List<Message> messages) {
+    public static MessageList toMessageList(String topic, Cluster cluster, List<Message> messages, int partitionsCount) {
         MessageList messageList = new MessageList();
         messageList.setCluster(cluster);
         messageList.setTopic(topic);
         messageList.setMessages(messages);
+        messageList.setPartitionsCount(partitionsCount);
         return messageList;
     }
 }

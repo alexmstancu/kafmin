@@ -1,10 +1,12 @@
 package org.kafmin.service;
 
+import org.apache.kafka.clients.admin.DescribeTopicsResult;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.kafmin.domain.Cluster;
 import org.kafmin.domain.Message;
 import org.kafmin.domain.MessageList;
 import org.kafmin.kafka.KafkaAdministrationCenter;
+import org.kafmin.kafka.TopicPartitionCount;
 import org.kafmin.repository.MessageRepository;
 import org.kafmin.service.mapper.MessageMapper;
 import org.slf4j.Logger;
@@ -55,7 +57,7 @@ public class MessageService {
         Iterable<ConsumerRecord<String, String>> consumerRecords = adminCenter.consumeMessages(cluster.getClusterId(), topic);
         List<Message> messages = MessageMapper.from(consumerRecords);
         removeUnusedFields(cluster);
-        return MessageMapper.toMessageList(topic, cluster, messages);
+        return MessageMapper.toMessageList(topic, cluster, messages, getPartitionsCount(cluster.getClusterId(), topic));
     }
 
 
@@ -88,5 +90,11 @@ public class MessageService {
     private void removeUnusedFields(Cluster cluster) {
         cluster.setTopics(Collections.emptyList());
         cluster.setBrokers(Collections.emptySet());
+    }
+
+    private int getPartitionsCount(String clusterId, String topic) throws ExecutionException, InterruptedException {
+        DescribeTopicsResult describeTopicsResult = adminCenter.describeTopics(clusterId, Collections.singletonList(topic));
+        TopicPartitionCount topicPartitionCount = TopicPartitionCount.extract(describeTopicsResult);
+        return topicPartitionCount.getPartitions();
     }
 }

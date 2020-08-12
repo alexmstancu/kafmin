@@ -1,11 +1,8 @@
 <template>
     <div class="row justify-content-center">
-        <div class="col-md-6">
+        <div v-if="!isFetching" class="col-8">
             <h2 id="page-heading">
-                <span id="message-heading">Messages</span>
-
-                
-
+                <span  id="message-heading">Messages in topic {{messageList.topic}}</span>
 
                 <router-link :to="{name: 'MessageCreate'}" tag="button" id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-message">
                     <font-awesome-icon icon="plus"></font-awesome-icon>
@@ -13,7 +10,33 @@
                         Produce a new Message
                     </span>
                 </router-link>
+                <button type="submit"
+                        v-on:click.prevent="previousState()"
+                        class="btn btn-info float-right">
+                    <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span> Back</span>
+                </button>
             </h2>
+
+            <dl class="row jh-entity-details">
+                <dt>
+                    <span>Topic name</span>
+                </dt>
+                <dd>
+                    <span>{{messageList.topic}}</span>
+                </dd>
+                <dt>
+                    <span>Total number of partitions</span>
+                </dt>
+                <dd>
+                    <span>{{messageList.partitionsCount}}</span>
+                </dd>
+                <dt>
+                    <span>Cluster</span>
+                </dt>
+                <dd>
+                    <router-link :to="{name: 'ClusterView', params: {clusterId: messageList.cluster.id}}">{{messageList.cluster.name}} ({{messageList.cluster.clusterId}})</router-link>
+                </dd>
+            </dl>
 
             <b-alert :show="dismissCountDown"
                 dismissible
@@ -28,7 +51,7 @@
             </div>
 
                 <div v-if="messageList.messages && messageList.messages.length > 0" >
-                    <b-card v-for="message in messageList.messages" :key="message.date" no-body header-tag="header" footer-tag="footer" style="margin-bottom: 20px">
+                    <b-card v-for="message in messagesSortedByOffsetDescending()" :key="message.date" no-body header-tag="header" footer-tag="footer" style="margin-bottom: 20px">
                         <template v-slot:header >
                             <p style="margin: 0px">
                                 <b-badge variant="success">Key</b-badge>  <b>{{message.key}}</b>

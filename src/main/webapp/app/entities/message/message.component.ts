@@ -16,7 +16,7 @@ export default class Message extends mixins(AlertMixin) {
   @Inject('messageService') private messageService: () => MessageService;
   private removeId: number = null;
 
-  public messageList: IMessageList[] = [];
+  public messageList: IMessageList;
 
   public isFetching = false;
 
@@ -39,7 +39,6 @@ export default class Message extends mixins(AlertMixin) {
 
   public retrieveAllMessages(clusterDbId: number, topicName: string): void {
     this.isFetching = true;
-    console.log('msg component retrieveAllMessages' + clusterDbId + topicName)
 
     this.messageService()
       .retrieve(clusterDbId, topicName)
@@ -82,4 +81,24 @@ export default class Message extends mixins(AlertMixin) {
     const date = new Date(dateStr);
     return date.toLocaleString();
   }
+
+
+  public previousState() {
+    this.$router.go(-1);
+  }
+
+  public messagesSortedByOffsetDescending(): IMessage[] {
+    return this.messageList.messages.sort((m1, m2) => {
+      if (m1.offset > m2.offset) {
+        return -1;
+      }
+
+      if (m1.offset < m2.offset) {
+          return 1;
+      }
+
+      return 0;
+    });
+  }
+
 }

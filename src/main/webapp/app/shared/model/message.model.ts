@@ -5,7 +5,7 @@ export interface IMessage {
   partition?: number;
   topic?: string;
   date?: string;
-  offest?: number
+  offset?: number
 }
 
 export class Message implements IMessage {
@@ -16,6 +16,6 @@ export class Message implements IMessage {
     public partition?: number,
     public topic?: string,
     public date?: string,
-    public offest?: number,
+    public offset?: number,
   ) {}
 }

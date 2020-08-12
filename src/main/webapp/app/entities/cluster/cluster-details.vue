@@ -35,7 +35,7 @@
                     <dd>
                         <span>{{getTopicsCount()}}</span>
                     </dd>
-                     <dt>
+                    <dt>
                         <span>Total number of partitions</span>
                     </dt>
                     <dd>

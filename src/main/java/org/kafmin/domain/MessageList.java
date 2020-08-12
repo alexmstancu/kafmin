@@ -16,6 +16,10 @@ public class MessageList {
 
     @Transient
     @JsonSerialize
+    private Integer partitionsCount;
+
+    @Transient
+    @JsonSerialize
     private List<Message> messages;
 
     public Cluster getCluster() {
@@ -49,5 +53,13 @@ public class MessageList {
             ", topic='" + topic + '\'' +
             ", messages=" + messages +
             '}';
+    }
+
+    public Integer getPartitionsCount() {
+        return partitionsCount;
+    }
+
+    public void setPartitionsCount(Integer partitionsCount) {
+        this.partitionsCount = partitionsCount;
     }
 }
