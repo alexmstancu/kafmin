@@ -1,6 +1,8 @@
 package org.kafmin.kafka;
 
 import org.apache.kafka.clients.admin.*;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.config.ConfigResource;
 import org.kafmin.domain.Cluster;
@@ -47,6 +49,24 @@ public class KafkaAdministrationCenter {
                 logger.error("Could not initialize KafkaAdminClient at startup for cluster {}", cluster, e);
             }
         });
+//        tmpDELETE_THIS_METHOD();
+    }
+
+    private void tmpDELETE_THIS_METHOD() throws ExecutionException, InterruptedException {
+        ClusterProducerConsumer producerConsumer = clusterProducerConsumerByClusterId.get("wrd2tnF3T6efxMnMO40yDQ");
+        RecordMetadata recordMetadata = producerConsumer.produceMessage("topic1", "alex", "salut");
+        logger.debug("RecordMetadata: {}", recordMetadata);
+        Iterable<ConsumerRecord<String, String>> records = producerConsumer.consumerRecords("topic1");
+        records.forEach(record -> {
+            logger.debug("Key: {}, Record: {}", record.key(), record.value());
+        });
+
+        recordMetadata = producerConsumer.produceMessage("topic2", "alex2", "salut2");
+        logger.debug("RecordMetadata: {}", recordMetadata);
+        records = producerConsumer.consumerRecords("topic2");
+        records.forEach(record -> {
+            logger.debug("Key: {}, Record: {}", record.key(), record.value());
+        });
     }
 
     // CLUSTER ADMINISTRATION
@@ -85,7 +105,7 @@ public class KafkaAdministrationCenter {
     }
 
     public void deleteCluster(String clusterId) {
-        kafkaAdminByClusterId.get(clusterId).close(Duration.ofSeconds(5));
+        kafkaAdminByClusterId.get(clusterId).close(Duration.ofSeconds(4));
         kafkaAdminByClusterId.remove(clusterId);
 
         clusterProducerConsumerByClusterId.get(clusterId).close();;
@@ -121,11 +141,7 @@ public class KafkaAdministrationCenter {
         Admin clusterAdmin = getClusterAdmin(clusterId);
         NewTopic newTopic = new NewTopic(topic.getName(), topic.getNumPartitions(), topic.getReplicationFactor());
         CreateTopicsResult createTopicsResult = clusterAdmin.createTopics(Collections.singletonList(newTopic), CREATE_TOPICS_OPTIONS);
-        CreateTopicsResult result = createTopicsResultGet(createTopicsResult, clusterId);
-        if (result != null) {
-            clusterProducerConsumerByClusterId.get(clusterId).addConsumer(topic.getName());
-        }
-        return result;
+        return createTopicsResultGet(createTopicsResult, clusterId);
     }
 
     private DeleteTopicsResult deleteTopicsResultGet(DeleteTopicsResult deleteTopicsResult, String clusterId, String topicName) {
@@ -141,11 +157,7 @@ public class KafkaAdministrationCenter {
     public DeleteTopicsResult deleteTopic(String clusterId, String topicName) {
         Admin clusterAdmin = getClusterAdmin(clusterId);
         DeleteTopicsResult deleteTopicsResult = clusterAdmin.deleteTopics(Collections.singletonList(topicName), DELETE_TOPICS_RESULT);
-        DeleteTopicsResult result = deleteTopicsResultGet(deleteTopicsResult, clusterId, topicName);
-        if (result != null) {
-            clusterProducerConsumerByClusterId.get(clusterId).removeConsumer(topicName);
-        }
-        return result;
+        return deleteTopicsResultGet(deleteTopicsResult, clusterId, topicName);
     }
 
     private AlterConfigsResult alterConfigsResultGet(AlterConfigsResult alterConfigsResult, String clusterId, String topicName) {
@@ -241,14 +253,8 @@ public class KafkaAdministrationCenter {
         kafkaAdminByClusterId.put(clusterId, admin);
     }
 
-    private List<String> getTopics(String clusterId) throws ExecutionException, InterruptedException {
-        Set<String> topics = listTopicsResultGet(listTopics(clusterId), clusterId).names().get();
-        return new ArrayList<>(topics);
-    }
-
-    private void addClusterProducerConsumer(String clusterId, String bootstrapServers) throws ExecutionException, InterruptedException {
-        List<String> topics = getTopics(clusterId);
-        ClusterProducerConsumer clusterProducerConsumer = new ClusterProducerConsumer(clusterId, bootstrapServers, topics);
+    private void addClusterProducerConsumer(String clusterId, String bootstrapServers) {
+        ClusterProducerConsumer clusterProducerConsumer = new ClusterProducerConsumer(clusterId, bootstrapServers);
         clusterProducerConsumerByClusterId.put(clusterId, clusterProducerConsumer);
     }
 

@@ -8,6 +8,8 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
+import org.apache.kafka.common.PartitionInfo;
+import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
@@ -17,24 +19,24 @@ import java.io.Closeable;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 public class ClusterProducerConsumer implements Closeable {
     private static final Logger logger = LoggerFactory.getLogger(ClusterProducerConsumer.class);
     private final Duration longDuration = Duration.ofSeconds(4);
-    private final Duration shortDuration = Duration.ofMillis(500);
+    private final Duration pollTimeout = Duration.ofMillis(500);
     private final String clusterId;
     private final String bootstrapServers;
-    private final Map<String, KafkaConsumer<String, String>> consumersByTopic = new HashMap<>();
     private final KafkaProducer<String, String> producer;
+    private final KafkaConsumer<String, String> consumer;
 
-    public ClusterProducerConsumer(String clusterId, String bootstrapServers, List<String> topics) {
+    public ClusterProducerConsumer(String clusterId, String bootstrapServers) {
         this.clusterId = clusterId;
         this.bootstrapServers = bootstrapServers;
         this.producer = new KafkaProducer<>(getProducerProperties());
         logger.debug("Producer for cluster {} was initialized.", clusterId);
-        initConsumers(topics);
-        logger.debug("All consumers for cluster {}, topics {} were initialized.", clusterId, topics);
-
+        this.consumer = new KafkaConsumer<>(getConsumerProperties());
+        logger.debug("Consumer for cluster {} was initialized.", clusterId);
     }
 
     public RecordMetadata produceMessage(String topic, String key, String message) throws ExecutionException, InterruptedException {
@@ -43,50 +45,36 @@ public class ClusterProducerConsumer implements Closeable {
         return metadata;
     }
 
-    public Iterable<ConsumerRecord<String, String>> consumeAllRecords(String topic) {
-        KafkaConsumer<String, String> consumer = consumersByTopic.get(topic);
-        try {
-            consumer.seekToBeginning(Collections.emptyList());
-            ConsumerRecords<String, String> consumerRecords = consumer.poll(shortDuration);
-            logger.debug("Consumed {} messages from topic {} cluster {}", consumerRecords.count(), topic, clusterId);
-            return consumerRecords.records(topic);
-        } catch (Exception e) {
-            logger.error("Could not consume from topic {} cluster {}", topic, clusterId, e);
+    public Iterable<ConsumerRecord<String, String>> consumerRecords(String topic) {
+        List<PartitionInfo> partitionInfoList = consumer.partitionsFor(topic);
+        List<TopicPartition> topicPartitions = toTopicPartitionList(partitionInfoList);
+        consumer.assign(topicPartitions);
+        consumer.seekToBeginning(Collections.emptyList());
+        Optional<ConsumerRecords<String, String>> optionalConsumerRecords = poll();
+        if (!optionalConsumerRecords.isPresent()) {
+            return Collections.emptyList();
         }
-        return Collections.emptyList();
+        return optionalConsumerRecords.get().records(topic);
     }
 
-    public void addConsumer(String topic) {
-        initConsumers(Collections.singletonList(topic));
-    }
-
-    // todo make async
-    public void removeConsumer(String topic) {
-        KafkaConsumer<String, String> consumer = consumersByTopic.get(topic);
-        try {
-            consumer.close(longDuration);
-            consumersByTopic.remove(topic);
-            logger.debug("Closed & removed consumer for topic {} cluster {}", topic, clusterId);
-        } catch (Exception e) {
-            logger.error("Could not close the consumer for cluster {} topic {}", clusterId, topic, e);
+    private Optional<ConsumerRecords<String, String>> poll() {
+        int maxRetries = 3;
+        int retires = 0;
+        while (retires <= maxRetries) {
+            ConsumerRecords<String, String> consumerRecords = consumer.poll(pollTimeout);
+            if (!consumerRecords.isEmpty()) {
+                return Optional.of(consumerRecords);
+            }
+            retires++;
         }
+        return Optional.empty();
     }
 
-    // todo make async
-    private void initConsumers(List<String> topics) {
-        topics.forEach(topic -> {
-            KafkaConsumer<String, String> consumer = createConsumer(topic);
-            consumersByTopic.put(topic, consumer);
-        });
-    }
-
-    // todo make async
-    private KafkaConsumer<String, String> createConsumer(String topic) {
-        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(getConsumerProperties(topic));
-        consumer.subscribe(Collections.singletonList(topic));
-        consumer.poll(longDuration);
-        logger.debug("Consumer for cluster {} topic {} was initialized.", clusterId, topic);
-        return consumer;
+    private List<TopicPartition> toTopicPartitionList(List<PartitionInfo> partitionInfoList) {
+        return partitionInfoList
+            .stream()
+            .map(partitionInfo -> new TopicPartition(partitionInfo.topic(), partitionInfo.partition()))
+            .collect(Collectors.toList());
     }
 
     private Properties getProducerProperties() {
@@ -97,8 +85,8 @@ public class ClusterProducerConsumer implements Closeable {
         return producerProperties;
     }
 
-    private Properties getConsumerProperties(String topic) {
-        String consumerId = "kafmin-" + clusterId + "-" + topic;
+    private Properties getConsumerProperties() {
+        String consumerId = "kafmin-" + clusterId + "-";
         Properties consumerProperties = new Properties();
         consumerProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         consumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
@@ -108,12 +96,11 @@ public class ClusterProducerConsumer implements Closeable {
         return consumerProperties;
     }
 
-    // todo make async
     @Override
     public void close() {
         try {
             producer.close(longDuration);
-            consumersByTopic.values().forEach(c -> c.close(longDuration));
+            consumer.close(longDuration);
         } catch (Exception e) {
             logger.error("Could not close the ClusterProducerConsumer for cluster {}", clusterId, e);
         }
