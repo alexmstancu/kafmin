@@ -33,6 +33,7 @@ import {
   BListGroupItem,
   BCardBody,
   BCardFooter,
+  BFormTextarea,
 } from 'bootstrap-vue';
 
 export function initBootstrapVue(vue) {
@@ -71,4 +72,5 @@ export function initBootstrapVue(vue) {
   vue.component('b-list-group-item', BListGroupItem);
   vue.component('b-card-body', BCardBody);
   vue.component('b-card-footer', BCardFooter);
+  vue.component('b-form-textarea', BFormTextarea);
 }
