@@ -102,15 +102,14 @@ export default [
     component: TopicDetails,
     meta: { authorities: [Authority.USER] },
   },
-
   {
-    path: '/message',
+    path: '/messages/:clusterDbId/:topicName',
     name: 'Message',
     component: Message,
     meta: { authorities: [Authority.USER] },
   },
   {
-    path: '/message/new',
+    path: '/messages/:clusterDbId/:topicName/new',
     name: 'MessageCreate',
     component: MessageUpdate,
     meta: { authorities: [Authority.USER] },
