@@ -6,6 +6,8 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
@@ -13,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 public class ClusterProducerConsumer {
     private static final Logger logger = LoggerFactory.getLogger(ClusterProducerConsumer.class);
@@ -20,14 +23,21 @@ public class ClusterProducerConsumer {
     private final Duration shortDuration = Duration.ofMillis(500);
     private final String clusterId;
     private final String bootstrapServers;
-    private KafkaProducer<String, String> producer;
-    private Map<String, KafkaConsumer<String, String>> consumersByTopic = new HashMap<>();
+    private final Map<String, KafkaConsumer<String, String>> consumersByTopic = new HashMap<>();
+    private final KafkaProducer<String, String> producer;
 
     public ClusterProducerConsumer(String clusterId, String bootstrapServers, List<String> topics) {
         this.clusterId = clusterId;
         this.bootstrapServers = bootstrapServers;
-        initProducer();
+        this.producer = new KafkaProducer<>(getProducerProperties());
+        logger.debug("Producer for cluster {} was initialized.", clusterId);
         initConsumers(topics);
+    }
+
+    public RecordMetadata produceMessage(String topic, String key, String message) throws ExecutionException, InterruptedException {
+        RecordMetadata metadata = producer.send(new ProducerRecord<>(topic, key, message)).get();
+        logger.debug("Produced message to topic {}: key {}, message {}", topic, key, message);
+        return metadata;
     }
 
     public Iterable<ConsumerRecord<String, String>> consumeAllRecords(String topic) {
@@ -56,20 +66,15 @@ public class ClusterProducerConsumer {
         }
     }
 
-    private void initProducer() {
-        this.producer = new KafkaProducer<>(getProducerProperties());
-        logger.debug("Producer for cluster {} was initialized.", clusterId);
-    }
-
     private void initConsumers(List<String> topics) {
         topics.forEach(topic -> {
-            KafkaConsumer<String, String> consumer = createConsumer(bootstrapServers, topic);
+            KafkaConsumer<String, String> consumer = createConsumer(topic);
             consumersByTopic.put(topic, consumer);
         });
         logger.debug("All consumers for cluster {}, topics {} were initialized.", clusterId, topics);
     }
 
-    private KafkaConsumer<String, String> createConsumer(String bootstrapServers, String topic) {
+    private KafkaConsumer<String, String> createConsumer(String topic) {
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(getConsumerProperties(topic));
         consumer.subscribe(Collections.singletonList(topic));
         consumer.poll(longDuration);
