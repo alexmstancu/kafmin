@@ -24,23 +24,17 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th><span>ID</span></th>
                     <th><span>Key</span></th>
                     <th><span>Message</span></th>
                     <th><span>Partition</span></th>
-                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="message in messages"
-                    :key="message.id">
-                    <td>
-                        <router-link :to="{name: 'MessageView', params: {messageId: message.id}}">{{message.id}}</router-link>
-                    </td>
+                <tr v-for="message in messages" :key="message.key">
                     <td>{{message.key}}</td>
                     <td>{{message.message}}</td>
                     <td>{{message.partition}}</td>
-                    <td class="text-right">
+                    <!-- <td class="text-right">
                         <div class="btn-group">
                             <router-link :to="{name: 'MessageView', params: {messageId: message.id}}" tag="button" class="btn btn-info btn-sm details">
                                 <font-awesome-icon icon="eye"></font-awesome-icon>
@@ -58,7 +52,7 @@
                                 <span class="d-none d-md-inline">Delete</span>
                             </b-button>
                         </div>
-                    </td>
+                    </td> -->
                 </tr>
                 </tbody>
             </table>

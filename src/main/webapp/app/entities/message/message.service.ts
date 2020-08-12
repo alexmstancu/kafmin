@@ -18,10 +18,11 @@ export default class MessageService {
     });
   }
 
-  public retrieve(): Promise<any> {
+  public retrieve(clusterDbId: number, topicName: string): Promise<any> {    
+    console.log('msg service retrieve' + clusterDbId + topicName)
     return new Promise<any>((resolve, reject) => {
       axios
-        .get(baseApiUrl)
+        .get(`${baseApiUrl}/${clusterDbId}/${topicName}`)
         .then(res => {
           resolve(res);
         })

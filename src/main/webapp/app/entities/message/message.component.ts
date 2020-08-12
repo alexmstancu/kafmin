@@ -18,19 +18,29 @@ export default class Message extends mixins(AlertMixin) {
 
   public isFetching = false;
 
-  public mounted(): void {
-    this.retrieveAllMessages();
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      if (to.params.clusterDbId && to.params.topicName) {
+        console.log('msg component beforeRouteEnter' + to.params.clusterDbId + to.params.topicName)
+        vm.retrieveAllMessages(to.params.clusterDbId, to.params.topicName);
+      }
+    });
   }
 
-  public clear(): void {
-    this.retrieveAllMessages();
-  }
+  // public mounted(): void {
+  //   this.retrieveAllMessages();
+  // }
 
-  public retrieveAllMessages(): void {
+  // public clear(): void {
+  //   this.retrieveAllMessages();
+  // }
+
+  public retrieveAllMessages(clusterDbId: number, topicName: string): void {
     this.isFetching = true;
+    console.log('msg component retrieveAllMessages' + clusterDbId + topicName)
 
     this.messageService()
-      .retrieve()
+      .retrieve(clusterDbId, topicName)
       .then(
         res => {
           this.messages = res.data;
@@ -57,7 +67,7 @@ export default class Message extends mixins(AlertMixin) {
         this.alertService().showAlert(message, 'danger');
         this.getAlertFromStore();
         this.removeId = null;
-        this.retrieveAllMessages();
+        // this.retrieveAllMessages();
         this.closeDialog();
       });
   }

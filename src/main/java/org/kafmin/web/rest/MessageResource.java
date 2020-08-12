@@ -62,7 +62,7 @@ public class MessageResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of messages in body.
      */
     @GetMapping("/messages/{clusterDbId}/{topicName}")
-    public MessageList getAllMessages(@PathVariable Long clusterDbId, String topicName) throws ExecutionException, InterruptedException {
+    public MessageList getAllMessages(@PathVariable Long clusterDbId, @PathVariable String topicName) throws ExecutionException, InterruptedException {
         log.debug("REST request to get all Messages");
         return messageService.consume(clusterDbId, topicName);
     }

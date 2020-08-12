@@ -111,15 +111,18 @@ public class Message implements Serializable {
         return 31;
     }
 
-    // prettier-ignore
+
     @Override
     public String toString() {
         return "Message{" +
-            "id=" + getId() +
-            ", key='" + getKey() + "'" +
-            ", message='" + getMessage() + "'" +
-            ", partition=" + getPartition() +
-            "}";
+            "id=" + id +
+            ", key='" + key + '\'' +
+            ", message='" + message + '\'' +
+            ", partition=" + partition +
+            ", topic='" + topic + '\'' +
+            ", date=" + date +
+            ", offset=" + offset +
+            '}';
     }
 
     public String getTopic() {

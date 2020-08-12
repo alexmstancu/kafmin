@@ -41,4 +41,13 @@ public class MessageList {
     public void setMessages(List<Message> messages) {
         this.messages = messages;
     }
+
+    @Override
+    public String toString() {
+        return "MessageList{" +
+            "cluster=" + cluster +
+            ", topic='" + topic + '\'' +
+            ", messages=" + messages +
+            '}';
+    }
 }
