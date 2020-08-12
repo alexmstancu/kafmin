@@ -33,6 +33,8 @@ public class ClusterProducerConsumer implements Closeable {
         this.producer = new KafkaProducer<>(getProducerProperties());
         logger.debug("Producer for cluster {} was initialized.", clusterId);
         initConsumers(topics);
+        logger.debug("All consumers for cluster {}, topics {} were initialized.", clusterId, topics);
+
     }
 
     public RecordMetadata produceMessage(String topic, String key, String message) throws ExecutionException, InterruptedException {
@@ -58,24 +60,27 @@ public class ClusterProducerConsumer implements Closeable {
         initConsumers(Collections.singletonList(topic));
     }
 
+    // todo make async
     public void removeConsumer(String topic) {
         KafkaConsumer<String, String> consumer = consumersByTopic.get(topic);
         try {
             consumer.close(longDuration);
             consumersByTopic.remove(topic);
+            logger.debug("Closed & removed consumer for topic {} cluster {}", topic, clusterId);
         } catch (Exception e) {
             logger.error("Could not close the consumer for cluster {} topic {}", clusterId, topic, e);
         }
     }
 
+    // todo make async
     private void initConsumers(List<String> topics) {
         topics.forEach(topic -> {
             KafkaConsumer<String, String> consumer = createConsumer(topic);
             consumersByTopic.put(topic, consumer);
         });
-        logger.debug("All consumers for cluster {}, topics {} were initialized.", clusterId, topics);
     }
 
+    // todo make async
     private KafkaConsumer<String, String> createConsumer(String topic) {
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(getConsumerProperties(topic));
         consumer.subscribe(Collections.singletonList(topic));
@@ -103,6 +108,7 @@ public class ClusterProducerConsumer implements Closeable {
         return consumerProperties;
     }
 
+    // todo make async
     @Override
     public void close() {
         try {
