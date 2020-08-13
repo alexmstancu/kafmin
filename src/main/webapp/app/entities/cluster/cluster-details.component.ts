@@ -5,7 +5,7 @@ import ClusterService from './cluster.service';
 import TopicService from '../topic/topic.service';
 import { ITopic } from '@/shared/model/topic.model';
 import AlertService from '@/shared/alert/alert.service';
-import { ITopicDetails } from '@/shared/model/topicDetails.model';
+import { ITopicDetails, TopicDetails } from '@/shared/model/topicDetails.model';
 
 @Component
 export default class ClusterDetails extends Vue {
@@ -31,7 +31,7 @@ export default class ClusterDetails extends Vue {
       .find(clusterId)
       .then(res => {
         this.cluster = res;
-        this.sortedTopics = this.getTopicsSortedByNameAscending(this.cluster.topics);
+        this.sortedTopics = this.getTopicsSortedByNameAscendingAndInternalDescening(this.cluster.topics);
         this.isFetchingTopics = false;
       });
   }
@@ -72,7 +72,7 @@ export default class ClusterDetails extends Vue {
     (<any>this.$refs.removeEntity).hide();
   }
 
-  public prepareRemove(instance: ITopic): void {
+  public prepareRemove(instance: ITopicDetails): void {
     this.removedTopicName = instance.name;
     if (<any>this.$refs.removeEntity) {
       (<any>this.$refs.removeEntity).show();
@@ -94,11 +94,30 @@ export default class ClusterDetails extends Vue {
       });
   }
 
-  public getTopicsSortedByNameAscending(topics: ITopicDetails[]) {
+  public getTopicsSortedByNameAscendingAndInternalDescening(topics: ITopicDetails[]) {
     return topics.sort(this.nameAlphabeticallyComparator);
   }
 
   private nameAlphabeticallyComparator = (t1, t2) => {
+    if (t1.internal) {
+      console.log(t1.name + 'is internal first')
+      if (t2.internal) {
+        console.log(t2.name + 'is internal second')
+        return t1.name.localeCompare(t2.name);
+      } else {
+        return -1;
+      }
+    }
+
+    if (t2.internal) {
+      if (t1.internal) {
+        return t2.name.localeCompare(t1.name);
+      } else {
+        return 1;
+      }
+    }
+    
+
     return t1.name.localeCompare(t2.name);
   };
 }
