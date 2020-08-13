@@ -1,14 +1,12 @@
 <template>
     <div class="row justify-content-center">
-        <div v-if="!isFetching" class="col-8">
+        <div v-if="!isFetching && messageList" class="col-8">
             <h2 id="page-heading">
                 <span  id="message-heading">Messages in topic {{messageList.topic}}</span>
 
-                <router-link :to="{name: 'MessageCreate'}" tag="button" id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-message">
-                    <font-awesome-icon icon="plus"></font-awesome-icon>
-                    <span >
+                <router-link :to="{name: 'MessageCreate'}" tag="button" id="jh-create-entity" class="btn btn-outline-success float-right jh-create-entity create-message">
+                    <font-awesome-icon icon="paper-plane"></font-awesome-icon>
                         Produce a new Message
-                    </span>
                 </router-link>
                 <button type="submit"
                         v-on:click.prevent="previousState()"
@@ -34,8 +32,7 @@
                     <span>Total number of messages</span>
                 </dt>
                 <dd>
-                    <!-- <span>{{getTotalMessagesNumber()}}</span> -->
-                    <span>{{messagesInPartitionCount}}</span>
+                    <span>{{messageList.messages.length}}</span>
                 </dd>
                 <dt>
                     <span>Cluster</span>
@@ -57,23 +54,27 @@
             </div>
             
             <div>
-                <b-dropdown id="dropdown-1" :text="getFilterText()" class="m-md-2" v-model="partitionFilter">
-                    <b-dropdown-item @click="partitionFilter=-1">All</b-dropdown-item>
-                    <b-dropdown-item v-for="p in partitionsArray" :key="p" @click="partitionFilter=p">
+                <b-dropdown id="dropdown-1" :text="getFilterText()" class="m-md-2">
+                    <b-dropdown-item @click="resetPartitionFilter()">All</b-dropdown-item>
+                    <b-dropdown-item v-for="p in partitionsArray" :key="p" @click="setPartitionFilter(p)">
                         Partition <b>{{p}}</b> 
                     </b-dropdown-item>
                 </b-dropdown>
+
+                <span>
+                    <b-badge pill variant="warning">Number of messages: <b-badge pill> <span style="font-size: 12px">{{filteredAndSortedMessages.length}}</span> </b-badge> </b-badge>
+                </span>
             </div>
 
             <div v-if="messageList.messages && messageList.messages.length > 0" >
-                <b-card v-for="message in messagesFilteredByPartitionSortedByOffsetDescending()" :key="message.date" no-body header-tag="header" footer-tag="footer" style="margin-bottom: 20px">
+                <b-card v-for="message in filteredAndSortedMessages" :key="message.date" no-body header-tag="header" footer-tag="footer" style="margin-bottom: 20px">
                     <template v-slot:header >
                         <p style="margin: 0px">
-                            <b-badge variant="info">Offset</b-badge>  <small>{{message.offset}}</small>
-                            <b-badge variant="info">Partition</b-badge> <small>{{message.partition}}</small>
+                            <b-badge variant="info">Offset</b-badge>  {{message.offset}}
+                            <b-badge variant="info">Partition</b-badge> {{message.partition}}
                             <b-badge variant="info">Timestamp</b-badge>  <small>{{getPrettyDate(message.date)}}</small> 
+                            <b-badge variant="success">Key</b-badge>  <b>{{message.key}}</b>
                         </p>
-                        <b-badge variant="success">Key</b-badge>  <b>{{message.key}}</b>
                     </template>
                     <b-card-body>
                         <b-card-text>

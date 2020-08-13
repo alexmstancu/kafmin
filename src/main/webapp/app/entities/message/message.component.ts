@@ -22,20 +22,14 @@ export default class Message extends mixins(AlertMixin) {
 
   public partitionFilter = -1;
 
-  public messagesInPartitionCount: number = 0;
-
   public partitionsArray: number[] = [];
 
-  public buildPartitionsArray() {
-    for (let i = 0; i < this.messageList.partitionsCount; i++) {
-      this.partitionsArray.push(i);
-    }
-  }
+  public filteredAndSortedMessages: IMessage[] = [];
+
 
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.clusterDbId && to.params.topicName) {
-        console.log('msg component beforeRouteEnter' + to.params.clusterDbId + to.params.topicName)
         vm.retrieveAllMessages(to.params.clusterDbId, to.params.topicName);
       }
     });
@@ -49,6 +43,13 @@ export default class Message extends mixins(AlertMixin) {
   //   this.retrieveAllMessages();
   // }
 
+  public buildPartitionsArray() {
+    for (let i = 0; i < this.messageList.partitionsCount; i++) {
+      this.partitionsArray.push(i);
+    }
+  }
+
+
   public retrieveAllMessages(clusterDbId: number, topicName: string): void {
     this.isFetching = true;
 
@@ -58,7 +59,7 @@ export default class Message extends mixins(AlertMixin) {
         res => {
           this.messageList = res.data;
           this.buildPartitionsArray();
-          this.messagesInPartitionCount = this.messageList.messages.length;
+          this.messagesFilterByPartitionAndSortByOffsetDescending();
           this.isFetching = false;
         },
         err => {
@@ -82,7 +83,6 @@ export default class Message extends mixins(AlertMixin) {
         this.alertService().showAlert(message, 'danger');
         this.getAlertFromStore();
         this.removeId = null;
-        // this.retrieveAllMessages();
         this.closeDialog();
       });
   }
@@ -101,15 +101,13 @@ export default class Message extends mixins(AlertMixin) {
     this.$router.go(-1);
   }
 
-  public messagesFilteredByPartitionSortedByOffsetDescending(): IMessage[] {
-    let filteredAndSortedMessages = this.messageList.messages;
+  public messagesFilterByPartitionAndSortByOffsetDescending() {
+    let messagesFiltertedAndSorted = this.messageList.messages;
     if (this.partitionFilter !== -1) {
-      filteredAndSortedMessages = filteredAndSortedMessages.filter((message) => message.partition === this.partitionFilter)
-      this.messagesInPartitionCount = filteredAndSortedMessages.length;
+      messagesFiltertedAndSorted = messagesFiltertedAndSorted.filter((message) => message.partition === this.partitionFilter)
     }
 
-    filteredAndSortedMessages = filteredAndSortedMessages.sort(this.offsetDescendingComparator);
-    return filteredAndSortedMessages;
+    this.filteredAndSortedMessages = messagesFiltertedAndSorted.sort(this.offsetDescendingComparator);
   }
 
   private offsetDescendingComparator = (m1, m2) => {
@@ -131,4 +129,13 @@ export default class Message extends mixins(AlertMixin) {
     return 'Filter by partition: ' + this.partitionFilter;
   }
 
+  public resetPartitionFilter() {
+    this.partitionFilter = -1;
+    this.messagesFilterByPartitionAndSortByOffsetDescending();
+  }
+
+  public setPartitionFilter(filter: number) {
+    this.partitionFilter = filter;
+    this.messagesFilterByPartitionAndSortByOffsetDescending();
+  }
 }
