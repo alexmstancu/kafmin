@@ -63,12 +63,12 @@
                             <tr>
                                 <th><span>Topic name</span></th>
                                 <th><span># of partitions</span></th>
-                                <!-- <th><span>Is internal?</span></th> -->
+                                <th><span>Is internal?</span></th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="topic in cluster.topics" :key="topic.name">
+                            <tr v-for="topic in sortedTopics" :key="topic.name">
                                 <td>
                                     <span>
                                         <router-link :to="{name: 'TopicView', params: {clusterDbId: cluster.id, topicName: topic.name}}">
@@ -78,7 +78,7 @@
                                     </span>
                                 </td>
                                 <td><span>{{topic.partitions}}</span></td>
-                                <!-- <td><span>{{isInternal(topic)}}</span></td> -->
+                                <td><span>{{isInternal(topic)}}</span></td>
                                 <td class="text-right">
                                     <div class="btn-group">
                                         <router-link :to="{name: 'Message', params: {clusterDbId: cluster.id, topicName: topic.name}}" tag="button" class="btn btn-outline-secondary btn-sm details">

@@ -5,6 +5,7 @@ import ClusterService from './cluster.service';
 import TopicService from '../topic/topic.service';
 import { ITopic } from '@/shared/model/topic.model';
 import AlertService from '@/shared/alert/alert.service';
+import { ITopicDetails } from '@/shared/model/topicDetails.model';
 
 @Component
 export default class ClusterDetails extends Vue {
@@ -14,6 +15,7 @@ export default class ClusterDetails extends Vue {
   public cluster: ICluster = {};
   public removedTopicName = '';
   public isFetchingTopics = false;
+  public sortedTopics: ITopicDetails[];
 
   beforeRouteEnter(to, from, next) {
     next(vm => {
@@ -29,6 +31,7 @@ export default class ClusterDetails extends Vue {
       .find(clusterId)
       .then(res => {
         this.cluster = res;
+        this.sortedTopics = this.getTopicsSortedByNameAscending(this.cluster.topics);
         this.isFetchingTopics = false;
       });
   }
@@ -91,4 +94,11 @@ export default class ClusterDetails extends Vue {
       });
   }
 
+  public getTopicsSortedByNameAscending(topics: ITopicDetails[]) {
+    return topics.sort(this.nameAlphabeticallyComparator);
+  }
+
+  private nameAlphabeticallyComparator = (t1, t2) => {
+    return t1.name.localeCompare(t2.name);
+  };
 }

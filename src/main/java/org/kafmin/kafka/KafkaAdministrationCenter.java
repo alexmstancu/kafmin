@@ -31,7 +31,7 @@ public class KafkaAdministrationCenter {
     private static final CreateTopicsOptions CREATE_TOPICS_OPTIONS = new CreateTopicsOptions().timeoutMs(TIMEOUT_MS);
     private static final DeleteTopicsOptions DELETE_TOPICS_RESULT = new DeleteTopicsOptions().timeoutMs(TIMEOUT_MS);
     private static final AlterConfigsOptions ALTER_CONFIGS_OPTIONS = new AlterConfigsOptions().timeoutMs(TIMEOUT_MS);
-    private static final ListTopicsOptions LIST_TOPICS_OPTIONS = new ListTopicsOptions().timeoutMs(3000);
+    private static final ListTopicsOptions LIST_TOPICS_OPTIONS = new ListTopicsOptions().timeoutMs(3000).listInternal(true);
 
     private final Map<String, Admin> kafkaAdminByClusterId = new HashMap<>();
     private final Map<String, ClusterProducerConsumer> clusterProducerConsumerByClusterId = new HashMap<>();
@@ -50,7 +50,6 @@ public class KafkaAdministrationCenter {
                 logger.error("Could not initialize KafkaAdminClient at startup for cluster {}", cluster, e);
             }
         });
-        tmpDELETE_THIS_METHOD();
     }
 
     private void tmpDELETE_THIS_METHOD() throws ExecutionException, InterruptedException {
