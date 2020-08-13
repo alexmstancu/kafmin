@@ -81,7 +81,7 @@
                             <b-badge variant="info">Timestamp</b-badge> <small>{{getPrettyDate(message.date)}}</small> 
                             <b-badge pill variant="success">Key</b-badge> 
                                 <b-badge v-if="message.key && message.key !==''" pill variant="primary">{{message.key}}</b-badge>
-                                <b-badge v-if="!message.key || message.key === ''" pill variant="danger"><i>null</i> </b-badge>
+                                <b-badge v-if="!message.key || message.key === ''" pill variant="danger"><i>NULL</i> </b-badge>
                         </p>
                     </template>
                     <b-card-body>
