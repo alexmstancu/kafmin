@@ -45,7 +45,7 @@
 
                 <h4>
                     <span>Topics</span>
-                    <router-link :to="{name: 'TopicCreate', params: {clusterDbId: cluster.id}}" tag="button" id="jh-create-entity" class="btn btn-primary btn-sm float-right jh-create-entity create-topic">
+                    <router-link :to="{name: 'TopicCreate', params: {clusterDbId: cluster.id, clusterName: cluster.name, clusterInternalId: cluster.clusterId}}" tag="button" id="jh-create-entity" class="btn btn-primary btn-sm float-right jh-create-entity create-topic">
                         <font-awesome-icon icon="plus"></font-awesome-icon>
                     <span>Create new Topic</span>
                     </router-link>

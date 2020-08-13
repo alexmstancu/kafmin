@@ -32,7 +32,6 @@ export default class Message extends mixins(AlertMixin) {
       if (to.params.clusterDbId && to.params.topicName) {
         console.log(to.params);
         if (to.params.partitionFilter >= 0) {
-          console.log('partition filter is: ' + to.params.partitionFilter)
           vm.partitionFilter = to.params.partitionFilter;
         }
         vm.retrieveAllMessages(to.params.clusterDbId, to.params.topicName);

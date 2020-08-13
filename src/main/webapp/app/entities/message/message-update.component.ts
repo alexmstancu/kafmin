@@ -25,8 +25,8 @@ export default class MessageUpdate extends Vue {
   public currentLanguage = '';
   public topicName = '';
   public clusterDbId = -1;
-  public clusterInternalId = "";
-  public clusterName = "";
+  public clusterInternalId = '';
+  public clusterName = '';
 
   beforeRouteEnter(to, from, next) {
     next(vm => {
@@ -59,14 +59,6 @@ export default class MessageUpdate extends Vue {
         this.$router.go(-1);
         const message = 'A Message is created with key ' + param.key + ' for topic ' + param.topic;
         this.alertService().showAlert(message, 'success');
-      });
-  }
-
-  public retrieveMessage(messageId): void {
-    this.messageService()
-      .find(messageId)
-      .then(res => {
-        this.message = res;
       });
   }
 

@@ -18,7 +18,6 @@
                 <dd>
                     <router-link :to="{name: 'ClusterView', params: {clusterId: clusterDbId}}">
                         {{clusterName}} ({{clusterInternalId}})
-                        cluster name (cluster id)
                         </router-link>
                 </dd>
             </dl>

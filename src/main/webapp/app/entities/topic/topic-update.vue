@@ -34,11 +34,10 @@
                 </dl>
             </div>
 
-
             <form name="editForm" role="form" novalidate v-on:submit.prevent="save()">
                 <div>
                     <button type="submit" id="save-entity" :disabled="$v.topic.$invalid || isSaving" class="btn btn-primary float-right">
-                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Save</span>
+                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Create</span>
                     </button>
                     <button type="button" id="cancel-save" class="btn btn-secondary float-right" v-on:click="previousState()">
                         <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span>Cancel</span>
@@ -49,6 +48,16 @@
                 <!-- CREATE NEW TOPIC CASE -->
                 <div v-if="topic.cluster === undefined">
                     <h2 id="kafminApp.topic.home.createOrEditLabel">Create a Topic</h2>
+
+                    <dl class="row jh-entity-details">
+                        <dt>
+                            <span>Cluster</span>
+                        </dt>
+                        <dd>
+                            <router-link :to="{name: 'ClusterView', params: {clusterId: savedClusterDbId}}"> {{clusterName}} ({{clusterInternalId}})</router-link>
+                        </dd>
+                    </dl>
+
                     <div>
                         <div class="form-group">
                             <label class="form-control-label" for="topic-name">Name</label>
@@ -95,7 +104,7 @@
                         <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span>Cancel</span>
                     </button>
                     <button type="submit" id="save-entity" :disabled="$v.topic.$invalid || isSaving" class="btn btn-primary">
-                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Save</span>
+                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Create</span>
                     </button>
                 </div>
             </form>
