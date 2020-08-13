@@ -76,9 +76,9 @@
                 <b-card v-for="message in filteredAndSortedMessages" :key="message.date" no-body header-tag="header" footer-tag="footer" style="margin-bottom: 20px">
                     <template v-slot:header >
                         <p style="margin: 0px">
-                            <b-badge variant="info">Offset</b-badge>    {{message.offset}}
-                            <b-badge variant="info">Partition</b-badge> {{message.partition}}
-                            <b-badge variant="info">Timestamp</b-badge> <small>{{getPrettyDate(message.date)}}</small> 
+                            <b-badge variant="info">Offset    <b-badge pill><span style="font-size: 12px">{{message.offset}} </span></b-badge> </b-badge>    
+                            <b-badge variant="info">Partition <b-badge pill><span style="font-size: 12px"> {{message.partition}}</span></b-badge></b-badge>
+                            <b-badge variant="info">Timestamp <b-badge pill><span style="font-size: 12px">{{getPrettyDate(message.date)}}</span></b-badge>  </b-badge>      
                             <b-badge pill variant="success">Key</b-badge> 
                                 <b-badge v-if="message.key && message.key !==''" pill variant="primary">{{message.key}}</b-badge>
                                 <b-badge v-if="!message.key || message.key === ''" pill variant="danger"><i>NULL</i> </b-badge>
