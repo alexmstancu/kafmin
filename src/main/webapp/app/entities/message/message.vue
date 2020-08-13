@@ -74,10 +74,10 @@
                 <b-card v-for="message in filteredAndSortedMessages" :key="message.date" no-body header-tag="header" footer-tag="footer" style="margin-bottom: 20px">
                     <template v-slot:header >
                         <p style="margin: 0px">
-                            <b-badge variant="info">Offset</b-badge>  {{message.offset}}
+                            <b-badge variant="info">Offset</b-badge>    {{message.offset}}
                             <b-badge variant="info">Partition</b-badge> {{message.partition}}
-                            <b-badge variant="info">Timestamp</b-badge>  <small>{{getPrettyDate(message.date)}}</small> 
-                            <b-badge variant="success">Key</b-badge>  <b>{{message.key}}</b>
+                            <b-badge variant="info">Timestamp</b-badge> <small>{{getPrettyDate(message.date)}}</small> 
+                            <b-badge pill variant="success">Key</b-badge>     <b>{{message.key}}</b>
                         </p>
                     </template>
                     <b-card-body>
