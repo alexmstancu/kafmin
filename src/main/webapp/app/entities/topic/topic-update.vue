@@ -37,7 +37,7 @@
             <form name="editForm" role="form" novalidate v-on:submit.prevent="save()">
                 <div>
                     <button type="submit" id="save-entity" :disabled="$v.topic.$invalid || isSaving" class="btn btn-primary float-right">
-                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Create</span>
+                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Save</span>
                     </button>
                     <button type="button" id="cancel-save" class="btn btn-secondary float-right" v-on:click="previousState()">
                         <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span>Cancel</span>
@@ -104,7 +104,7 @@
                         <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span>Cancel</span>
                     </button>
                     <button type="submit" id="save-entity" :disabled="$v.topic.$invalid || isSaving" class="btn btn-primary">
-                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Create</span>
+                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Save</span>
                     </button>
                 </div>
             </form>
