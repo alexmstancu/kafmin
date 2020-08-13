@@ -51,8 +51,9 @@ public class MessageResource {
             throw new BadRequestAlertException("A new message cannot already have an ID", ENTITY_NAME, "idexists");
         }
         messageService.produce(clusterDbId, message);
+        String resultParam = message.getKey() != null ? message.getKey() : "";
         return ResponseEntity.created(new URI("/api/messages/"))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, message.getKey()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, resultParam))
             .body(message);
     }
 
