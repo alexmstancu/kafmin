@@ -79,7 +79,9 @@
                             <b-badge variant="info">Offset</b-badge>    {{message.offset}}
                             <b-badge variant="info">Partition</b-badge> {{message.partition}}
                             <b-badge variant="info">Timestamp</b-badge> <small>{{getPrettyDate(message.date)}}</small> 
-                            <b-badge pill variant="success">Key</b-badge> <b>{{message.key}}</b>
+                            <b-badge pill variant="success">Key</b-badge> 
+                                <b-badge v-if="message.key && message.key !==''" pill variant="primary">{{message.key}}</b-badge>
+                                <b-badge v-if="!message.key || message.key === ''" pill variant="danger"><i>null</i> </b-badge>
                         </p>
                     </template>
                     <b-card-body>
