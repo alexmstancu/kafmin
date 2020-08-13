@@ -63,6 +63,7 @@
                                 <th><span>Partition</span></th>
                                 <th><span>Leader broker</span></th>
                                 <th><span>Replica brokers</span></th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -83,10 +84,14 @@
                                                 broker {{replica.brokerId}} ({{replica.host}}:{{replica.port}})  
                                             </router-link>
                                             <span v-if="index !== partition.replicas.length - 1">&#8226; </span>
-
                                        </small>
-                                         
                                     </span>
+                                </td>
+                                <td>
+                                    <router-link :to="{name: 'Message', params: {clusterDbId: topic.cluster.id, topicName: topic.name, partitionFilter: partition.id}}" tag="button" class="btn btn-outline-secondary btn-sm details float-right">
+                                        <font-awesome-icon icon="envelope-open-text"></font-awesome-icon>
+                                        <span class="d-none d-md-inline">Consume</span>
+                                    </router-link>
                                 </td>
                             </tr>
                         </tbody>

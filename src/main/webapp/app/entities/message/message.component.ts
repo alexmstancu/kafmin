@@ -30,6 +30,11 @@ export default class Message extends mixins(AlertMixin) {
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.clusterDbId && to.params.topicName) {
+        console.log(to.params);
+        if (to.params.partitionFilter >= 0) {
+          console.log('partition filter is: ' + to.params.partitionFilter)
+          vm.partitionFilter = to.params.partitionFilter;
+        }
         vm.retrieveAllMessages(to.params.clusterDbId, to.params.topicName);
       }
     });
@@ -123,7 +128,7 @@ export default class Message extends mixins(AlertMixin) {
   };
 
   public getFilterText(): string {
-    if (this.partitionFilter == -1) {
+    if (this.partitionFilter === -1) {
       return 'Filter by partition: all';
     }
     return 'Filter by partition: ' + this.partitionFilter;

@@ -55,10 +55,6 @@
                 @dismiss-count-down="countDownChanged">
                 {{alertMessage}}
             </b-alert>
-            <div class="alert alert-warning" v-if="!isFetching && messageList.messages && messageList.messages.length === 0">
-                <span>No messages found</span>
-            </div>
-            
             <div>
                 <b-dropdown id="dropdown-1" :text="getFilterText()" class="m-md-2">
                     <b-dropdown-item @click="resetPartitionFilter()">All</b-dropdown-item>
@@ -71,8 +67,12 @@
                     <b-badge pill variant="warning">Number of messages: <b-badge pill> <span style="font-size: 12px">{{filteredAndSortedMessages.length}}</span> </b-badge> </b-badge>
                 </span>
             </div>
+            
+            <div class="alert alert-warning" v-if="!isFetching && filteredAndSortedMessages && filteredAndSortedMessages.length === 0">
+                <span>No messages found</span>
+            </div>
 
-            <div v-if="messageList.messages && messageList.messages.length > 0" >
+            <div v-if="!isFetching && filteredAndSortedMessages && filteredAndSortedMessages.length > 0" >
                 <b-card v-for="message in filteredAndSortedMessages" :key="message.date" no-body header-tag="header" footer-tag="footer" style="margin-bottom: 20px">
                     <template v-slot:header >
                         <p style="margin: 0px">
