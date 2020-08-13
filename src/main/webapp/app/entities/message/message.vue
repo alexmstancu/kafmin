@@ -99,7 +99,7 @@
                         class="btn btn-info">
                     <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span> Back</span>
                 </button>
-                <router-link :to="{name: 'MessageCreate'}" tag="button" id="jh-create-entity" class="btn  btn-outline-success">
+                <router-link :to="{name: 'MessageCreate', params: {clusterDbId: messageList.cluster.id, topicName: messageList.topic, clusterName: messageList.cluster.name, clusterInternalId: messageList.cluster.clusterId}}" tag="button" id="jh-create-entity" class="btn  btn-outline-success">
                     <font-awesome-icon icon="paper-plane"></font-awesome-icon>
                     <span >
                         Produce a new Message
