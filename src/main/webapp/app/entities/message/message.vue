@@ -31,6 +31,12 @@
                     <span>{{messageList.partitionsCount}}</span>
                 </dd>
                 <dt>
+                    <span>Total number of messages</span>
+                </dt>
+                <dd>
+                    <span>{{getTotalMessagesNumber()}}</span>
+                </dd>
+                <dt>
                     <span>Cluster</span>
                 </dt>
                 <dd>
@@ -48,6 +54,15 @@
             <br/>
             <div class="alert alert-warning" v-if="!isFetching && messageList.messages && messageList.messages.length === 0">
                 <span>No messages found</span>
+            </div>
+            
+            <div>
+                <b-dropdown variant="info" id="dropdown-1" :text="getFilterText()" class="m-md-2" v-model="partitionFilter">
+                    <b-dropdown-item @click="partitionFilter=-1">All</b-dropdown-item>
+                    <b-dropdown-item v-for="p in partitionsArray" :key="p" @click="partitionFilter=p">
+                        Partition <b>{{p}}</b> 
+                    </b-dropdown-item>
+                </b-dropdown>
             </div>
 
             <div v-if="messageList.messages && messageList.messages.length > 0" >

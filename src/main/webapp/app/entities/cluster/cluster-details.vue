@@ -51,8 +51,13 @@
                     </router-link>
                 </h4>
 
+                <div class="alert alert-warning" v-if="cluster.id && (!cluster.topics ||  cluster.topics.length === 0)">
+                    <span>No topics found</span>
+                </div>
+
+
                 <!-- <div class="table-responsive" v-if="cluster.id && !isFetchingTopics"> -->
-                <div class="table-responsive" v-if="cluster.id">
+                <div class="table-responsive" v-if="cluster.id && cluster.topics && cluster.topics.length > 0">
                     <table class="table table-sm table-striped table-bordered">
                         <thead>
                             <tr>

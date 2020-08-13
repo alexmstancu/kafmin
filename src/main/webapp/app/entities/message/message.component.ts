@@ -20,6 +20,16 @@ export default class Message extends mixins(AlertMixin) {
 
   public isFetching = false;
 
+  public partitionFilter = -1;
+
+  public partitionsArray: number[] = [];
+
+  public buildPartitionsArray() {
+    for (let i = 0; i < this.messageList.partitionsCount; i++) {
+      this.partitionsArray.push(i);
+    }
+  }
+
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.clusterDbId && to.params.topicName) {
@@ -45,6 +55,7 @@ export default class Message extends mixins(AlertMixin) {
       .then(
         res => {
           this.messageList = res.data;
+          this.buildPartitionsArray();
           this.isFetching = false;
         },
         err => {
@@ -99,6 +110,20 @@ export default class Message extends mixins(AlertMixin) {
 
       return 0;
     });
+  }
+
+  public getTotalMessagesNumber(): number {
+    if (this.partitionFilter === -1) {
+      return this.messageList.messages.length;
+    }
+    return 0;
+  }
+
+  public getFilterText(): string {
+    if (this.partitionFilter == -1) {
+      return 'Filter by partition: all';
+    }
+    return 'Filter by partition: ' + this.partitionFilter;
   }
 
 }
