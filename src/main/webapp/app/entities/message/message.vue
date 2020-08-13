@@ -3,16 +3,18 @@
         <div v-if="!isFetching && messageList" class="col-8">
             <h2 id="page-heading">
                 <span  id="message-heading">Messages in topic {{messageList.topic}}</span>
+                <div class="btn-group float-right">
+                    <button type="submit"
+                            v-on:click.prevent="previousState()"
+                            class="btn btn-info">
+                        <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span> Back</span>
+                    </button>
+                    <router-link :to="{name: 'MessageCreate'}" tag="button" id="jh-create-entity" class="btn btn-outline-success">
+                        <font-awesome-icon icon="paper-plane"></font-awesome-icon>
+                            Produce a new Message
+                    </router-link>
 
-                <router-link :to="{name: 'MessageCreate'}" tag="button" id="jh-create-entity" class="btn btn-outline-success float-right jh-create-entity create-message">
-                    <font-awesome-icon icon="paper-plane"></font-awesome-icon>
-                        Produce a new Message
-                </router-link>
-                <button type="submit"
-                        v-on:click.prevent="previousState()"
-                        class="btn btn-info float-right">
-                    <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span> Back</span>
-                </button>
+                </div>
             </h2>
 
             <dl class="row jh-entity-details">
@@ -20,10 +22,12 @@
                     <span>Topic name</span>
                 </dt>
                 <dd>
-                    <span>{{messageList.topic}}</span>
+                    <router-link :to="{name: 'TopicView', params: {clusterDbId: messageList.cluster.id, topicName: messageList.topic}}">
+                        {{messageList.topic}}
+                    </router-link>
                 </dd>
                 <dt>
-                    <span>Total number of partitions</span>
+                    <span>Number of partitions</span>
                 </dt>
                 <dd>
                     <span>{{messageList.partitionsCount}}</span>
@@ -83,17 +87,21 @@
                     </b-card-body>
                 </b-card>
             </div>
-            <button type="submit"
-                    v-on:click.prevent="previousState()"
-                    class="btn btn-info">
-                <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span> Back</span>
-            </button>
-            <router-link :to="{name: 'MessageCreate'}" tag="button" id="jh-create-entity" class="btn btn-primary jh-create-entity create-message">
-                <font-awesome-icon icon="plus"></font-awesome-icon>
-                <span >
-                    Produce a new Message
-                </span>
-            </router-link>
+
+            <div class="btn-group float-left">
+
+                <button type="submit"
+                        v-on:click.prevent="previousState()"
+                        class="btn btn-info">
+                    <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span> Back</span>
+                </button>
+                <router-link :to="{name: 'MessageCreate'}" tag="button" id="jh-create-entity" class="btn  btn-outline-success">
+                    <font-awesome-icon icon="paper-plane"></font-awesome-icon>
+                    <span >
+                        Produce a new Message
+                    </span>
+                </router-link>
+            </div>
             
             <b-modal ref="removeEntity" id="removeEntity" >
                 <span slot="modal-title"><span id="kafminApp.message.delete.question">Confirm delete operation</span></span>
