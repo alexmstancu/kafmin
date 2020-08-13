@@ -16,11 +16,13 @@ export default class Message extends mixins(AlertMixin) {
   @Inject('messageService') private messageService: () => MessageService;
   private removeId: number = null;
 
-  public messageList: IMessageList;
+  public messageList: IMessageList = null;
 
   public isFetching = false;
 
   public partitionFilter = -1;
+
+  public messagesInPartitionCount: number = 0;
 
   public partitionsArray: number[] = [];
 
@@ -56,6 +58,7 @@ export default class Message extends mixins(AlertMixin) {
         res => {
           this.messageList = res.data;
           this.buildPartitionsArray();
+          this.messagesInPartitionCount = this.messageList.messages.length;
           this.isFetching = false;
         },
         err => {
@@ -98,26 +101,28 @@ export default class Message extends mixins(AlertMixin) {
     this.$router.go(-1);
   }
 
-  public messagesSortedByOffsetDescending(): IMessage[] {
-    return this.messageList.messages.sort((m1, m2) => {
-      if (m1.offset > m2.offset) {
-        return -1;
-      }
-
-      if (m1.offset < m2.offset) {
-          return 1;
-      }
-
-      return 0;
-    });
-  }
-
-  public getTotalMessagesNumber(): number {
-    if (this.partitionFilter === -1) {
-      return this.messageList.messages.length;
+  public messagesFilteredByPartitionSortedByOffsetDescending(): IMessage[] {
+    let filteredAndSortedMessages = this.messageList.messages;
+    if (this.partitionFilter !== -1) {
+      filteredAndSortedMessages = filteredAndSortedMessages.filter((message) => message.partition === this.partitionFilter)
+      this.messagesInPartitionCount = filteredAndSortedMessages.length;
     }
-    return 0;
+
+    filteredAndSortedMessages = filteredAndSortedMessages.sort(this.offsetDescendingComparator);
+    return filteredAndSortedMessages;
   }
+
+  private offsetDescendingComparator = (m1, m2) => {
+    if (m1.offset > m2.offset) {
+      return -1;
+    }
+
+    if (m1.offset < m2.offset) {
+        return 1;
+    }
+
+    return 0;
+  };
 
   public getFilterText(): string {
     if (this.partitionFilter == -1) {

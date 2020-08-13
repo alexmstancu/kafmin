@@ -34,7 +34,8 @@
                     <span>Total number of messages</span>
                 </dt>
                 <dd>
-                    <span>{{getTotalMessagesNumber()}}</span>
+                    <!-- <span>{{getTotalMessagesNumber()}}</span> -->
+                    <span>{{messagesInPartitionCount}}</span>
                 </dd>
                 <dt>
                     <span>Cluster</span>
@@ -51,13 +52,12 @@
                 @dismiss-count-down="countDownChanged">
                 {{alertMessage}}
             </b-alert>
-            <br/>
             <div class="alert alert-warning" v-if="!isFetching && messageList.messages && messageList.messages.length === 0">
                 <span>No messages found</span>
             </div>
             
             <div>
-                <b-dropdown variant="info" id="dropdown-1" :text="getFilterText()" class="m-md-2" v-model="partitionFilter">
+                <b-dropdown id="dropdown-1" :text="getFilterText()" class="m-md-2" v-model="partitionFilter">
                     <b-dropdown-item @click="partitionFilter=-1">All</b-dropdown-item>
                     <b-dropdown-item v-for="p in partitionsArray" :key="p" @click="partitionFilter=p">
                         Partition <b>{{p}}</b> 
@@ -66,14 +66,14 @@
             </div>
 
             <div v-if="messageList.messages && messageList.messages.length > 0" >
-                <b-card v-for="message in messagesSortedByOffsetDescending()" :key="message.date" no-body header-tag="header" footer-tag="footer" style="margin-bottom: 20px">
+                <b-card v-for="message in messagesFilteredByPartitionSortedByOffsetDescending()" :key="message.date" no-body header-tag="header" footer-tag="footer" style="margin-bottom: 20px">
                     <template v-slot:header >
                         <p style="margin: 0px">
-                            <b-badge variant="success">Key</b-badge>  <b>{{message.key}}</b>
                             <b-badge variant="info">Offset</b-badge>  <small>{{message.offset}}</small>
                             <b-badge variant="info">Partition</b-badge> <small>{{message.partition}}</small>
                             <b-badge variant="info">Timestamp</b-badge>  <small>{{getPrettyDate(message.date)}}</small> 
                         </p>
+                        <b-badge variant="success">Key</b-badge>  <b>{{message.key}}</b>
                     </template>
                     <b-card-body>
                         <b-card-text>
