@@ -23,14 +23,18 @@ export default class MessageUpdate extends Vue {
   public message: IMessage = new Message();
   public isSaving = false;
   public currentLanguage = '';
-  public topicName;
-  public clusterDbId;
+  public topicName = '';
+  public clusterDbId = -1;
+  public clusterInternalId = "";
+  public clusterName = "";
 
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      if (to.params.clusterDbId && to.params.topicName) {
+      if (to.params.clusterDbId && to.params.topicName && to.params.clusterName && to.params.clusterInternalId) {
         vm.clusterDbId = to.params.clusterDbId;
         vm.topicName = to.params.topicName;
+        vm.clusterName = to.params.clusterName;
+        vm.clusterInternalId = to.params.clusterInternalId;
       }
     });
   }

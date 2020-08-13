@@ -9,7 +9,9 @@
                             class="btn btn-info">
                         <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span> Back</span>
                     </button>
-                    <router-link :to="{name: 'MessageCreate'}" tag="button" id="jh-create-entity" class="btn btn-outline-success">
+                    <router-link 
+                        :to="{name: 'MessageCreate', params: {clusterDbId: messageList.cluster.id, topicName: messageList.topic, clusterName: messageList.cluster.name, clusterInternalId: messageList.cluster.clusterId}}" 
+                        tag="button" id="jh-create-entity" class="btn btn-outline-success">
                         <font-awesome-icon icon="paper-plane"></font-awesome-icon>
                             Produce a new Message
                     </router-link>
@@ -77,7 +79,7 @@
                             <b-badge variant="info">Offset</b-badge>    {{message.offset}}
                             <b-badge variant="info">Partition</b-badge> {{message.partition}}
                             <b-badge variant="info">Timestamp</b-badge> <small>{{getPrettyDate(message.date)}}</small> 
-                            <b-badge pill variant="success">Key</b-badge>     <b>{{message.key}}</b>
+                            <b-badge pill variant="success">Key</b-badge> <b>{{message.key}}</b>
                         </p>
                     </template>
                     <b-card-body>
