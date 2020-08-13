@@ -1,7 +1,9 @@
 <template>
     <div class="home row">
         <div class="col-md-3">
-            <span class="hipster img-fluid rounded"></span>
+            <div class=" img-fluid rounded">
+                <img src="content/images/kafka.png" alt="">
+            </div>
         </div>
         <div class="col-md-9">
             <h1 class="display-4">Welcome, Kafka Administrator!</h1>

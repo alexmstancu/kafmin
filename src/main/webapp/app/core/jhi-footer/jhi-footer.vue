@@ -5,7 +5,7 @@
             &#8226; Alexandru Stancu, ACS UPB
         </p>
         <p>
-            <a href="https://kafka.apache.org/documentation/" target="_blank" rel="noopener">Kafka documentation</a>
+            <a href="https://kafka.apache.org/documentation/" target="_blank" rel="noopener">Apache Kafka documentation</a>
         </p>
     </div>
 </template>
