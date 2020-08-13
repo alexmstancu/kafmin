@@ -85,7 +85,7 @@
                                             <font-awesome-icon icon="envelope-open-text"></font-awesome-icon>
                                             <span class="d-none d-md-inline">Consume</span>
                                         </router-link>
-                                        <router-link :to="{name: 'MessageCreate', params: {clusterDbId: cluster.id, topicName: topic.name}}" tag="button" class="btn btn-outline-success btn-sm details">
+                                        <router-link :to="{name: 'MessageCreate', params: {clusterDbId: cluster.id, topicName: topic.name, clusterName: cluster.name, clusterInternalId: cluster.clusterId}}" tag="button" class="btn btn-outline-success btn-sm details">
                                             <font-awesome-icon icon="paper-plane"></font-awesome-icon>
                                             <span class="d-none d-md-inline">Produce</span>
                                         </router-link>
