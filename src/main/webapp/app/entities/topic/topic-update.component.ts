@@ -106,7 +106,7 @@ export default class TopicUpdate extends Vue {
           this.isSaving = false;
           this.$router.go(-1);
           const message = 'A topic was created with name ' + param.name;
-          this.alertService().showAlert(message, 'success');
+          // this.alertService().showAlert(message, 'success');
         });
     }
   }
