@@ -1,7 +1,7 @@
 <template>
     <b-navbar toggleable="md" type="dark" class="bg-primary">
         <b-navbar-brand class="logo" b-link to="/">
-            <span class="logo-img"></span>
+            <!-- <span class="logo-img"></span> -->
             <span class="navbar-title">kafmin</span> <span class="navbar-version">{{version}}</span>
         </b-navbar-brand>
         <b-navbar-toggle
@@ -167,6 +167,7 @@
 .navbar-title {
   display: inline-block;
   vertical-align: middle;
+  font-size: 26px;
 }
 
 /* ==========================================================================
