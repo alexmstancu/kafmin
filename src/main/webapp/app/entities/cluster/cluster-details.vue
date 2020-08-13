@@ -3,7 +3,7 @@
         <div class="col-8">
             <div v-if="cluster">
                 <h2 class="jh-entity-heading">
-                    <span>Cluster</span> '{{cluster.name}}'
+                    <span>Cluster details</span> 
 
                     <router-link v-if="cluster.id" :to="{name: 'ClusterEdit', params: {clusterId: cluster.id}}" tag="button" class="btn btn-primary float-right">
                         <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span> Edit cluster name</span>
@@ -18,16 +18,16 @@
 
                 <dl class="row jh-entity-details">
                     <dt>
-                        <span>Cluster Id</span>
-                    </dt>
-                    <dd>
-                        <span>{{cluster.clusterId}}</span>
-                    </dd>
-                    <dt>
                         <span>Name</span>
                     </dt>
                     <dd>
                         <span>{{cluster.name}}</span>
+                    </dd>
+                    <dt>
+                        <span>Cluster Id</span>
+                    </dt>
+                    <dd>
+                        <span>{{cluster.clusterId}}</span>
                     </dd>
                     <dt>
                         <span>Total number of topics</span>
@@ -161,7 +161,7 @@
 
 
     <b-modal ref="removeEntity" id="removeEntity" >
-            <span slot="modal-title"><span id="kafminApp.cluster.delete.topic.question">Confirm topic deletion operation</span></span>
+            <span slot="modal-title"><span id="kafminApp.cluster.delete.topic.question">Confirm topic deletion</span></span>
             <div class="modal-body">
                 <p id="jhi-delete-cluster-heading">Are you sure you want to delete this topic?</p>
             </div>

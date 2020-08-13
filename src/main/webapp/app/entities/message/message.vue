@@ -2,7 +2,7 @@
     <div class="row justify-content-center">
         <div v-if="!isFetching && messageList" class="col-8">
             <h2 id="page-heading">
-                <span  id="message-heading">Messages in topic {{messageList.topic}}</span>
+                <span  id="message-heading">Messages in topic</span>
                 <div class="btn-group float-right">
                     <button type="submit"
                             v-on:click.prevent="previousState()"

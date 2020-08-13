@@ -2,7 +2,7 @@
     <div class="row justify-content-center">
         <div class="col-8">
             <div v-if="topic">
-                <h2 class="jh-entity-heading"><span>Topic</span> '{{topic.name}}'
+                <h2 class="jh-entity-heading"><span>Topic details</span>
                 
                     <div class="btn-group float-right">
 
@@ -28,7 +28,7 @@
                 </h2>
                 <dl class="row jh-entity-details">
                     <dt>
-                        <span>Name</span>
+                        <span>Topic name</span>
                     </dt>
                     <dd>
                         <span>{{topic.name}}</span>
