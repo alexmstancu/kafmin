@@ -8,6 +8,8 @@ import { IBroker, Broker } from '@/shared/model/broker.model';
 import AlertService from '@/shared/alert/alert.service';
 import { ICluster, Cluster } from '@/shared/model/cluster.model';
 import ClusterService from './cluster.service';
+import { mixins } from 'vue-class-component';
+import AlertMixin from '@/shared/alert/alert.mixin';
 
 const validations: any = {
   cluster: {
@@ -20,15 +22,10 @@ const validations: any = {
 @Component({
   validations,
 })
-export default class ClusterUpdate extends Vue {
-  @Inject('alertService') private alertService: () => AlertService;
+export default class ClusterUpdate extends mixins(AlertMixin) {
   @Inject('clusterService') private clusterService: () => ClusterService;
   public cluster: ICluster = new Cluster();
 
-  @Inject('brokerService') private brokerService: () => BrokerService;
-
-  public brokers: IBroker[] = [];
-  public initialBroker: IBroker = new Broker();
   public isSaving = false;
   public currentLanguage = '';
 
@@ -36,8 +33,10 @@ export default class ClusterUpdate extends Vue {
     next(vm => {
       if (to.params.clusterId) {
         vm.retrieveCluster(to.params.clusterId);
+      } else {
+        vm.cluster.brokers = [];
+        vm.addBroker();
       }
-      vm.initRelationships();
     });
   }
 
@@ -59,19 +58,21 @@ export default class ClusterUpdate extends Vue {
         .then(param => {
           this.isSaving = false;
           this.$router.go(-1);
-          const message = 'A Cluster is updated with identifier ' + param.id;
+          const message = 'A Cluster is updated with identifier ' + param.clusterId;
           this.alertService().showAlert(message, 'info');
         });
     } else {
-      this.addBroker(this.initialBroker.host, this.initialBroker.port);
-      this.cluster.brokers = this.brokers;
+      if (!this.isValid()) {
+        this.isSaving = false;
+        return;
+      }
 
       this.clusterService()
         .create(this.cluster)
         .then(param => {
           this.isSaving = false;
           this.$router.go(-1);
-          const message = 'A Cluster is created with identifier ' + param.id;
+          const message = 'A Cluster was connected with identifier ' + param.clusterId;
           this.alertService().showAlert(message, 'success');
         });
     }
@@ -89,19 +90,50 @@ export default class ClusterUpdate extends Vue {
     this.$router.go(-1);
   }
 
-  public initRelationships(): void {
-    this.brokerService()
-      .retrieve()
-      .then(res => {
-        this.brokers = res.data;
-      });
+  public addBroker(): void {
+    const broker = new Broker();
+    broker.id = 
+    this.cluster.brokers.push(broker);
   }
 
-  public addBroker(host, port): void {
-    const broker = new Broker();
-    broker.host = host;
-    broker.port = port;
-    this.brokers.push(broker);
+  public isAddBrokerButtonDisabled(): boolean {
+    console.log('isDisabled');
+    if (!this.cluster.brokers || this.cluster.brokers.length === 0) {
+      return true;
+    }
+
+    const lastIndex = this.cluster.brokers.length - 1;
+    const lastBroker = this.cluster.brokers[lastIndex];
+    if (!lastBroker.host || !lastBroker.port) {
+      return true;
+    }
+
+    return false;
+  }
+
+  public isValid(): boolean {
+    if (!this.cluster.name) {
+      console.log("is not valid name");
+      const message = 'You need to provide a name for the new cluster';
+      this.alertService().showAlert(message, 'danger');
+      this.getAlertFromStore();
+      return false;
+    }
+
+
+    const lastIndex = this.cluster.brokers.length - 1;
+    if (lastIndex === 0) {
+      const lastBroker = this.cluster.brokers[lastIndex];
+      if (!lastBroker.host || !lastBroker.port) {
+        console.log("is not valid broker");
+        const message = 'You need to provide at least one bootstrap broker (host and port).';
+        this.alertService().showAlert(message, 'danger');
+        this.getAlertFromStore();
+        return false;
+      }
+    }
+
+    return true;
   }
 
   public getTopicsCount(): number {

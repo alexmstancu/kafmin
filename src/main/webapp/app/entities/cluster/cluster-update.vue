@@ -32,6 +32,14 @@
                         </dd>
                     </dl>
 
+                    <b-alert :show="dismissCountDown"
+                        dismissible
+                        :variant="alertType"
+                        @dismissed="dismissCountDown=0"
+                        @dismiss-count-down="countDownChanged">
+                        {{alertMessage}}
+                    </b-alert>
+
                     <!-- <div class="form-group" v-if="cluster.id">
                         <label class="form-control-label" for="cluster-clusterId">Cluster Id</label>
                         <input type="text" class="form-control" id="id" name="id" v-model="cluster.clusterId" readonly />
@@ -43,8 +51,8 @@
                     </div>
 
                     <!-- list the brokers and let the user add more brokers (host & port only) ONLY IN CASE OF CREATE -->
-                    <label v-if="!cluster.id" class="form-control-label" for="brokers-table">Add the initial bootstrap server</label>
-                    <div class="table-responsive" v-if="!cluster.id">
+                    <label v-if="!cluster.id" class="form-control-label" for="brokers-table">Add the initial bootstrap broker</label>
+                    <div class="table-responsive table table-sm table-striped table-bordered" v-if="!cluster.id">
                         <table class="table table-striped">
                             <thead>
                                 <tr>
@@ -53,9 +61,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td><input type="text" class="form-control" id="id" name="id" v-model="initialBroker.host"/></td>
-                                    <td><input type="text" class="form-control" id="id" name="id" v-model="initialBroker.port"/></td>
+                                <tr v-for="broker in cluster.brokers" :key="broker.brokerId">
+                                    <td><input type="text" class="form-control" id="id" name="id" v-model="broker.host"/></td>
+                                    <td><input type="text" class="form-control" id="id" name="id" v-model="broker.port"/></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -67,6 +75,9 @@
                     </button>
                     <button type="submit" id="save-entity" :disabled="$v.cluster.$invalid || isSaving" class="btn btn-primary">
                         <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Save</span>
+                    </button>
+                    <button :disabled="isAddBrokerButtonDisabled()" v-on:click="addBroker()" class="btn btn-info float-right">
+                        <font-awesome-icon icon="plus"></font-awesome-icon>&nbsp;<span>Add more brokers</span>
                     </button>
                 </div>
             </form>
