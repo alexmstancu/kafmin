@@ -76,7 +76,7 @@
                     <button type="submit" id="save-entity" :disabled="$v.cluster.$invalid || isSaving" class="btn btn-primary">
                         <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Save</span>
                     </button>
-                    <button :disabled="isAddBrokerButtonDisabled()" v-on:click="addBroker()" class="btn btn-info float-right">
+                    <button :disabled="isAddBrokerButtonDisabled()" v-on:click="addBroker()" class="btn btn-outline-info float-right">
                         <font-awesome-icon icon="plus"></font-awesome-icon>&nbsp;<span>Add more brokers</span>
                     </button>
                 </div>

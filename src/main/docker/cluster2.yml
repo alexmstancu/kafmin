@@ -1,0 +1,27 @@
+version: '2'
+services:
+    cluster2-zookeeper-1:
+        container_name: cluster2_zookeeper
+        image: confluentinc/cp-zookeeper:latest
+        environment:
+            ZOOKEEPER_SERVER_ID: 1
+            ZOOKEEPER_CLIENT_PORT: 32181
+            ZOOKEEPER_TICK_TIME: 2000
+            ZOOKEEPER_INIT_LIMIT: 5
+            ZOOKEEPER_SYNC_LIMIT: 2
+            ZOOKEEPER_SERVERS: localhost:32888:33888
+            KAFKA_OPTS: '-Dzookeeper.admin.serverPort=8085'
+        network_mode: host
+
+    cluster2-kafka-1:
+        container_name: cluster2_broker1_49092
+        image: confluentinc/cp-kafka:latest
+        network_mode: host
+        depends_on:
+            - cluster2-zookeeper-1
+        environment:
+            KAFKA_BROKER_ID: 1
+            KAFKA_ZOOKEEPER_CONNECT: localhost:32181
+            KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:49092
+        ports:
+            - 49092:49092
