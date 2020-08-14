@@ -2,20 +2,33 @@
     <div class="row justify-content-center">
         <div class="col-8">
             <div v-if="topic">
-                <h2 class="jh-entity-heading"><span>Topic</span> '{{topic.name}}'
-                    <router-link v-if="topic.cluster !== undefined" :to="{name: 'TopicEdit', params: {clusterDbId: topic.cluster.id, topicName: topic.name}}" tag="button" class="btn btn-primary float-right">
-                        <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span> Edit</span>
-                    </router-link>
-                    <button type="submit"
-                        v-on:click.prevent="previousState()"
-                        class="btn btn-info float-right">
-                    <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span> Back</span>
-                    </button>
+                <h2 class="jh-entity-heading"><span>Topic details</span>
+                
+                    <div class="btn-group float-right">
+
+                        <button type="submit"
+                            v-on:click.prevent="previousState()"
+                            class="btn btn-info float-right">
+                            <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span> Back</span>
+                        </button>
+
+                        <router-link :to="{name: 'MessageCreate', params: {clusterDbId: topic.cluster.id, topicName: topic.name, clusterName: topic.cluster.name, clusterInternalId: topic.cluster.clusterId}}" tag="button" class="btn btn-outline-success btn-sm details">
+                            <font-awesome-icon icon="paper-plane"></font-awesome-icon>
+                            <span class="d-none d-md-inline">Produce</span>
+                        </router-link>
+                        <router-link :to="{name: 'Message', params: {clusterDbId: topic.cluster.id, topicName: topic.name}}" tag="button" class="btn btn-outline-secondary btn-sm details">
+                            <font-awesome-icon icon="envelope-open-text"></font-awesome-icon>
+                            <span class="d-none d-md-inline">Consume</span>
+                        </router-link>
+                        <router-link v-if="topic.cluster !== undefined" :to="{name: 'TopicEdit', params: {clusterDbId: topic.cluster.id, topicName: topic.name}}" tag="button" class="btn btn-primary float-right">
+                            <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span> Edit</span>
+                        </router-link>
+                    </div>
                 
                 </h2>
                 <dl class="row jh-entity-details">
                     <dt>
-                        <span>Name</span>
+                        <span>Topic name</span>
                     </dt>
                     <dd>
                         <span>{{topic.name}}</span>
@@ -50,6 +63,7 @@
                                 <th><span>Partition</span></th>
                                 <th><span>Leader broker</span></th>
                                 <th><span>Replica brokers</span></th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -70,10 +84,14 @@
                                                 broker {{replica.brokerId}} ({{replica.host}}:{{replica.port}})  
                                             </router-link>
                                             <span v-if="index !== partition.replicas.length - 1">&#8226; </span>
-
                                        </small>
-                                         
                                     </span>
+                                </td>
+                                <td>
+                                    <router-link :to="{name: 'Message', params: {clusterDbId: topic.cluster.id, topicName: topic.name, partitionFilter: partition.id}}" tag="button" class="btn btn-outline-secondary btn-sm details float-right">
+                                        <font-awesome-icon icon="envelope-open-text"></font-awesome-icon>
+                                        <span class="d-none d-md-inline">Consume</span>
+                                    </router-link>
                                 </td>
                             </tr>
                         </tbody>

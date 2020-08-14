@@ -34,7 +34,6 @@
                 </dl>
             </div>
 
-
             <form name="editForm" role="form" novalidate v-on:submit.prevent="save()">
                 <div>
                     <button type="submit" id="save-entity" :disabled="$v.topic.$invalid || isSaving" class="btn btn-primary float-right">
@@ -49,6 +48,16 @@
                 <!-- CREATE NEW TOPIC CASE -->
                 <div v-if="topic.cluster === undefined">
                     <h2 id="kafminApp.topic.home.createOrEditLabel">Create a Topic</h2>
+
+                    <dl class="row jh-entity-details">
+                        <dt>
+                            <span>Cluster</span>
+                        </dt>
+                        <dd>
+                            <router-link :to="{name: 'ClusterView', params: {clusterId: savedClusterDbId}}"> {{clusterName}} ({{clusterInternalId}})</router-link>
+                        </dd>
+                    </dl>
+
                     <div>
                         <div class="form-group">
                             <label class="form-control-label" for="topic-name">Name</label>

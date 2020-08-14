@@ -1,13 +1,13 @@
 export interface ITopicDetails {
   name?: string;
-  isInternal?: boolean;
+  internal?: boolean;
   partitions?: number;
 }
 
 export class TopicDetails implements ITopicDetails {
   constructor(
     public name?: string,
-    public isInternal?: boolean,
+    public internal?: boolean,
     public partitions?: number
   ) {}
 }

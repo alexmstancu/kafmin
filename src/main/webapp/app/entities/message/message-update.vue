@@ -1,8 +1,27 @@
 <template>
     <div class="row justify-content-center">
         <div class="col-8">
+
+            <h2 id="kafminApp.message.home.createOrEditLabel">Produce a new Message</h2>
+            <dl class="row jh-entity-details">
+                <dt>
+                    <span>Topic name</span>
+                </dt>
+                <dd>
+                    <router-link :to="{name: 'TopicView', params: {clusterDbId: clusterDbId, topicName: topicName}}">
+                       {{topicName}} 
+                    </router-link>
+                </dd>
+                <dt>
+                    <span>Cluster</span>
+                </dt>
+                <dd>
+                    <router-link :to="{name: 'ClusterView', params: {clusterId: clusterDbId}}">
+                        {{clusterName}} ({{clusterInternalId}})
+                        </router-link>
+                </dd>
+            </dl>
             <form name="editForm" role="form" novalidate v-on:submit.prevent="save()" >
-                <h2 id="kafminApp.message.home.createOrEditLabel">Create or edit a Message</h2>
                 <div>
                     <div class="form-group">
                         <label class="form-control-label" for="message-key">Key</label>
@@ -12,7 +31,7 @@
                     <div class="form-group">
                         <label class="form-control-label" for="message-message">Message</label>
 
-                          <b-form-textarea id="textarea-rows"  placeholder="Message" rows="8" v-model="message.message">
+                          <b-form-textarea id="textarea-rows" rows="8" v-model="message.message">
 
                           </b-form-textarea>
 
@@ -22,12 +41,12 @@
 
 
                 </div>
-                <div>
+                <div class="btn-group float-left">
                     <button type="button" id="cancel-save" class="btn btn-secondary" v-on:click="previousState()">
                         <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span>Cancel</span>
                     </button>
-                    <button type="submit" id="save-entity" :disabled="$v.message.$invalid || isSaving" class="btn btn-primary">
-                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Save</span>
+                    <button type="submit" id="save-entity" :disabled="$v.message.$invalid || isSaving" class="btn btn-outline-success">
+                        <font-awesome-icon icon="paper-plane"></font-awesome-icon>&nbsp;<span>Produce</span>
                     </button>
                 </div>
             </form>

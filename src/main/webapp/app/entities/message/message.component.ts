@@ -16,14 +16,24 @@ export default class Message extends mixins(AlertMixin) {
   @Inject('messageService') private messageService: () => MessageService;
   private removeId: number = null;
 
-  public messageList: IMessageList;
+  public messageList: IMessageList = null;
 
   public isFetching = false;
+
+  public partitionFilter = -1;
+
+  public partitionsArray: number[] = [];
+
+  public filteredAndSortedMessages: IMessage[] = [];
+
 
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.clusterDbId && to.params.topicName) {
-        console.log('msg component beforeRouteEnter' + to.params.clusterDbId + to.params.topicName)
+        console.log(to.params);
+        if (to.params.partitionFilter >= 0) {
+          vm.partitionFilter = to.params.partitionFilter;
+        }
         vm.retrieveAllMessages(to.params.clusterDbId, to.params.topicName);
       }
     });
@@ -37,6 +47,13 @@ export default class Message extends mixins(AlertMixin) {
   //   this.retrieveAllMessages();
   // }
 
+  public buildPartitionsArray() {
+    for (let i = 0; i < this.messageList.partitionsCount; i++) {
+      this.partitionsArray.push(i);
+    }
+  }
+
+
   public retrieveAllMessages(clusterDbId: number, topicName: string): void {
     this.isFetching = true;
 
@@ -45,6 +62,8 @@ export default class Message extends mixins(AlertMixin) {
       .then(
         res => {
           this.messageList = res.data;
+          this.buildPartitionsArray();
+          this.messagesFilterByPartitionAndSortByOffsetDescending();
           this.isFetching = false;
         },
         err => {
@@ -68,7 +87,6 @@ export default class Message extends mixins(AlertMixin) {
         this.alertService().showAlert(message, 'danger');
         this.getAlertFromStore();
         this.removeId = null;
-        // this.retrieveAllMessages();
         this.closeDialog();
       });
   }
@@ -87,18 +105,41 @@ export default class Message extends mixins(AlertMixin) {
     this.$router.go(-1);
   }
 
-  public messagesSortedByOffsetDescending(): IMessage[] {
-    return this.messageList.messages.sort((m1, m2) => {
-      if (m1.offset > m2.offset) {
-        return -1;
-      }
+  public messagesFilterByPartitionAndSortByOffsetDescending() {
+    let messagesFiltertedAndSorted = this.messageList.messages;
+    if (this.partitionFilter !== -1) {
+      messagesFiltertedAndSorted = messagesFiltertedAndSorted.filter((message) => message.partition === this.partitionFilter)
+    }
 
-      if (m1.offset < m2.offset) {
-          return 1;
-      }
-
-      return 0;
-    });
+    this.filteredAndSortedMessages = messagesFiltertedAndSorted.sort(this.offsetDescendingComparator);
   }
 
+  private offsetDescendingComparator = (m1, m2) => {
+    if (m1.offset > m2.offset) {
+      return -1;
+    }
+
+    if (m1.offset < m2.offset) {
+        return 1;
+    }
+
+    return 0;
+  };
+
+  public getFilterText(): string {
+    if (this.partitionFilter === -1) {
+      return 'Filter by partition: all';
+    }
+    return 'Filter by partition: ' + this.partitionFilter;
+  }
+
+  public resetPartitionFilter() {
+    this.partitionFilter = -1;
+    this.messagesFilterByPartitionAndSortByOffsetDescending();
+  }
+
+  public setPartitionFilter(filter: number) {
+    this.partitionFilter = filter;
+    this.messagesFilterByPartitionAndSortByOffsetDescending();
+  }
 }

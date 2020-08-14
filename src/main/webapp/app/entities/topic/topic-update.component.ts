@@ -25,12 +25,30 @@ export default class TopicUpdate extends Vue {
   public topic: ITopic = new Topic();
   public isSaving = false;
   public currentLanguage = '';
-  public savedClusterDbId = -1;
   public originalConfigsMap: Map<string, IGenericConfig> = new Map();
-
   public configEditedStyle = {
     'background-color': '#f5e5a4'
   };
+  public savedClusterDbId = -1;
+  public clusterName = '';
+  public clusterInternalId = '';
+  
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      console.log(to.params);
+      if (to.params.clusterDbId) {
+        vm.savedClusterDbId = to.params.clusterDbId;
+        if (to.params.clusterName && to.params.clusterInternalId) {
+          vm.clusterName = to.params.clusterName;
+          vm.clusterInternalId = to.params.clusterInternalId;
+          console.log('salvate');
+        }
+        if (to.params.topicName) {
+          vm.retrieveTopic(to.params.clusterDbId, to.params.topicName);
+        }
+      }
+    });
+  }
 
   public applyStyleIfEdited(config: IGenericConfig): object {
     if (this.wasEdited(config)) {
@@ -59,17 +77,6 @@ export default class TopicUpdate extends Vue {
       map.set(config.name, config);
       return map;
     }, this.originalConfigsMap);
-  }
-
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      if (to.params.clusterDbId) {
-        vm.savedClusterDbId = to.params.clusterDbId;
-        if (to.params.topicName) {
-          vm.retrieveTopic(to.params.clusterDbId, to.params.topicName);
-        }
-      }
-    });
   }
 
   created(): void {
@@ -106,7 +113,7 @@ export default class TopicUpdate extends Vue {
           this.isSaving = false;
           this.$router.go(-1);
           const message = 'A topic was created with name ' + param.name;
-          this.alertService().showAlert(message, 'success');
+          // this.alertService().showAlert(message, 'success');
         });
     }
   }

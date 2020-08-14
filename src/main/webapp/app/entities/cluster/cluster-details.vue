@@ -3,7 +3,7 @@
         <div class="col-8">
             <div v-if="cluster">
                 <h2 class="jh-entity-heading">
-                    <span>Cluster</span> '{{cluster.name}}'
+                    <span>Cluster details</span> 
 
                     <router-link v-if="cluster.id" :to="{name: 'ClusterEdit', params: {clusterId: cluster.id}}" tag="button" class="btn btn-primary float-right">
                         <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span> Edit cluster name</span>
@@ -18,16 +18,16 @@
 
                 <dl class="row jh-entity-details">
                     <dt>
-                        <span>Cluster Id</span>
-                    </dt>
-                    <dd>
-                        <span>{{cluster.clusterId}}</span>
-                    </dd>
-                    <dt>
                         <span>Name</span>
                     </dt>
                     <dd>
                         <span>{{cluster.name}}</span>
+                    </dd>
+                    <dt>
+                        <span>Cluster Id</span>
+                    </dt>
+                    <dd>
+                        <span>{{cluster.clusterId}}</span>
                     </dd>
                     <dt>
                         <span>Total number of topics</span>
@@ -45,25 +45,30 @@
 
                 <h4>
                     <span>Topics</span>
-                    <router-link :to="{name: 'TopicCreate', params: {clusterDbId: cluster.id}}" tag="button" id="jh-create-entity" class="btn btn-primary btn-sm float-right jh-create-entity create-topic">
+                    <router-link :to="{name: 'TopicCreate', params: {clusterDbId: cluster.id, clusterName: cluster.name, clusterInternalId: cluster.clusterId}}" tag="button" id="jh-create-entity" class="btn btn-primary btn-sm float-right jh-create-entity create-topic">
                         <font-awesome-icon icon="plus"></font-awesome-icon>
                     <span>Create new Topic</span>
                     </router-link>
                 </h4>
 
+                <div class="alert alert-warning" v-if="cluster.id && (!cluster.topics ||  cluster.topics.length === 0)">
+                    <span>No topics found</span>
+                </div>
+
+
                 <!-- <div class="table-responsive" v-if="cluster.id && !isFetchingTopics"> -->
-                <div class="table-responsive" v-if="cluster.id">
+                <div class="table-responsive" v-if="cluster.id && cluster.topics && cluster.topics.length > 0">
                     <table class="table table-sm table-striped table-bordered">
                         <thead>
                             <tr>
                                 <th><span>Topic name</span></th>
                                 <th><span># of partitions</span></th>
-                                <!-- <th><span>Is internal?</span></th> -->
+                                <th><span>Is internal?</span></th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="topic in cluster.topics" :key="topic.name">
+                            <tr v-for="topic in sortedTopics" :key="topic.name">
                                 <td>
                                     <span>
                                         <router-link :to="{name: 'TopicView', params: {clusterDbId: cluster.id, topicName: topic.name}}">
@@ -73,14 +78,14 @@
                                     </span>
                                 </td>
                                 <td><span>{{topic.partitions}}</span></td>
-                                <!-- <td><span>{{isInternal(topic)}}</span></td> -->
+                                <td><span>{{isInternal(topic)}}</span></td>
                                 <td class="text-right">
                                     <div class="btn-group">
                                         <router-link :to="{name: 'Message', params: {clusterDbId: cluster.id, topicName: topic.name}}" tag="button" class="btn btn-outline-secondary btn-sm details">
                                             <font-awesome-icon icon="envelope-open-text"></font-awesome-icon>
                                             <span class="d-none d-md-inline">Consume</span>
                                         </router-link>
-                                        <router-link :to="{name: 'MessageCreate', params: {clusterDbId: cluster.id, topicName: topic.name}}" tag="button" class="btn btn-outline-success btn-sm details">
+                                        <router-link :to="{name: 'MessageCreate', params: {clusterDbId: cluster.id, topicName: topic.name, clusterName: cluster.name, clusterInternalId: cluster.clusterId}}" tag="button" class="btn btn-outline-success btn-sm details">
                                             <font-awesome-icon icon="paper-plane"></font-awesome-icon>
                                             <span class="d-none d-md-inline">Produce</span>
                                         </router-link>
@@ -156,7 +161,7 @@
 
 
     <b-modal ref="removeEntity" id="removeEntity" >
-            <span slot="modal-title"><span id="kafminApp.cluster.delete.topic.question">Confirm topic deletion operation</span></span>
+            <span slot="modal-title"><span id="kafminApp.cluster.delete.topic.question">Confirm topic deletion</span></span>
             <div class="modal-body">
                 <p id="jhi-delete-cluster-heading">Are you sure you want to delete this topic?</p>
             </div>

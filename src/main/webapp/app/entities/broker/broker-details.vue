@@ -3,7 +3,7 @@
         <div class="col-8">
             <div v-if="broker">
                 <h2 class="jh-entity-heading">
-                    <span>Broker</span> {{broker.brokerId}}
+                    <span>Broker details</span>
                     
                     <button type="submit"
                             v-on:click.prevent="previousState()"
@@ -14,16 +14,16 @@
                 </h2>
                 <dl class="row jh-entity-details">
                     <dt>
-                        <span>Host</span>
+                        <span>Broker id</span>
                     </dt>
                     <dd>
-                        <span>{{broker.host}}</span>
+                        <span>{{broker.brokerId}}</span>
                     </dd>
                     <dt>
-                        <span>Port</span>
+                        <span>Host & port</span>
                     </dt>
                     <dd>
-                        <span>{{broker.port}}</span>
+                        <span>{{broker.host}}:{{broker.port}}</span>
                     </dd>
                     <dt>
                         <span>Is Controller</span>
