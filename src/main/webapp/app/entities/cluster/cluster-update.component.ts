@@ -92,7 +92,6 @@ export default class ClusterUpdate extends mixins(AlertMixin) {
 
   public addBroker(): void {
     const broker = new Broker();
-    broker.id = 
     this.cluster.brokers.push(broker);
   }
 
