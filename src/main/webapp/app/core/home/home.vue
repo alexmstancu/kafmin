@@ -5,7 +5,7 @@
                 <img src="content/images/kafka.png" alt="">
             </div>
         </div>
-        <div class="col-md-9">
+        <div class="col-md-9" style="margin-top: 150px;">
             <h1 class="display-4">Welcome, Kafka Administrator!</h1>
             <!-- <p class="lead">This is your homepage</p> -->
 
