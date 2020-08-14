@@ -24,14 +24,14 @@ import java.util.concurrent.ExecutionException;
 @Service
 public class KafkaAdministrationCenter {
     private static final Logger logger = LoggerFactory.getLogger(KafkaAdministrationCenter.class);
-    private static final int TIMEOUT_MS = 3000;
+    private static final int TIMEOUT_MS = 5000;
     private static final DescribeClusterOptions DESCRIBE_CLUSTER_OPTIONS = new DescribeClusterOptions().timeoutMs(TIMEOUT_MS);
     private static final DescribeTopicsOptions DESCRIBE_TOPICS_OPTIONS = new DescribeTopicsOptions().timeoutMs(TIMEOUT_MS);
     private static final DescribeConfigsOptions DESCRIBE_CONFIGS_OPTIONS = new DescribeConfigsOptions().timeoutMs(TIMEOUT_MS);
     private static final CreateTopicsOptions CREATE_TOPICS_OPTIONS = new CreateTopicsOptions().timeoutMs(TIMEOUT_MS);
     private static final DeleteTopicsOptions DELETE_TOPICS_RESULT = new DeleteTopicsOptions().timeoutMs(TIMEOUT_MS);
     private static final AlterConfigsOptions ALTER_CONFIGS_OPTIONS = new AlterConfigsOptions().timeoutMs(TIMEOUT_MS);
-    private static final ListTopicsOptions LIST_TOPICS_OPTIONS = new ListTopicsOptions().timeoutMs(3000).listInternal(true);
+    private static final ListTopicsOptions LIST_TOPICS_OPTIONS = new ListTopicsOptions().timeoutMs(TIMEOUT_MS).listInternal(true);
 
     private final Map<String, Admin> kafkaAdminByClusterId = new HashMap<>();
     private final Map<String, ClusterProducerConsumer> clusterProducerConsumerByClusterId = new HashMap<>();

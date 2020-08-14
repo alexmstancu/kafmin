@@ -81,7 +81,7 @@
                                     <span v-for="(replica, index) in partition.replicas" :key="replica.id">
                                        <small>
                                            <router-link :to="{name: 'BrokerView', params: {clusterId: topic.cluster.id, brokerId: replica.brokerId}}">
-                                                broker {{replica.brokerId}} ({{replica.host}}:{{replica.port}})  
+                                                broker {{replica.brokerId}}
                                             </router-link>
                                             <span v-if="index !== partition.replicas.length - 1">&#8226; </span>
                                        </small>

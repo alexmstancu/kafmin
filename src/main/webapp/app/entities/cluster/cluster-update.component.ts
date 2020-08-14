@@ -66,7 +66,7 @@ export default class ClusterUpdate extends mixins(AlertMixin) {
         this.isSaving = false;
         return;
       }
-
+      this.removeLastBrokerIfEmpty();
       this.clusterService()
         .create(this.cluster)
         .then(param => {
@@ -75,6 +75,14 @@ export default class ClusterUpdate extends mixins(AlertMixin) {
           const message = 'A Cluster was connected with identifier ' + param.clusterId;
           this.alertService().showAlert(message, 'success');
         });
+    }
+  }
+
+  public removeLastBrokerIfEmpty() {
+    const lastIndex = this.cluster.brokers.length - 1;
+    const lastBroker = this.cluster.brokers[lastIndex];
+    if (!lastBroker.host || !lastBroker.port) {
+      this.cluster.brokers.pop();
     }
   }
 
