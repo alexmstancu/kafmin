@@ -11,8 +11,12 @@ const validations: any = {
   topic: {
     name: {},
     isInternal: {},
-    numPartitions: {},
-    replicationFactor: {}
+    numPartitions: {
+      minValue: minValue(1)
+    },
+    replicationFactor: {
+      minValue: minValue(1)
+    }
   },
 };
 
