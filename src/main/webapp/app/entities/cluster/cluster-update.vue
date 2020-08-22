@@ -52,6 +52,9 @@
 
                     <!-- list the brokers and let the user add more brokers (host & port only) ONLY IN CASE OF CREATE -->
                     <label v-if="!cluster.id" class="form-control-label" for="brokers-table">Add the initial bootstrap broker</label>
+                    <button :disabled="isAddBrokerButtonDisabled()"  v-on:click="addBroker()" class="btn btn-outline-info float-right">
+                        <font-awesome-icon icon="plus"></font-awesome-icon>&nbsp;<span>Add more brokers</span>
+                    </button>
                     <div class="table-responsive table table-sm table-striped table-bordered" v-if="!cluster.id">
                         <table class="table table-striped">
                             <thead>
@@ -76,9 +79,7 @@
                     <button type="submit" id="save-entity" :disabled="$v.cluster.$invalid || isSaving" class="btn btn-primary">
                         <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Save</span>
                     </button>
-                    <button :disabled="isAddBrokerButtonDisabled()" v-on:click="addBroker()" class="btn btn-outline-info float-right">
-                        <font-awesome-icon icon="plus"></font-awesome-icon>&nbsp;<span>Add more brokers</span>
-                    </button>
+
                 </div>
             </form>
         </div>

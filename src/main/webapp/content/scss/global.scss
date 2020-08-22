@@ -255,3 +255,8 @@ ui bootstrap tweaks
 }
 
 /* jhipster-needle-scss-add-main JHipster will add new css style */
+
+.btn-outline-info:disabled {
+  color: grey;
+  border-color: grey;
+}

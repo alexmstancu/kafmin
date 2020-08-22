@@ -1,7 +1,7 @@
 <template>
     <div>
         <h2 id="page-heading">
-            <span id="cluster-heading">Connected Clusters</span>
+            <span id="cluster-heading">Connected Clusters <b-badge pill variant="info"><span style="font-size: 22px">{{clusters.length}}  </span></b-badge></span>
             <router-link :to="{name: 'ClusterCreate'}" tag="button" id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-cluster">
                 <font-awesome-icon icon="plus"></font-awesome-icon>
                 <span >
