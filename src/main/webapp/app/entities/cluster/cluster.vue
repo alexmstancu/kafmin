@@ -70,7 +70,7 @@
             </div>
             <div slot="modal-footer">
                 <button type="button" class="btn btn-secondary" v-on:click="closeDialog()">Cancel</button>
-                <button type="button" class="btn btn-primary" id="jhi-confirm-delete-cluster" v-on:click="removeCluster()">Delete</button>
+                <button type="button" class="btn btn-primary" id="jhi-confirm-delete-cluster" v-on:click="removeCluster()">Disconnect</button>
             </div>
         </b-modal>
     </div>
