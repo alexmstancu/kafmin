@@ -71,7 +71,7 @@ public class MessageResource {
     /**
      * will not be used
      */
-    @GetMapping("/messages/{id}")
+//    @GetMapping("/messages/{id}")
     public ResponseEntity<Message> getMessage(@PathVariable Long id) {
         log.debug("REST request to get Message : {}", id);
         Optional<Message> message = messageService.findOne(id);
@@ -81,7 +81,7 @@ public class MessageResource {
     /**
      * will not be used
      */
-    @DeleteMapping("/messages/{id}")
+//    @DeleteMapping("/messages/{id}")
     public ResponseEntity<Void> deleteMessage(@PathVariable Long id) {
         log.debug("REST request to delete Message : {}", id);
         messageService.delete(id);

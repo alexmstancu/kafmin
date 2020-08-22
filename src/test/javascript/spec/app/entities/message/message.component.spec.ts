@@ -54,7 +54,7 @@ describe('Component Tests', () => {
       messageServiceStub.retrieve.resolves({ headers: {}, data: [{ id: 123 }] });
 
       // WHEN
-      comp.retrieveAllMessages();
+      comp.retrieveAllMessages(123, '');
       await comp.$nextTick();
 
       // THEN

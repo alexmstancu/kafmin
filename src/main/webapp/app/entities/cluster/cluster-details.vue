@@ -30,6 +30,12 @@
                         <span>{{cluster.clusterId}}</span>
                     </dd>
                     <dt>
+                        <span>Number of brokers</span>
+                    </dt>
+                    <dd>
+                        <span>{{cluster.brokers.length}}</span>
+                    </dd>
+                    <dt>
                         <span>Total number of topics</span>
                     </dt>
                     <dd>

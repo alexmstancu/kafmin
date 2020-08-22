@@ -56,7 +56,11 @@ public class BrokerResource {
         return ResponseUtil.wrapOrNotFound(broker);
     }
 
-    /**
+
+    /*
+     * Below are unused APIs !
+     */
+    /** TODO this endpoint cannot be used and should be deleted/hidden
      * {@code PUT  /brokers} : Updates an existing broker.
      *
      * @param broker the broker to update.
@@ -65,7 +69,7 @@ public class BrokerResource {
      * or with status {@code 500 (Internal Server Error)} if the broker couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/brokers")
+//    @PutMapping("/brokers")
     public ResponseEntity<Broker> updateBroker(@RequestBody Broker broker) throws URISyntaxException {
         log.debug("REST request to update Broker : {}", broker);
         if (broker.getId() == null) {
@@ -77,15 +81,11 @@ public class BrokerResource {
             .body(result);
     }
 
-    /*
-     * Below are unused APIs !
-     */
-
     /**
      * TODO this endpoint cannot be used and should be deleted/hidden
      * @deprecated
      */
-    @PostMapping("/brokers")
+//    @PostMapping("/brokers")
     public ResponseEntity<Broker> createBroker(@RequestBody Broker broker) throws URISyntaxException {
         log.debug("REST request to save Broker : {}", broker);
         if (broker.getId() != null) {
@@ -100,7 +100,7 @@ public class BrokerResource {
     /**
      * TODO this will not be used
      */
-    @GetMapping("/brokers")
+//    @GetMapping("/brokers")
     public List<Broker> getAllBrokers() {
         log.debug("REST request to get all Brokers");
         return brokerRepository.findAll();
@@ -110,7 +110,7 @@ public class BrokerResource {
      * TODO this endpoint cannot be used and should be deleted/hidden
      * @deprecated
      */
-    @DeleteMapping("/brokers/{id}")
+//    @DeleteMapping("/brokers/{id}")
     public ResponseEntity<Void> deleteBroker(@PathVariable Long id) {
         log.debug("REST request to delete Broker : {}", id);
         brokerRepository.deleteById(id);

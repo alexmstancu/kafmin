@@ -82,7 +82,7 @@ public class TopicResource {
      *
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of topics in body.
      */
-    @GetMapping("/topics")
+//    @GetMapping("/topics")
     public List<Topic> getAllTopics() {
         log.debug("REST request to get all Topics");
         return topicService.findAll();

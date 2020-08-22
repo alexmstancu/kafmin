@@ -57,14 +57,16 @@ public class TokenProviderTest {
 
     @Test
     public void testReturnFalseWhenJWTisExpired() {
+        // prepare test
         ReflectionTestUtils.setField(tokenProvider, "tokenValidityInMilliseconds", -ONE_MINUTE);
-
         Authentication authentication = createAuthentication();
         String token = tokenProvider.createToken(authentication, false);
 
-        boolean isTokenValid = tokenProvider.validateToken(token);
+        // do the action
+        boolean isValid = tokenProvider.validateToken(token);
 
-        assertThat(isTokenValid).isEqualTo(false);
+        // validate
+        assertThat(isValid).isEqualTo(false);
     }
 
     @Test
