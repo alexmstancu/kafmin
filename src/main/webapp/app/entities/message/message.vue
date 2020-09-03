@@ -86,7 +86,8 @@
                     </template>
                     <b-card-body>
                         <b-card-text>
-                            {{message.message}}
+                            <span>{{message.message}}</span>
+                            <span><b-badge v-if="!message.message || message.message === ''" pill variant="danger"><i>NULL</i> </b-badge></span>
                         </b-card-text>
                     </b-card-body>
                 </b-card>

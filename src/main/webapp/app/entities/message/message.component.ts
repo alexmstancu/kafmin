@@ -7,7 +7,6 @@ import AlertMixin from '@/shared/alert/alert.mixin';
 
 import MessageService from './message.service';
 import { IMessageList } from '@/shared/model/messageList.model';
-import { da } from 'date-fns/locale';
 
 @Component({
   mixins: [Vue2Filters.mixin],
@@ -26,11 +25,20 @@ export default class Message extends mixins(AlertMixin) {
 
   public filteredAndSortedMessages: IMessage[] = [];
 
+  public clusterDbId = -1;
+  public topicName = "";
+
 
   beforeRouteEnter(to, from, next) {
+    console.log("beforeRouteEnter");
+    console.log("to" + to);
+    console.log("from" + from);
+    console.log("next" + next);
+
     next(vm => {
       if (to.params.clusterDbId && to.params.topicName) {
-        console.log(to.params);
+        vm.clusterDbId = to.params.clusterDbId;
+        vm.topicName = to.params.topicName;
         if (to.params.partitionFilter >= 0) {
           vm.partitionFilter = to.params.partitionFilter;
         }
@@ -39,20 +47,25 @@ export default class Message extends mixins(AlertMixin) {
     });
   }
 
-  // public mounted(): void {
-  //   this.retrieveAllMessages();
-  // }
+  public mounted(): void {
+    console.log("MOUNTED");
+    console.log("MOUNTED cluserId" + this.clusterDbId);
+    console.log("MOUNTED topicName" + this.topicName);
+    // this.retrieveAllMessages(this.clusterDbId, this.topicName);
+  }
 
-  // public clear(): void {
-  //   this.retrieveAllMessages();
-  // }
+  public clear(): void {
+    console.log("CLEAR");
+    console.log("CLEAR cluserId" + this.clusterDbId);
+    console.log("CLEAR topicName" + this.topicName);
+    // this.retrieveAllMessages(this.clusterDbId, this.topicName);
+  }
 
   public buildPartitionsArray() {
     for (let i = 0; i < this.messageList.partitionsCount; i++) {
       this.partitionsArray.push(i);
     }
   }
-
 
   public retrieveAllMessages(clusterDbId: number, topicName: string): void {
     this.isFetching = true;

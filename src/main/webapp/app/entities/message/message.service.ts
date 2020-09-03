@@ -18,14 +18,18 @@ export default class MessageService {
     });
   }
 
-  public retrieve(clusterDbId: number, topicName: string): Promise<any> {    
+  public retrieve(clusterDbId: number, topicName: string): Promise<any> {
+    console.log("inainte de return promise");
+    let url = `${baseApiUrl}/${clusterDbId}/${topicName}`;
+    console.log("URL = " + url);
     return new Promise<any>((resolve, reject) => {
       axios
-        .get(`${baseApiUrl}/${clusterDbId}/${topicName}`)
+        .get(url)
         .then(res => {
           resolve(res);
         })
         .catch(err => {
+          console.log(err);
           reject(err);
         });
     });

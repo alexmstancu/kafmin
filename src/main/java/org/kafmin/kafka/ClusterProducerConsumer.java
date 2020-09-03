@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class ClusterProducerConsumer implements Closeable {
     private static final Logger logger = LoggerFactory.getLogger(ClusterProducerConsumer.class);
     private final Duration longDuration = Duration.ofSeconds(4);
-    private final Duration pollTimeout = Duration.ofMillis(500);
+    private final Duration pollTimeout = Duration.ofMillis(200);
     private final String clusterId;
     private final String bootstrapServers;
     private final KafkaProducer<String, String> producer;
@@ -56,14 +56,15 @@ public class ClusterProducerConsumer implements Closeable {
     private Iterable<ConsumerRecord<String, String>> poll(String topic) {
         int maxRetries = 3;
         int retires = 0;
+        List<ConsumerRecord<String, String>> result = new ArrayList<>();
         while (retires < maxRetries) {
             ConsumerRecords<String, String> consumerRecords = consumer.poll(pollTimeout);
             if (!consumerRecords.isEmpty()) {
-                return consumerRecords.records(topic);
+                consumerRecords.records(topic).forEach(result::add);
             }
             retires++;
         }
-        return Collections.emptyList();
+        return result;
     }
 
     private List<TopicPartition> toTopicPartitionList(List<PartitionInfo> partitionInfoList) {

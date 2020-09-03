@@ -63,7 +63,7 @@ describe('Service Tests', () => {
         const expected = Object.assign({}, returnedFromService);
 
         mockedAxios.post.mockReturnValue(Promise.resolve({ data: returnedFromService }));
-        return service.create({}).then(res => {
+        return service.create(123, {}).then(res => {
           expect(res).toMatchObject(expected);
         });
       });
@@ -72,7 +72,7 @@ describe('Service Tests', () => {
         mockedAxios.post.mockReturnValue(Promise.reject(error));
 
         return service
-          .create({})
+          .create(123, {})
           .then()
           .catch(err => {
             expect(err).toMatchObject(error);
@@ -119,7 +119,7 @@ describe('Service Tests', () => {
         );
         const expected = Object.assign({}, returnedFromService);
         mockedAxios.get.mockReturnValue(Promise.resolve([returnedFromService]));
-        return service.retrieve().then(res => {
+        return service.retrieve(123, '').then(res => {
           expect(res).toContainEqual(expected);
         });
       });
@@ -128,7 +128,7 @@ describe('Service Tests', () => {
         mockedAxios.get.mockReturnValue(Promise.reject(error));
 
         return service
-          .retrieve()
+          .retrieve(123, '')
           .then()
           .catch(err => {
             expect(err).toMatchObject(error);

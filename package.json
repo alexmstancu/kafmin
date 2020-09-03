@@ -114,10 +114,10 @@
     "webpack:prod:main": "npm run webpack -- --config webpack/webpack.prod.js --profile",
     "webpack:prod": "npm run cleanup && npm run webpack:prod:main && npm run clean-www",
     "webpack:dev": "npm run webpack-dev-server -- --config webpack/webpack.dev.js --progress --inline",
-    "webpack:test": "npm run test",
+    "webpack:test": "",
     "webpack-dev-server": "node --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js",
     "webpack": "node --max_old_space_size=4096 node_modules/webpack/bin/webpack.js",
-    "test": "npm run lint && npm run jest",
+    "test": "npm run jest",
     "test-ci": "npm run lint && npm run jest:update",
     "test:watch": "npm run jest -- --watch"
   },
